@@ -1,0 +1,11 @@
+{
+  "name": "norestforthewiccad",
+  "version": "1.0.0",
+  "description": "RESTful API for witches and wizards",
+  "main": "index.js",
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
