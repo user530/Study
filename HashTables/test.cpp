@@ -234,11 +234,11 @@ int main()
     // cout << *(int *)p + 10 << endl; // (int*)p -> we make int pointer from p, dereference it and print
 
     // EXAMPLE 5
-    int m, n;
-    m = doSomething(10, 5, addition);
-    n = doSomething(17, 12, substraction);
+    // int m, n;
+    // m = doSomething(10, 5, addition);
+    // n = doSomething(17, 12, substraction);
 
-    cout << m << ", " << n << endl;
+    // cout << m << ", " << n << endl;
 
     return 0;
 };
