@@ -1,0 +1,55 @@
+.container {
+  width: 100%;
+}
+
+section {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #444;
+}
+
+.block {
+  width: 75px;
+  height: 75px;
+  margin: 25px;
+  border: 2px solid #333;
+}
+
+.active {
+  background: orange;
+}
+
+.hide {
+  display: none;
+}
+
+.keyboard-wrapper {
+  width: fit-content;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+}
+
+.keyboard-row + .keyboard-row {
+  margin-top: 5px;
+}
+
+.keyboard-row:last-child .key {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+.key {
+  display: inline-block;
+  text-align: center;
+  min-width: 30px;
+  height: 40px;
+  line-height: 40px;
+  border: 1px black solid;
+}
+
+.key + .key {
+  margin-left: 5px;
+}

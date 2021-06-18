@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Page</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<!--========== bootstrap-grid ==========-->
+		<link rel="stylesheet" href="libs/bootstrap/bootstrap.min.css">
+		<!--========== FONTS ==========-->
+		<link rel="stylesheet" href="fonts/fonts.css">
+		<!--========== STYLES ==========-->
+		<link rel="stylesheet" href="css/main.css">
+		<!--========== AOS ANIMATION ==========-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+		<!--========== FAVICON ==========-->
+		<link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+	</head>
+	<body>
+		<div class="blur-wrapper">
+			<main class="main">
+				<!-- для карточек по 4 шт в ряду , добавляем родительскому диву с классом "productCard-item" еще один класс   "productCard-item--small"-->
+				<!-- для карточек с прямоугольной картинкой диву с классом  "productCard-image" (внутри которого тег <img>) добавляем класс  productCard-image--rect-->
+				<div class="block-wrapper">
+					<section class="main-Product-menu">
+						<div class="container">
+							<div class="mixit-block" id="mixit-block">
+								<div class="mixitBlock-menu">
+									<button class="active" data-btn="cat1">Пиццы</button>
+									<button data-btn="cat2">Роллы</button>
+									<button data-btn="cat3">Блюда</button>
+									<button data-btn="cat4">Салаты</button>
+									<button data-btn="cat5">Закуски</button>
+									<button data-btn="cat6">Напитки</button>
+								</div>
+								<div class="productCards-wrapper">
+									<!--============== карточки одной категории =============-->
+									<div class="row mixitBlock-content active" data-content="cat1">
+										<!-- =====КАРТОЧКА #1 -  КВАДРАТНАЯ КАРТИНКА ==========-->
+										<div class="col-md-6 col-lg-4">
+															<div class="productCard-item ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="#productModal">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<div class="product-new">
+																				<p>NEW</p>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/1.png" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p>Соус Ранч, сыр Моцарелла, цыпленок барбекю, бекон, томаты. Соус Ранч, сыр Моцарелла, цыпленок барбекю, бекон, томаты.</p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>830</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="#productModal">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+										<div class="col-md-6 col-lg-4">
+															<div class="productCard-item ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="#productModal">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<div class="product-new">
+																				<p>NEW</p>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/1.png" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p>Соус Ранч</p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>830</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="#productModal">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+										<div class="col-md-6 col-lg-4">
+															<div class="productCard-item ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="#productModal">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<div class="product-new">
+																				<p>NEW</p>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/1.png" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p></p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>830</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="#productModal">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+										<div class="col-md-6 col-lg-4">
+															<div class="productCard-item ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="#productModal">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<div class="product-new">
+																				<p>NEW</p>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/1.png" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p></p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>830</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="#productModal">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+									</div>
+									<!--============== карточки одной категории =============	-->
+									<div class="row mixitBlock-content" data-content="cat2">
+										<!-- ===== КАРТОЧКА #1- ПРЯМОУГ КАРТИНКА ==========-->
+										<div class="col-md-6 col-lg-4">
+															<div class="productCard-item  productCard-item--small ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="badge">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p>new</p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>#productModal2</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="badge">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+									</div>
+									<!--============== карточки одной категории =============-->
+									<div class="row mixitBlock-content" data-content="cat3">
+										<!-- =====КАРТОЧКА #2  КВАДРАТНАЯ КАРТИНКА ==========-->
+										<div class="col-md-6 col-lg-4 col-xl-3">
+															<div class="productCard-item ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="badge">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<div class="product-new">
+																				<p>NEW</p>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/true" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p>new</p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>#productModal</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="badge">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+									</div>
+									<!--============== карточки одной категории =============-->
+									<div class="row mixitBlock-content" data-content="cat4">
+										<!-- =====КАРТОЧКА #2  ПРЯМОУГ КАРТИНКА ==========-->
+										<div class="col-md-6 col-lg-4 col-xl-3">
+															<div class="productCard-item  productCard-item--small ">
+																<!-- ========   первая ссылка внутри карточки ===========--><a class="productCard" href="#!" data-toggle="modal" data-target="badge">
+																	<div class="productCard-body">
+																		<div class="productCard-top">
+																			<!-- ========   БЕЙДЖИ  ===========-->
+																			<div class="productCard__badges">
+																				<div class="product-sale">
+																					<p>Акция!</p>
+																				</div>
+																				<div class="product-poppular">
+																					<p>Популярное</p>
+																				</div>
+																			</div>
+																			<!--======== КОНЕЦ  БЕЙДЖИ  ===========-->
+																			<div class="productCard-image"><img src="img/products/true" alt="product"></div>
+																		</div>
+																		<div class="productCard-center">
+																			<div class="productCard-text">
+																				<h3>Пицца Пепперони</h3>
+																				<p>new</p>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="productCard-footer productCard-footer--desk">
+																		<div class="productCard-price">
+																			<div class="product-price-new">
+																				<p>630</p><span>&#8381;</span>
+																			</div>
+																			<div class="product-price-old">
+																				<p>#productModal2</p><span>&#8381;</span>
+																			</div>
+																		</div>
+																	</div></a>
+																<!-- ========   вторая ссылка внутри карточки ===========--><a class="productCard-btn" href="#!" data-toggle="modal" data-target="badge">Выбрать</a>
+																<div class="productCard-footer productCard-footer--mobile">
+																	<div class="productCard-price"><a class="product-price-new" href="#!"><span class="for-mobile">от</span>
+																			<p>630</p><span>&#8381;</span></a>
+																		<div class="product-price-old">
+																			<p>830</p><span>&#8381;</span>
+																		</div>
+																	</div>
+																</div>
+															</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</main>
+		</div>
+		<div class="productModal modal fade" id="productModal" tabindex="-1" role="dialog" aria-hidden="true" data-aos="flip-left">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close"><img src="img/products/close.png" width="30" alt="x"></button>
+					<!--==============Центр модального окна ===============-->
+					<div class="modal-body">
+						<!--==============Левая колонка ===============-->
+						<div class="modal-body-left">
+							<div class="modal-body-img"> <img src="img/products/1.png" width="340" alt="product"></div>
+						</div>
+						<!--==============Правая колонка ===============-->
+						<div class="modal-body-right">
+							<!--==============Заголовок модального окна ===============-->
+							<div class="productModal-title">
+								<h1>Пицца “Особая”</h1>
+							</div>
+							<div class="modal-body-row modal-row-desck">
+								<p>Говядина, халапеньо, моцарелла, помидоры, куриное филе, томатный соус.</p><span>Вес: 550 гр.</span>
+							</div>
+							<div class="modal-body-row product-set__row">
+								<div class="product-card__filters"><span class="filter-name mrb-5">Размеры:</span>
+									<div class="filters-type">
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_diameter" value="26см">
+												<div class="fake-radiobutton">26см</div>
+											</label>
+										</div>
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_diameter" value="33см">
+												<div class="fake-radiobutton">33см</div>
+											</label>
+										</div>
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_diameter" value="40см">
+												<div class="fake-radiobutton">40см</div>
+											</label>
+										</div>
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_diameter" value="33см">
+												<div class="fake-radiobutton">33см</div>
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="product-card__filters"><span class="filter-name mrb-5">Тесто:</span>
+									<div class="filters-type">
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_testo" value="Традиционное">
+												<div class="fake-radiobutton">Традиционное</div>
+											</label>
+										</div>
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_testo" value="Тонкое">
+												<div class="fake-radiobutton">Тонкое</div>
+											</label>
+										</div>
+										<div class="filters-type__item">
+											<label>
+												<input type="radio" name="product_testo" value="Тонкое">
+												<div class="fake-radiobutton">Дрожжевое</div>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--============== ПРОДУКТЫ - ДОПОЛНЕНИЕ К ЗАКАЗУ ===============-->
+							<div class="modal-body-row modal-row-addProduct">
+								<div class="filter-name">Добавить:</div>
+								<div class="addProduct-inner">
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct2.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct3.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct2.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct3.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+											<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+											<label class="addProduct-item">
+												<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+												<div class="addProduct-item-title">
+													<p>Лук</p>
+												</div>
+												<div class="addProduct-item-price">
+													<p>80</p><span>руб.</span>
+												</div>
+												<input type="checkbox" name="" value="">
+												<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+												</div>
+											</label>
+											<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+								</div>
+							</div>
+							<div class="product-set__footer">
+								<div class="total-amount"><span class="filter-name">Количество:</span>
+													<div class="product-counter">
+														<button class="product-counter--minus">-</button><span class="product-counter--num">1</span>
+														<button class="product-counter--plus">+</button>
+														<input type="hidden" name="product_count" value="1">
+													</div>
+									<div class="productCard-price">
+										<div class="product-price-new">
+											<p>630</p><span>&#8381;</span>
+										</div>
+										<div class="product-price-old">
+											<p>830</p><span>&#8381;</span>
+										</div>
+									</div>
+									<button class="page-button page-button--red" data-dismiss="modal">В корзину</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--модальное с допродуктами на всю ширину-->
+		<div class="productModal modal fade" id="productModal2" tabindex="-1" role="dialog" aria-hidden="true" data-aos="flip-left">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close"><img src="img/products/close.png" width="30" alt="x"></button>
+					<!--==============Центр модального окна ===============-->
+					<div class="modal2-content">
+						<div class="modal-body">
+							<!--==============Левая колонка ===============-->
+							<div class="modal-body-left">
+								<div class="modal-body-img"> <img src="img/products/1.png" width="340" alt="product"></div>
+							</div>
+							<!--==============Правая колонка ===============-->
+							<div class="modal-body-right">
+								<!--==============Заголовок модального окна ===============-->
+								<div class="productModal-title">
+									<h1>Пицца “Особая”</h1>
+								</div>
+								<div class="modal-body-row modal-row-desck">
+									<p>Говядина, халапеньо, моцарелла, помидоры, куриное филе, томатный соус.</p><span>Вес: 550 гр.</span>
+								</div>
+								<div class="modal-body-row product-set__row">
+									<div class="product-card__filters"><span class="filter-name mrb-5">Размеры:</span>
+										<div class="filters-type">
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_diameter" value="26см">
+													<div class="fake-radiobutton">26см</div>
+												</label>
+											</div>
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_diameter" value="33см">
+													<div class="fake-radiobutton">33см</div>
+												</label>
+											</div>
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_diameter" value="40см">
+													<div class="fake-radiobutton">40см</div>
+												</label>
+											</div>
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_diameter" value="33см">
+													<div class="fake-radiobutton">33см</div>
+												</label>
+											</div>
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_diameter" value="40см">
+													<div class="fake-radiobutton">40см</div>
+												</label>
+											</div>
+										</div>
+									</div>
+									<div class="product-card__filters"><span class="filter-name mrb-5">Тесто:</span>
+										<div class="filters-type">
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_testo" value="Традиционное">
+													<div class="fake-radiobutton">Традиционное</div>
+												</label>
+											</div>
+											<div class="filters-type__item">
+												<label>
+													<input type="radio" name="product_testo" value="Тонкое">
+													<div class="fake-radiobutton">Тонкое</div>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--============== ПРОДУКТЫ - ДОПОЛНЕНИЕ К ЗАКАЗУ ===============-->
+						<div class="modal-body-row modal-row-addProduct">
+							<div class="filter-name">Добавить:</div>
+							<div class="addProduct-inner">
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct2.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct3.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct2.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct3.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+										<!--=========== КАРТОЧКА ДОП ПРОДУКТА ==========-->
+										<label class="addProduct-item">
+											<div class="addProduct-item-img"><img src="img/products/addProduct1.png" width="158" alt="product"></div>
+											<div class="addProduct-item-title">
+												<p>Лук</p>
+											</div>
+											<div class="addProduct-item-price">
+												<p>80</p><span>руб.</span>
+											</div>
+											<input type="checkbox" name="" value="">
+											<div class="fake-checkbox"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M13.9979 7.3161H13.9999C14.3673 7.3161 14.6659 7.61344 14.6666 7.98077C14.6719 9.76144 13.9833 11.4381 12.7273 12.7008C11.4719 13.9634 9.79995 14.6614 8.01928 14.6668H7.99995C6.22595 14.6668 4.55728 13.9788 3.29928 12.7274C2.03662 11.4721 1.33862 9.8001 1.33328 8.01944C1.32795 6.2381 2.01662 4.5621 3.27262 3.29944C4.52795 2.03677 6.19995 1.33877 7.98062 1.33344C8.51062 1.34144 9.05062 1.39477 9.56795 1.51877C9.92528 1.60544 10.1459 1.96544 10.0593 2.32344C9.97328 2.68077 9.61128 2.90077 9.25528 2.81544C8.84128 2.71544 8.40195 2.67344 7.98462 2.66677C6.55995 2.67077 5.22195 3.22944 4.21795 4.23944C3.21328 5.24944 2.66262 6.59077 2.66662 8.01544C2.67062 9.4401 3.22928 10.7774 4.23928 11.7821C5.24595 12.7828 6.58062 13.3334 7.99995 13.3334H8.01528C9.43995 13.3294 10.7779 12.7708 11.7819 11.7608C12.7866 10.7501 13.3373 9.40944 13.3333 7.98477C13.3326 7.61677 13.6299 7.31677 13.9979 7.3161ZM5.52862 7.52871C5.78929 7.26805 6.21062 7.26805 6.47129 7.52871L7.96729 9.02471L12.1653 4.22738C12.408 3.95205 12.8286 3.92271 13.106 4.16538C13.3826 4.40738 13.4106 4.82871 13.168 5.10605L8.50129 10.4394C8.37995 10.578 8.20662 10.66 8.02195 10.6667H7.99995C7.82329 10.6667 7.65395 10.5967 7.52862 10.4714L5.52862 8.47138C5.26795 8.21071 5.26795 7.78938 5.52862 7.52871Z" />
+</svg>
+											</div>
+										</label>
+										<!--=========== КОНЕЦ КАРТОЧКА ДОП ПРОДУКТА ==========	-->
+							</div>
+						</div>
+						<div class="product-set__footer">
+							<div class="total-amount"><span class="filter-name">Количество:</span>
+												<div class="product-counter">
+													<button class="product-counter--minus">-</button><span class="product-counter--num">1</span>
+													<button class="product-counter--plus">+</button>
+													<input type="hidden" name="product_count" value="1">
+												</div>
+								<div class="productCard-price">
+									<div class="product-price-new">
+										<p>630</p><span>&#8381;</span>
+									</div>
+									<div class="product-price-old">
+										<p>830</p><span>&#8381;</span>
+									</div>
+								</div>
+								<button class="page-button page-button--red" data-dismiss="modal">В корзину</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--========== JQUERY ==========-->
+		<script src="libs/jquery/jquery-3.0.0.min.js"></script>
+		<!--========== bootstrap ==========-->
+		<script src="libs/bootstrap/bootstrap.min.js"></script>
+		<!--========== MAIN.JS ==========-->
+		<!--========== скрипт для модального окна карточки ==========-->
+		<script src="js/product-card-modal.js"></script>
+		<script src="js/truncate-margin-bottom.js"></script>
+	</body>
+</html>

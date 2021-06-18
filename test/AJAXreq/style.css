@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
+.form1Field {
+  display: block;
+}
+
+.form1Field + * {
+  margin-top: 10px;
+}

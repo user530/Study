@@ -1,0 +1,13 @@
+html,
+body {
+  font-family: serif;
+}
+body {
+  margin: 20px;
+}
+
+p {
+  font-size: 32px;
+  font: bold;
+  text-decoration: underline;
+}

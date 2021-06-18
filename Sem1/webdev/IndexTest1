@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Bios and CVs</title>
+        <meta charset="utf-8">
+        <meta name="description" content="Library of examples of CVs and Bio forms">
+        <meta name="keywords" content="Bio, Form, CV">
+        <meta name="author" content="TMV">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta http-equiv="refresh" content="60">
+        <meta name="robots" content="noindex, no follow">
+    </head>
+    
+    <body>
+        <article>
+            <header>
+                <h1>Example of a Bio from</h1>
+            </header>
+        </article>
+        
+        <article>
+            <br>
+            <div>
+                <h2>Bio of TMV</h2>
+            </div>
+        </article>
+        
+        <article>
+            <br>
+            <div>
+                <form>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="Your Name"><br>
+                    <label for="job">Job title:</label>
+                    <input type="text" id="job" name="Your job title"><br>
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="Your e-mail adress">
+                </form>
+                
+                <img src="https://images.app.goo.gl/EaKzpfPdjuakhLG59" alt="Photo" width="300" height="500">
+                
+            </div>
+            
+                <br><br><br>
+                
+            <div>
+                <form>
+                <label for="highlights"><b>Career Highlights:</b> </label><br>
+                <textarea id="highlights" rows="4" cols="50"> Enter the instances when your decisions influenced your work</textarea>
+                </form>
+            </div>
+                
+            <div>
+                <form>
+                    <label for="hobbies"><b>When not at work:</b></label><br>
+                    <textarea id="hobbies" rows="3" cols="50">What are your hobbies?</textarea>
+                </form>
+            </div>
+        </article>
+        
+        
+    </body>
+</html>
+
+

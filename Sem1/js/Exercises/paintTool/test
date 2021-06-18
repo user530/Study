@@ -1,0 +1,7 @@
+var a = 0;
+
+function setup()
+{
+	createCanvas(400, 200);
+	a(height);
+}

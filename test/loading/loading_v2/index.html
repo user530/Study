@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+		<link rel="stylesheet" href="libs/bootstrap/bootstrap-grid.min.css"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com"/>
+		<link href="https://fonts.googleapis.com/css2?family=Cuprum:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+		<link rel="stylesheet" href="css/main.css"/>
+		<title>Page</title>
+	</head>
+	<body>
+		<header class="header"> 
+			<div class="container">
+				<div class="header-content"> 
+					<div class="row"> 
+						<div class="col-lg-6 col-xl-7 order-lg-2">
+							<div class="header-column"> 
+								<div class="header-img"> <img src="img/bg.jpg" width="640" alt="bg"/></div>
+								<div class="d-none d-lg-block header-info"> 
+									<p>Уникальная запатенованная технология. Номер&nbsp;патента&nbsp;2049008</p>
+									<p>работает даже, если абонент удалит информацию из телефона</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-6 col-xl-5 order-lg-1">
+							<div class="header-title">
+								<h1> <span>мобильный</span><span>детектор</span><span>чужого телефона</span></h1>
+							</div>
+							<div class="header-subtitle">
+								<p>Чтение входящих и исходящих мессенджеров</p>
+								<ul class="icons-list">
+									<li><i class="fas fa-sms"></i></li>
+									<li class="wapp-icon"> <i class="fab fa-whatsapp"></i></li>
+									<li class="viber-icon"> <i class="fab fa-viber"></i></li>
+									<li class="tg-icon"> <i class="fab fa-telegram"></i></li>
+								</ul>
+							</div>
+							<div class="d-block d-lg-none">
+								<div class="header-info-mobile header-info">
+									<p>Уникальная запатенованная технология. Номер патента 2049008</p>
+									<p>работает даже, если абонент удалит информацию из телефона</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<main class="main"> 
+			<div class="container"> 
+				<div class="main-content"> 
+					<div class="main-header">
+						<div class="row"> 
+							<div class="col-md-6 order-md-2 col-bottom">
+								<div class="form-wrapper">
+									<div class="form-wrapper__img"><img src="img/phone.jpg" alt="phone"/></div>
+									<div class="form-wrapper__content-1">
+										<form class="contact-form" action="#">
+											<div class="form-item">
+												<label>Номер телефона
+													<input class="phone" type="text" name="phone"/>
+												</label>
+											</div>
+											<div class="form-item__btn">
+												<button class="form-button" id="check-btn" type="submit">Проверить</button>
+											</div>
+										</form>
+										<div id="demo-preview">
+											<div id="line-container"></div>
+											<div id="preview-steps">
+												<p class="active">соединение с сервером</p>
+												<p>оформление запроса</p>
+												<p>получение списка звонков</p>
+												<p>получение списка сообщений</p>
+												<p>данные успешно получены</p>
+												<p>определение страны абонента</p>
+												<p>определение оператора абонента</p>
+												<p>получение серверных параметров</p>
+												<p>запуск эмулятора устройства GSM</p>
+											</div>
+										</div>
+										<div class="main-demo" id="main-demo"><img src="img/example.png" alt="demo"/></div>
+										<div class="block-hidden" id="circle-container"></div>
+									</div>
+									<div class="form-wrapper__content-2 block-hidden">
+										<div class="form-success">
+											<div class="success-percent">
+												<p>Статус обработки 100%</p>
+											</div>
+											<div class="success-text">
+												<ul> 
+													<li><span>Информация об абоненте:</span><span>Получено</span></li>
+													<li><span>Входящие и исходящие сообщения:</span><span>Получено </span></li>
+													<li><span>Входящие и исходящие сообщения вызовы:</span><span>Получено</span></li>
+												</ul>
+												<p>Теперь скачайте и установите приложение на телефон.</p>
+												<div class="download-btn"><a href="#" download="download"> Скачать и установить </a></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 order-md-1"> 
+								<div class="main-decore"> 
+									<div class="main-decore__img"> <img src="img/play.png" width="400" alt="image"/></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="main-footer">
+						<div class="row"> 
+							<div class="col-md-8">
+								<div class="messanger-block"> 
+									<div class="messanger-block__text">
+										<p><strong>внимание!</strong> Сервис только для частного использования!</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="messanger-logo">
+									<ul class="icons-list">
+										<li class="sms-icon"><i class="fas fa-sms"></i></li>
+										<li class="wapp-icon"> <i class="fab fa-whatsapp"></i></li>
+										<li class="viber-icon"> <i class="fab fa-viber"></i></li>
+										<li class="tg-icon"> <i class="fab fa-telegram"></i></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<section class="cards-block">
+						<div class="row"> 
+							<div class="col-6 col-lg-3"> 
+								<div class="card-item">
+									<div class="card-item__img" style="background-image:url(img/comment1.jpg);"></div>
+									<p>...ты был великолепен. завтра я свободна..милый</p>
+								</div>
+							</div>
+							<div class="col-6 col-lg-3"> 
+								<div class="card-item">
+									<div class="card-item__img" style="background-image:url(img/comment2.jpg);"></div>
+									<p>жена уехала, давай отдохнем:)?</p>
+								</div>
+							</div>
+							<div class="col-6 col-lg-3"> 
+								<div class="card-item">
+									<div class="card-item__img" style="background-image:url(img/comment3.jpg);"></div>
+									<p>... я тебя тоже. хочу еще тебя ...</p>
+								</div>
+							</div>
+							<div class="col-6 col-lg-3"> 
+								<div class="card-item">
+									<div class="card-item__img" style="background-image:url(img/comment4.jpg);"></div>
+									<p>мой лапух на я все мокрая ...</p>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
+		</main>
+		<script src="libs/jquery/jquery-3.0.0.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/1.0.1/progressbar.min.js"></script>
+		<script src="https://kit.fontawesome.com/82e9f58f04.js"></script>
+		<script src="libs/jquery.maskedinput.min.js"></script>
+		<script src="js/main.js"></script>
+	</body>
+</html>

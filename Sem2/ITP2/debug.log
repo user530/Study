@@ -1,0 +1,2 @@
+[1202/103104.296:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
+[1202/134356.323:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\TMV\AppData\Roaming\Brackets\live-dev-profile\Crashpad\attachments\0887982d-996d-4cef-8521-e93dfd268aed: Системе не удается найти указанный путь. (0x3)

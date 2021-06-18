@@ -1,0 +1,36 @@
+@font-face {
+	font-family: 'Cuprum Regular';
+	src: url('Cuprum-Regular.eot');
+	src: url('Cuprum-Regular.eot?#iefix') format('embedded-opentype'),
+	url('Cuprum-Regular.woff') format('woff'),
+	url('Cuprum-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Cuprum Bold';
+	src: url('Cuprum-Bold.eot');
+	src: url('Cuprum-Bold.eot?#iefix') format('embedded-opentype'),
+	url('Cuprum-Bold.woff') format('woff'),
+	url('Cuprum-Bold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	}
+	@font-face {
+	font-family: 'Roboto Condensed Regular';
+	src: url('RobotoCondensed-Regular.eot');
+	src: url('RobotoCondensed-Regular.eot?#iefix') format('embedded-opentype'),
+	url('RobotoCondensed-Regular.woff') format('woff'),
+	url('RobotoCondensed-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	}
+@font-face {
+	font-family: 'Roboto Condensed Bold';
+	src: url('RobotoCondensed-Bold.eot');
+	src: url('RobotoCondensed-Bold.eot?#iefix') format('embedded-opentype'),
+	url('RobotoCondensed-Bold.woff') format('woff'),
+	url('RobotoCondensed-Bold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	}
