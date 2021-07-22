@@ -4,14 +4,21 @@ using namespace std;
 
 HashTable::HashTable(long _a, long _c, long _m)
 {
-  int a = _a, c = _c, m = _m;
-  int *buckets = new int[m];
-  *buckets = a;
-  *(buckets + 1) = c;
+  a = _a, c = _c;
+  int m = _m;
+  buckets = new int[m];
+  *(buckets) = 1;
+  *(buckets + 2) = 3;
+
+  for (int i = 0; i < m; ++i)
+  {
+    std::cout << *(buckets + i) << "\n";
+  }
 }
 
 HashTable::~HashTable()
 {
+  delete[] buckets;
 }
 
 void HashTable::insert(int key)
@@ -38,5 +45,6 @@ double HashTable::loadFactor()
 
 int main()
 {
+  HashTable htable(1, 0, 3);
   return 0;
 }

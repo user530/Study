@@ -3,6 +3,9 @@
 
 class HashTable
 {
+  int *buckets;
+  int a, c;
+
 public:
   HashTable(long, long, long);
   ~HashTable();
