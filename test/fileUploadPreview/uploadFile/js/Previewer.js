@@ -156,7 +156,7 @@ class Previewer{
                             }
                         }else{
                             status = false;
-                            errMsg += "Разрешение не более 500х500\n";
+                            errMsg += `Разрешение не более ${here.#wLimit}х${here.#hLimit}\n`;
                         }
                         // Successful loading
                         res(status);
