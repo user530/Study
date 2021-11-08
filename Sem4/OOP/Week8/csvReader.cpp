@@ -27,7 +27,8 @@ std::vector<OrderBookEntry> CSVReader::readCSV(std::string filename)
             }
             catch (const std::exception &e)
             {
-                std::cout << "CSVReader::readCSV bad data" << std::endl;
+                std::cout << "CSVReader::readCSV bad data"
+                          << std::endl;
             }
         }
 
@@ -101,11 +102,19 @@ OrderBookEntry CSVReader::tokensToOBE(std::vector<std::string> tokens)
     {
         price = std::stod(tokens[3]);
         amount = std::stod(tokens[4]);
+        // Check negative numbers
+        if (price < 0 || amount < 0)
+        {
+            throw std::invalid_argument("Negative number!");
+        }
     }
     catch (const std::exception &e)
     {
-        std::cout << "Bad float!" << tokens[3] << std::endl;
-        std::cout << "Bad float!" << tokens[4] << std::endl;
+        std::cout << "\n*****ERROR*****\n\n";
+        std::cout << "CSVReader::tokensToOBE - Bad float! " << tokens[3] << std::endl;
+        std::cout << "CSVReader::tokensToOBE - Bad float! " << tokens[4] << std::endl;
+        std::cout << e.what() << "\n\n***************\n"
+                  << std::endl;
         throw;
     }
 
@@ -133,12 +142,18 @@ OrderBookEntry CSVReader::tokensToOBE(std::string priceString,
     {
         price = std::stod(priceString);
         amount = std::stod(amountString);
+        // Check negative numbers
+        if (price < 0 || amount < 0)
+        {
+            throw std::invalid_argument("Negative number!");
+        }
     }
     catch (const std::exception &e)
     {
+        std::cout << "\n\n*****ERROR*****\n";
         std::cout << "CSVReader::tokensToOBE - Bad float! " << priceString << std::endl;
         std::cout << "CSVReader::tokensToOBE - Bad float! " << amountString << std::endl;
-        std::cout << "**********\n"
+        std::cout << e.what() << "\n\n***************\n"
                   << std::endl;
         throw;
     }

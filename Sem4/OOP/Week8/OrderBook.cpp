@@ -81,12 +81,12 @@ double OrderBook::getLowPrice(std::vector<OrderBookEntry> &orders)
     return min;
 };
 
-double OrderBook::getSpread(double &highPrice, double &lowPrice)
+double OrderBook::getSpread(double &askPrice, double &bidPrice)
 {
     // Check that arguments are valid and return spread, else throw and error
-    if (highPrice >= lowPrice)
+    if (askPrice >= bidPrice)
     {
-        return (highPrice - lowPrice);
+        return (askPrice - bidPrice);
     }
     else
     {
@@ -133,4 +133,88 @@ void OrderBook::insertOrder(OrderBookEntry &order)
     std::sort(orders.begin(),
               orders.end(),
               OrderBookEntry::compareByTimestamp);
+};
+
+std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std::string timestamp)
+{
+    // Two variables holding all asks and bids for the product in required timestamp
+    std::vector<OrderBookEntry> asks = OrderBook::getOrders(OrderBookType::ask, product, timestamp);
+    std::vector<OrderBookEntry> bids = OrderBook::getOrders(OrderBookType::bid, product, timestamp);
+
+    // Variable for all deals that will take place
+    std::vector<OrderBookEntry> sales;
+
+    // Sort asks in ascending order
+    std::sort(asks.begin(), asks.end(), OrderBookEntry::compareByPriceAsc);
+
+    // Sort bids in descending order
+    std::sort(bids.begin(), bids.end(), OrderBookEntry::compareByPriceDesc);
+
+    // We iterate over asks...
+    for (OrderBookEntry &ask : asks)
+    {
+        // Skip "ghost" asks
+        if (ask.amount == 0)
+            continue;
+
+        // ...and compare them to bids. Lowest ask to a highest bid
+        for (OrderBookEntry &bid : bids)
+        {
+            // Skip "ghost" bids
+            if (bid.amount == 0)
+                continue;
+
+            // If prices match...
+            if (ask.price <= bid.price)
+            {
+                // Create new entry for the deal
+                OrderBookEntry sale{
+                    ask.price, //The price of the deal is equal to one asked, not the one offered by the bidder
+                    0,
+                    timestamp,
+                    product,
+                    OrderBookType::ask};
+
+                // As for amount, we check ask and bid
+                // If they match perfectly
+                if (ask.amount == bid.amount)
+                {
+                    // set the deal amount
+                    sale.amount = ask.amount;
+                    // register the deal
+                    sales.push_back(sale);
+                    // clear the bid
+                    bid.amount = 0;
+                    // switch to the next ask
+                    break;
+                }
+
+                if (ask.amount < bid.amount)
+                {
+                    // set the deal amount
+                    sale.amount = ask.amount;
+                    // register deal
+                    sales.push_back(sale);
+                    // update the bid amount
+                    bid.amount = bid.amount - ask.amount;
+                    // switch to the next ask
+                    break;
+                }
+
+                // else, we imply that ask amount > bid amount, so...
+
+                // set the deal amount
+                sale.amount = bid.amount;
+                // register the deal
+                sales.push_back(sale);
+                // update the ask and bid amounts
+                ask.amount = ask.amount - bid.amount;
+                bid.amount = 0;
+                // switch to the next bid
+                continue;
+            }
+        }
+    }
+
+    return sales;
 };

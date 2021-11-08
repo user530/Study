@@ -41,6 +41,9 @@ public:
      */
     void insertOrder(OrderBookEntry &order);
 
+    /** Function to match bids to asks */
+    std::vector<OrderBookEntry> matchAsksToBids(std::string product, std::string timestamp);
+
 private:
     /** Vector of orders */
     std::vector<OrderBookEntry> orders;

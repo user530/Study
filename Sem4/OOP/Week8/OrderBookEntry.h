@@ -30,4 +30,10 @@ public:
 
     /** Function to compare two OrderBookEntries based on the timestamp */
     static bool compareByTimestamp(const OrderBookEntry &entry1, const OrderBookEntry &entry2);
+
+    /** Function to sort two OrderBookEntries in ascending order based on the price */
+    static bool compareByPriceAsc(const OrderBookEntry &entry1, const OrderBookEntry &entry2);
+
+    /** Function to sort two OrderBookEntries in descending order based on the price */
+    static bool compareByPriceDesc(const OrderBookEntry &entry1, const OrderBookEntry &entry2);
 };

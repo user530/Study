@@ -69,22 +69,6 @@ void MerkelMain::printMarketStats()
         }
         std::cout << "=============================\n"
                   << std::endl;
-
-        // std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, product, currentTime);
-
-        // std::cout << "There are " << entries.size() << " asks for this product\n";
-
-        // double min{OrderBook::getLowPrice(entries)};
-        // double max{OrderBook::getHighPrice(entries)};
-
-        // std::cout << "The max ask for this product is " << max << "\n";
-
-        // std::cout << "The min ask for this product is " << min << "\n";
-
-        // std::cout << "The spread for this product is " << OrderBook::getSpread(max, min) << "\n";
-
-        // std::cout << "\n=============================\n"
-        //           << std::endl;
     }
 };
 /** Make an ask market offer */
@@ -197,8 +181,21 @@ void MerkelMain::printWallet()
 /** Skip to the next game turn */
 void MerkelMain::gotoNextTimeFrame()
 {
+
+    // Make sales, !!!!!! Check products!!!!!!
+    std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime);
+
+    // Print sales information
+    for (const OrderBookEntry &sale : sales)
+    {
+        std::cout << "Sale price: " << sale.price << ", amount sold: " << sale.amount << "\n";
+    }
+    std::cout << "Total number of deals: " << sales.size() << "\n"
+              << std::endl;
+
     // Iterate to the next timeframe
     currentTime = orderBook.getNextTime(currentTime);
+
     std::cout << "A few moments later...\n\n"
               << "=============================\n"
               << std::endl;
