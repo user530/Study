@@ -78,7 +78,7 @@ void MerkelMain::enterAsk()
     std::cout << "Make an offer\n\n"
               << "The format is - 'product, price, amount'\n"
               << "e.g. - 'ETH/BTC, 200, 0.5'\n"
-              << "=============================\n"
+              << "\n=============================\n"
               << std::endl;
 
     // Variable that stores user ask information
@@ -106,8 +106,21 @@ void MerkelMain::enterAsk()
                                                               askTokens[0],
                                                               OrderBookType::ask);
 
-            // Add it to the orderBook and shuffle it in the right position
-            orderBook.insertOrder(userOrder);
+            // Check if user has enough currency...
+            if (wallet.canFulfillOrder(userOrder))
+            {
+                // Add it to the orderBook and shuffle it in the right position
+                orderBook.insertOrder(userOrder);
+
+                // Confirmation msg
+                std::cout << "Order accepted\n"
+                          << "You placed ask order as follows - " << askString << std::endl;
+            }
+            else
+            {
+                // If not enough currency to fulfill, msg user
+                std::cout << "Insufficient fonds, order is not accepted" << std::endl;
+            }
         }
         catch (const std::exception &error)
         {
@@ -116,10 +129,8 @@ void MerkelMain::enterAsk()
                       << std::endl;
         }
     }
-
-    // Confirmation msg
-    std::cout
-        << "You placed ask order as follows - " << askString << std::endl;
+    std::cout << "\n=============================\n"
+              << std::endl;
 };
 /** Make an ask market offer */
 void MerkelMain::enterBid()
@@ -155,9 +166,21 @@ void MerkelMain::enterBid()
                                                               currentTime,
                                                               bidTokens[0],
                                                               OrderBookType::bid);
+            // Check if user has enough currency...
+            if (wallet.canFulfillOrder(userOrder))
+            {
+                // Add it to the orderBook and shuffle it in the right position
+                orderBook.insertOrder(userOrder);
 
-            // Add it to the orderBook and shuffle it in the right position
-            orderBook.insertOrder(userOrder);
+                // Confirmation msg
+                std::cout << "Order accepted\n"
+                          << "You placed bid order as follows - " << bidString << std::endl;
+            }
+            else
+            {
+                // If not enough currency to fulfill, msg user
+                std::cout << "Insufficient fonds, order is not accepted" << std::endl;
+            }
         }
         catch (const std::exception &error)
         {
@@ -166,10 +189,8 @@ void MerkelMain::enterBid()
                       << std::endl;
         }
     }
-
-    // Confirmation msg
-    std::cout
-        << "You placed bid order as follows - " << bidString << std::endl;
+    std::cout << "\n=============================\n"
+              << std::endl;
 };
 /** Print available money  */
 void MerkelMain::printWallet()
@@ -178,9 +199,8 @@ void MerkelMain::printWallet()
     //           << "=============================\n"
     //           << std::endl;
 
-    std::cout << wallet.toString()
-              << "\n\n"
-              << "=============================\n"
+    std::cout << wallet
+              << "\n=============================\n"
               << std::endl;
 };
 

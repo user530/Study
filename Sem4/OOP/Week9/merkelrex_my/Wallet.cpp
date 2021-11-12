@@ -135,3 +135,9 @@ std::string Wallet::toString()
     // return the content of the wallet
     return walletStr;
 };
+
+std::ostream &operator<<(std::ostream &os, Wallet &wallet)
+{
+    os << wallet.toString();
+    return os;
+};
