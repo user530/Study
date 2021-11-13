@@ -126,7 +126,7 @@ std::string OrderBook::getNextTime(std::string timestamp)
 
 void OrderBook::insertOrder(OrderBookEntry &order)
 {
-    // First, we insert and order into the back of the order book
+    // First, we insert an order into the back of the order book
     orders.push_back(order);
 
     // Sorting the entry, so the user order is in the right position
@@ -175,14 +175,32 @@ std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std:
                     product,
                     OrderBookType::ask};
 
+                // Check if the user has a part in the sale
+                // If the user is buying
+                if (bid.username == "simuser")
+                {
+                    // Change the sale type and username
+                    sale.orderType = OrderBookType::bidsale;
+                    sale.username = "simuser";
+                }
+                // If the user is selling
+                else if (ask.username == "simuser")
+                {
+                    // Change the sale type and username
+                    sale.orderType = OrderBookType::asksale;
+                    sale.username = "simuser";
+                }
+
                 // As for amount, we check ask and bid
                 // If they match perfectly
                 if (ask.amount == bid.amount)
                 {
                     // set the deal amount
                     sale.amount = ask.amount;
+
                     // register the deal
                     sales.push_back(sale);
+
                     // clear the bid
                     bid.amount = 0;
                     // switch to the next ask
@@ -195,6 +213,7 @@ std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std:
                     sale.amount = ask.amount;
                     // register deal
                     sales.push_back(sale);
+
                     // update the bid amount
                     bid.amount = bid.amount - ask.amount;
                     // switch to the next ask
@@ -202,16 +221,19 @@ std::vector<OrderBookEntry> OrderBook::matchAsksToBids(std::string product, std:
                 }
 
                 // else, we imply that ask amount > bid amount, so...
+                if (ask.amount > bid.amount)
+                {
+                    // set the deal amount
+                    sale.amount = bid.amount;
+                    // register the deal
+                    sales.push_back(sale);
 
-                // set the deal amount
-                sale.amount = bid.amount;
-                // register the deal
-                sales.push_back(sale);
-                // update the ask and bid amounts
-                ask.amount = ask.amount - bid.amount;
-                bid.amount = 0;
-                // switch to the next bid
-                continue;
+                    // update the ask and bid amounts
+                    ask.amount = ask.amount - bid.amount;
+                    bid.amount = 0;
+                    // switch to the next bid
+                    continue;
+                }
             }
         }
     }

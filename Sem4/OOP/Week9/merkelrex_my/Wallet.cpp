@@ -136,6 +136,46 @@ std::string Wallet::toString()
     return walletStr;
 };
 
+void Wallet::processSale(const OrderBookEntry &sale)
+{
+    // Variables for sale currencies pair, required currency and required amount
+    std::vector<std::string> currencyPairs = CSVReader::tokenise(sale.product, '/');
+
+    // Ask sale
+    if (sale.orderType == OrderBookType::asksale)
+    {
+        // Currency that will leave the wallet
+        std::string currencyLeave = currencyPairs[0];
+        // amount that will leave
+        double amountLeave = sale.amount;
+        // execute subtraction from the wallet
+        currencies[currencyLeave] -= amountLeave;
+
+        // Currency that will be added to the wallet
+        std::string currencyAdd = currencyPairs[1];
+        // amount that will be added
+        double amountAdd = sale.amount * sale.price;
+        // execute addition to the wallet
+        currencies[currencyAdd] += amountAdd;
+    }
+    else if (sale.orderType == OrderBookType::bidsale)
+    {
+        // Currency that will leave the wallet
+        std::string currencyLeave = currencyPairs[1];
+        // amount that will leave
+        double amountLeave = sale.amount * sale.price;
+        // execute subtraction from the wallet
+        currencies[currencyLeave] -= amountLeave;
+
+        // Currency that will be added to the wallet
+        std::string currencyAdd = currencyPairs[0];
+        // amount that will be added
+        double amountAdd = sale.amount;
+        // execute addition to the wallet
+        currencies[currencyAdd] += amountAdd;
+    }
+};
+
 std::ostream &operator<<(std::ostream &os, Wallet &wallet)
 {
     os << wallet.toString();

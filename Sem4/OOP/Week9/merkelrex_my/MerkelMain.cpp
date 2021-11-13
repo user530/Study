@@ -106,6 +106,9 @@ void MerkelMain::enterAsk()
                                                               askTokens[0],
                                                               OrderBookType::ask);
 
+            // Set userOrder username to distinguish his order from dataset orders
+            userOrder.username = "simuser";
+
             // Check if user has enough currency...
             if (wallet.canFulfillOrder(userOrder))
             {
@@ -166,6 +169,10 @@ void MerkelMain::enterBid()
                                                               currentTime,
                                                               bidTokens[0],
                                                               OrderBookType::bid);
+
+            // Set userOrder username to distinguish his order from dataset orders
+            userOrder.username = "simuser";
+
             // Check if user has enough currency...
             if (wallet.canFulfillOrder(userOrder))
             {
@@ -195,10 +202,6 @@ void MerkelMain::enterBid()
 /** Print available money  */
 void MerkelMain::printWallet()
 {
-    // std::cout << "No money, honey\n\n"
-    //           << "=============================\n"
-    //           << std::endl;
-
     std::cout << wallet
               << "\n=============================\n"
               << std::endl;
@@ -207,17 +210,31 @@ void MerkelMain::printWallet()
 /** Skip to the next game turn */
 void MerkelMain::gotoNextTimeFrame()
 {
-
-    // Make sales, !!!!!! Check products!!!!!!
-    std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids("ETH/BTC", currentTime);
-
-    // Print sales information
-    for (const OrderBookEntry &sale : sales)
+    // Iterate over all product pairs in OrderBook
+    for (const std::string &product : orderBook.getKnownProducts())
     {
-        std::cout << "Sale price: " << sale.price << ", amount sold: " << sale.amount << "\n";
+        std::cout << "Current product: " << product << std::endl;
+
+        // Create sales list
+        std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids(product, currentTime);
+
+        // Print sales information
+        for (const OrderBookEntry &sale : sales)
+        {
+            std::cout << "Sale price: " << sale.price << ", amount sold: " << sale.amount << "\n";
+
+            // Check if sale is initiated by the user
+            if (sale.username == "simuser")
+            {
+                // Update his wallet for the correct ammount
+                wallet.processSale(sale);
+            }
+        }
+        std::cout << "Total number of deals for this product: "
+                  << sales.size()
+                  << "\n____________________\n"
+                  << std::endl;
     }
-    std::cout << "Total number of deals: " << sales.size() << "\n"
-              << std::endl;
 
     // Iterate to the next timeframe
     currentTime = orderBook.getNextTime(currentTime);

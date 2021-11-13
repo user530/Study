@@ -24,6 +24,9 @@ public:
     /** Generate a string representation of the wallet */
     std::string toString();
 
+    /** Update the user wallet based on the sale information */
+    void processSale(const OrderBookEntry &sale);
+
     /** Overload "<<" operator to make wallet output easier */
     friend std::ostream &operator<<(std::ostream &os, Wallet &wallet);
 

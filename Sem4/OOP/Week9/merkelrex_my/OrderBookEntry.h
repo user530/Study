@@ -6,7 +6,9 @@ enum class OrderBookType
 {
     bid,
     ask,
-    unknown
+    unknown,
+    bidsale,
+    asksale
 };
 
 class OrderBookEntry
@@ -17,13 +19,15 @@ public:
     std::string timestamp;
     std::string product;
     OrderBookType orderType;
+    std::string username;
 
     OrderBookEntry(
         double _price,
         double _amount,
         std::string _timestamp,
         std::string _product,
-        OrderBookType _orderType);
+        OrderBookType _orderType,
+        std::string _username = "dataset");
 
     /** Function to convert string into a correct Order Book type (ask/bid) */
     static OrderBookType stringToOBT(std::string token);
