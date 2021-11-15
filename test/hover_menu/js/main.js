@@ -7,38 +7,35 @@ window.addEventListener("scroll", () => {
   }
 });
 /*============= menu toggle ===============*/
-// const menuToggle = document.querySelector('.menu-toggle');
-// const mobileMenu = document.querySelector('.header-menu');
-// const overlayBlock = document.querySelector('#overlay');
-// const bodyEl = document.body;
-//   menuToggle.addEventListener('click', function () {
-//     if (this.classList.contains('active')) {
-
-//       this.classList.remove('active');
-//       mobileMenu.classList.remove('active');
-//       overlayBlock.classList.remove('active');
-//       bodyEl.classList.remove('noscroll');
-
-//     } else {
-//       this.classList.add('active');
-// 	  mobileMenu.classList.add('active');
-// 	  overlayBlock.classList.add('active');
-//       bodyEl.classList.add('noscroll');
-//     }
-//   });
-//   window.addEventListener('resize', function () {
-//     menuToggle.classList.remove('active');
-// 	mobileMenu.classList.remove('active');
-// 	overlayBlock.classList.remove('active');
-//     bodyEl.classList.remove('noscroll');
-//   });
-//    overlayBlock.addEventListener('click', function () {
-//       this.classList.remove('active');
-//       mobileMenu.classList.remove('active');
-//       menuToggle.classList.remove('active');
-//       bodyEl.classList.remove('noscroll');
-
-//     });
+const menuToggle = document.querySelector(".menu-toggle");
+const mobileMenu = document.querySelector(".header-menu");
+const overlayBlock = document.querySelector("#overlay");
+const bodyEl = document.body;
+menuToggle.addEventListener("click", function () {
+  if (this.classList.contains("active")) {
+    this.classList.remove("active");
+    mobileMenu.classList.remove("active");
+    overlayBlock.classList.remove("active");
+    bodyEl.classList.remove("noscroll");
+  } else {
+    this.classList.add("active");
+    mobileMenu.classList.add("active");
+    overlayBlock.classList.add("active");
+    bodyEl.classList.add("noscroll");
+  }
+});
+window.addEventListener("resize", function () {
+  menuToggle.classList.remove("active");
+  mobileMenu.classList.remove("active");
+  overlayBlock.classList.remove("active");
+  bodyEl.classList.remove("noscroll");
+});
+overlayBlock.addEventListener("click", function () {
+  this.classList.remove("active");
+  mobileMenu.classList.remove("active");
+  menuToggle.classList.remove("active");
+  bodyEl.classList.remove("noscroll");
+});
 /*==================HEADER SEARCH FORM ==========*/
 const showSearchForm = document.querySelector("#showSearchForm");
 const headerSearchForm = document.querySelector("#headerForm");
