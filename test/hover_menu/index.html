@@ -1,915 +1,1253 @@
 <!DOCTYPE html>
 <html lang="ru">
-	<head>
-		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-		<link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-		<link rel="stylesheet" href="./fonts/fonts.css"/>
-		<link rel="stylesheet" href="./css/main.css"/>
-		<title>Главная</title>
-	</head>
-	<body>
-		<div id="overlay"></div>
-		<!--=====toggle mob menu ======-->
-		<div class="menu-toggle"><span></span></div>
-		<!--==============MOB MENU=============-->
-		<div class="header-menu">
-			<ul>
-				<!-- пункт меню  с подменю -->
-				<li class="drop-menu drop-menu_2"><a href="#!">Направления</a><span class="drop-icon"></span>
-					<!-- второй  уровень-->
-					<div class="submenu submenu--medium submenu-2">
-						<ul>
-							<li class="drop-menu drop-menu_3"><a href="#!">Лечение позвоночника</a><span class="drop-icon"></span>
-								<!-- третий уровень -->
-								<div class="submenu submenu-3">
-									<ul>
-										<li><a href="#!">Лечение сколиоза у детей</a></li>
-										<li><a href="#!">Лечение сколиоза у взрослых</a></li>
-										<li><a href="#!">Корсет Шено</a></li>
-										<li><a href="#!">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-							</li>
-							<li class="drop-menu drop-menu_3"><a href="#!">Лечение позвоночника</a><span class="drop-icon"></span>
-								<!-- третий уровень -->
-								<div class="submenu submenu-3">
-									<ul>
-										<li><a href="#!">Лечение сколиоза у детей</a></li>
-										<li><a href="#!">Лечение сколиоза у взрослых</a></li>
-										<li><a href="#!">Корсет Шено</a></li>
-										<li><a href="#!">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-							</li>
-							<li class="drop-menu drop-menu_3"><a href="#!">Лечение позвоночника</a><span class="drop-icon"></span>
-								<!-- третий уровень -->
-								<div class="submenu submenu-3">
-									<ul>
-										<li><a href="#!">Лечение сколиоза у детей</a></li>
-										<li><a href="#!">Лечение сколиоза у взрослых</a></li>
-										<li><a href="#!">Корсет Шено</a></li>
-										<li><a href="#!">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-							</li>
-							<li class="drop-menu drop-menu_3"><a href="#!">Лечение позвоночника</a><span class="drop-icon"></span>
-								<!-- третий уровень -->
-								<div class="submenu submenu-3">
-									<ul>
-										<li><a href="#!">Лечение сколиоза у детей</a></li>
-										<li><a href="#!">Лечение сколиоза у взрослых</a></li>
-										<li><a href="#!">Корсет Шено</a></li>
-										<li><a href="#!">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</li>
-				<li><a href="#!">Врачи</a></li>
-				<li><a href="#!">Адреса</a></li>
-				<li><a href="#!">Для пациентов</a></li>
-				<li><a href="#!">Для врачей</a></li>
-				<li class="last-item"><a href="#!">Все разделы</a></li>
-			</ul>
-			<!--====строка поиска=====-->
-			<div class="search-block-mobile">
-				<form class="search-form-mobile" action="" method="method">
-					<div class="form-group">
-						<input class="border-field" type="text" placeholder="Поиск по сайту"/>
-					</div>
-					<div class="form-btn">
-						<button type="submit"></button>
-					</div>
-				</form>
-			</div>
-			<!--====тел + кнопки=====-->
-			<div class="contacts-block">
-				<div class="contacts-block-phone"><a href="#">8 (800) 301-43-74</a></div>
-				<button class="button button-slim--white">Перезвоните мне</button>
-				<button class="button button-slim--orange">Online-консультация</button>
-			</div>
-		</div>
-		<header class="header">
-			<!--============= HEADER TOP ======================-->
-			<div class="header-top">
-				<div class="container">
-					<div class="header-content d-flex"><a class="logo" href="index.html"><img src="./img/logo.png" width="224" alt="logo"/></a>
-						<div class="header-buttons"><a class="phone-link" href="tel:88003014374">8 (800) 301-43-74</a>
-							<button class="button button-small">Перезвоните мне</button>
-							<button class="button button-small--orange">Online-консультация</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--============= HEADER NAVIGATION ======================-->
-			<div class="header-bottom" id="headerNav">
-				<div class="container">
-					<div class="header-bottom-content d-flex">
-						<div class="header-navigation">
-							<ul>
-								<li data-role="1"><a href="#!">Направления</a></li>
-								<li data-role="2"><a href="#">Врачи</a></li>
-								<li data-role="3"><a href="#">Адреса</a></li>
-								<li data-role="4"><a href="#">Для пациентов</a></li>
-								<li data-role="5"><a href="#">Для врачей</a></li>
-							</ul>
-						</div><a class="phone-link" href="tel:88003014374">8 (800) 301-43-74</a>
-						<div class="header-search">
-							<button class="large-menu-btn" data-role="6">Все разделы</button>
-							<button class="search-button" id="showSearchForm"></button>
-						</div>
-						<div class="header-form" id="headerForm">
-							<form class="header-search-form" action="" method="method">
-								<div class="close-search-form" id="closeSearch">&#10006;</div>
-								<div class="form-group">
-									<input class="border-field" type="text" placeholder="Поиск по сайту"/>
-								</div>
-								<div class="form-btn">
-									<button class="search-form-btn" type="submit"></button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--============= LARGE MENU ======================-->
-			<div class="header-dropdown" id="headerDrop">
-				<div class="header-dropdown__block" data-content="1">
-					<div class="large-menu">
-						<div class="container">
-							<div class="large-menu-content scroll-box">
-								<div class="large-menu-list">
-									<h3>Лечение позвоночника</h3>
-									<ul>
-										<li><a href="#">Лечение сколиоза у детей</a></li>
-										<li><a href="#">Лечение сколиоза у взрослых </a></li>
-										<li><a href="#">Корсет Шено</a></li>
-										<li><a href="#">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-								<div class="large-menu-list">
-									<h3>Лечение позвоночника</h3>
-									<ul>
-										<li><a href="#">Лечение сколиоза у детей</a></li>
-										<li><a href="#">Лечение сколиоза у взрослых </a></li>
-										<li><a href="#">Корсет Шено</a></li>
-										<li><a href="#">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-								<div class="large-menu-list">
-									<h3>Лечение позвоночника</h3>
-									<ul>
-										<li><a href="#">Лечение сколиоза у детей</a></li>
-										<li><a href="#">Лечение сколиоза у взрослых </a></li>
-										<li><a href="#">Корсет Шено</a></li>
-										<li><a href="#">Лечебная гимнастика</a></li>
-									</ul>
-								</div>
-								<div class="large-menu-list">
-									<h3>Лечение при травмах</h3>
-									<ul>
-										<li><a href="#">Индивидуальная обувь</a></li>
-										<li><a href="#">Стельки </a></li>
-										<li><a href="#">Аппараты</a></li>
-										<li><a href="#">Ортопедические аксессуары</a></li>
-									</ul>
-								</div>
-								<div class="large-menu-list">
-									<h3>Лечение при травмах</h3>
-									<ul>
-										<li><a href="#">Индивидуальная обувь</a></li>
-										<li><a href="#">Стельки </a></li>
-										<li><a href="#">Аппараты</a></li>
-										<li><a href="#">Ортопедические аксессуары</a></li>
-									</ul>
-								</div>
-								<div class="large-menu-list">
-									<h3>Лечение при травмах</h3>
-									<ul>
-										<li><a href="#">Индивидуальная обувь</a></li>
-										<li><a href="#">Стельки </a></li>
-										<li><a href="#">Аппараты</a></li>
-										<li><a href="#">Ортопедические аксессуары</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="header-dropdown__block" data-content="6">
-					<div class="large-menu">
-						<div class="container">
-							<div class="large-menu-content scroll-box"><a href="#">Первичная консультация врача</a><a href="#">Безоперационное лечение позвоночника</a><a href="#">Ортопедическая коррекция и восстановление при травмах</a><a href="#">Ортопедическая коррекция и реабилитация при ДЦП</a><a href="#">Лечение заболеваний ОДА у детей раннего возраста</a><a href="#">Лечение заболеваний ОДА у детей среднего возраста</a><a href="#">Лечение заболеваний ОДА у взрослых</a><a href="#">Лечение диабетической стопы</a><a href="#">Индивидуальная ортопедическая обувь</a><a href="#">Ортопедические стельки и вкладные пособия</a><a href="#">Получение технических средств реабилитации</a><a href="#">Ортопедический интернет магазин Ортолэнд</a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</header>
-		<!--================= КОНЕЦ ШАПКИ ==========*/-->
-		<!--============= FIRST SCREEN ======================-->
-		<div class="main-banner">
-			<div class="container">
-				<div class="main-banner-content d-flex">
-					<!--======TEXT=====-->
-					<div class="main-banner__text">
-						<h1 class="title-1">Клиника ортопедического здоровья</h1>
-						<div class="text-24">
-							<p>Внимательная медицина с подтвержденной эффективностью</p>
-						</div>
-						<button class="button button-big--dark" type="button">Записаться на прием</button>
-					</div>
-					<!--======IMAGE=====-->
-					<div class="main-banner__img">
-						<div class="img-round"><img src="./img/header/main.jpg" width="429" alt="img"/></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--======== ЗАДАЙТЕ ВОПРОС ===========-->
-		<section class="activity-direction">
-			<div class="container">
-				<div class="section-header d-flex">
-					<div class="section-header__title">
-						<h2 class="title-2">Выберите свой вопрос</h2>
-						<div class="text-23">
-							<p>лечение детей и взрослых</p>
-						</div>
-					</div>
-					<div class="section-header__button"><a class="button" href="#">Все услуги</a></div>
-				</div>
-				<!--============color card ==========-->
-				<div class="direction-block"><a class="direction-card" href="#" target="_blank">
-						<p>Лечение позвоночника</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Лечение ДЦП</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Ортопедия при травмах</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Лечение диабетической стопы</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Индивидуальная обувь</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Стельки и вкладные пособия</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Лечение детей раннего возраста</p></a><a class="direction-card" href="#" target="_blank">
-						<p>Лечение взрослых</p></a></div>
-				<div class="section-header__button--mobile"><a class="button" href="#">Все услуги</a></div>
-			</div>
-		</section>
-		<!--================= КОНЕЦ СЕКЦИИ ==========*/-->
-		<!--======== АКЦИИ ===========-->
-		<section class="discount">
-			<div class="container">
-				<div class="discount-content">
-					<div class="section-header d-flex"> 
-						<div class="section-header__title"> 
-							<h2 class="title-2">Акции</h2>
-						</div>
-						<div class="section-header__button"> <a class="button" href="#">Все акции</a></div>
-					</div>
-					<!--============== DESCKTOP CADRS ===============-->
-					<div class="card-grid">
-						<!--===== карточка акция ======-->
-						<div class="card-grid__item">
-							<div class="card-grid__item-content">
-								<h3>Хочу корсет</h3>
-								<p>Конкурс, где мы разыг&shy;рываем ортопедическое изделие</p>
-								<form class="light-form">
-									<div class="form-group">
-										<input type="text" name="user_name" placeholder="Имя"/>
-									</div>
-									<div class="form-group">
-										<input type="text" name="user_phone" placeholder="Телефон"/>
-									</div>
-									<div class="form-button">
-										<button class="button button-big--dark" type="submit">Участвовать</button>
-									</div><a class="info-text" href="#!">Условия конкурса</a>
-								</form>
-							</div>
-						</div>
-						<!--===== карточка акция ======-->
-						<div class="card-grid__item">
-							<div class="card-grid__item-header"> 
-								<p>Онлайн консультация</p>
-							</div>
-							<div class="card-grid__item-footer d-flex">
-								<div class="price-block">0 &#8381;</div><a class="button button-slim--orange" href="#">Записаться</a>
-							</div>
-						</div>
-						<!--===== карточка акция ======-->
-						<div class="card-grid__item">
-							<div class="card-grid__item-header">
-								<p>8 занятий гимнастикой</p>
-							</div>
-							<div class="card-grid__item-footer d-flex">
-								<div class="price-block">5 500 &#8381;</div><a class="button button-slim--orange" href="#">Записаться</a>
-							</div>
-						</div>
-						<!--============== SLIDER MOBILE CADRS ===============-->
-					</div>
-					<div class="swiper">
-						<div class="card-grid card-grid-slider swiper-wrapper">
-							<!--=====одна карточка ============-->
-							<div class="swiper-slide">
-								<div class="card-grid__item">
-									<div class="card-grid__item-content">
-										<h3>Хочу корсет</h3>
-										<p>Конкурс, где мы разыг&shy;рываем ортопедическое изделие</p>
-										<form class="light-form">
-											<div class="form-group">
-												<input type="text" name="user_name" placeholder="Имя"/>
-											</div>
-											<div class="form-group">
-												<input type="text" name="user_phone" placeholder="Телефон"/>
-											</div>
-											<div class="form-button">
-												<button class="button button-big--dark" type="submit">Участвовать</button>
-											</div><a class="info-text" href="#!">Условия конкурса</a>
-										</form>
-									</div>
-								</div>
-							</div>
-							<!--=====одна карточка ============-->
-							<div class="swiper-slide">
-								<div class="card-grid__item">
-									<div class="card-grid__item-header">
-										<p>Онлайн консультация</p>
-									</div>
-									<div class="card-grid__item-footer d-flex">
-										<div class="price-block">0 &#8381;</div><a class="button button-slim--orange" href="#">Записаться</a>
-									</div>
-								</div>
-							</div>
-							<!--=====одна карточка ============-->
-							<div class="swiper-slide">
-								<div class="card-grid__item">
-									<div class="card-grid__item-header">
-										<p>Онлайн консультация</p>
-									</div>
-									<div class="card-grid__item-footer d-flex">
-										<div class="price-block">5 500 &#8381;</div><a class="button button-slim--orange" href="#">Записаться</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--====slider pagination ====-->
-						<div class="swiper-pagination"></div>
-					</div>
-					<!--=====mobile-button ======-->
-					<div class="section-header__button--mobile"><a class="button" href="#">Все акции</a></div>
-				</div>
-			</div>
-		</section>
-		<!--================= КОНЕЦ СЕКЦИИ ==========*/-->
-		<!--======== ЗЕЛЕНЫЙ БЛОК С СОЦСЕТЯМИ ===========-->
-		<section class="social-block pb-50">
-			<div class="container">
-				<div class="social-block__content d-flex">
-					<div class="social-block__text">
-						<div class="social-block__titile">
-							<p>Не знаете, с чего начать?</p>
-						</div>
-						<div class="text-24">
-							<p>Задайте свой вопрос врачу клиники<br> в любом удобном мэссенджере бесплатно</p>
-						</div>
-					</div>
-					<div class="social-block__icons">
-						<nav><a href="#">
-								<p><img src="./img/icons/tg.png" width="58" alt="alt"/></p>
-								<p>Telegram</p></a><a href="#">
-								<p><img src="./img/icons/vk.png" width="60" alt="alt"/></p>
-								<p>Вконтакте</p></a><a href="#">
-								<p><img src="./img/icons/vb.png" width="50" alt="alt"/></p>
-								<p>Viber</p></a></nav>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================= КОНЕЦ СЕКЦИИ ==========-->
-		<!--======== КОМАНДА ВРАЧЕЙ ===========-->
-		<section class="team">
-			<div class="container">
-				<div class="team-content">
-					<div class="section-header d-flex">
-						<div class="section-header__title">
-							<h2 class="title-2">Команда врачей</h2>
-							<div class="text-23">
-								<p>Специализация врачей и их подход к работе</p>
-							</div>
-						</div>
-						<div class="section-header__button"><a class="button" href="#">Все врачи</a></div>
-					</div>
-				</div>
-				<div class="team-tabs" id="teamTabs">
-					<!--=========== БЛОК СЛЕВА С МАЛ ФОТО ==============-->
-					<div class="scroll-box">
-						<div class="tabs-button">
-							<!--===== tab block =====-->
-							<div class="tabs-button__item active" data-role="1">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<p>врач - ортопед, ортезист</p>
-								</div>
-							</div>
-							<!--===== tab block =====-->
-							<div class="tabs-button__item" data-role="2">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<p>врач - ортопед, ортезист</p>
-								</div>
-							</div>
-							<!--===== tab block =====-->
-							<div class="tabs-button__item" data-role="3">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<p>врач - ортопед, ортезист</p>
-								</div>
-							</div>
-							<!--===== tab block =====-->
-							<div class="tabs-button__item" data-role="4">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<p>врач - ортопед, ортезист</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--=========== БЛОК СПРАВА С БОЛЬШ ФОТО ВРАЧА ==============-->
-					<div class="tabs-content-wrapper">
-						<!--========= ОПИСАНИЕ ВРАЧА ============-->
-						<div class="tabs-content active" data-content="1">
-							<div class="tabs-content__head d-flex">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<div class="text-18 text-demi">
-										<p>врач - ортопед, специалист по 3D коррекции позвоночника</p>
-									</div>
-									<div class="text-18">
-										<p>Ведет первичный прием, делает 3D скан туловища, моделирует изделие, контролирует изготовление</p>
-									</div>
-								</div>
-							</div>
-							<div class="tabs-content__body">
-								<p><strong>Диагностика</strong>  – наиважнейший этап. На первом приеме врач ортопед проведет осмотр спины пациента, груди, таза и ног на предмет асимметрии. Узнает жалобы пациента, проверит результаты анализов и рентген-снимков (при наличии).</p>
-								<p><strong>План лечения</strong> Мы составляем план лечения, после изучения которого у Вас не должно остаться вопросов. В плане подробно расписаны цели лечения, примерные сроки, промежуточные точки контроля, методы, которые будет использовать. Даны все необходимые рекомендации и советы на время лечения. (психолог например и предложение сразу пройти).</p>
-								<button class="show-content">Весь текст</button>
-							</div>
-						</div>
-						<!--========= ОПИСАНИЕ ВРАЧА ============-->
-						<div class="tabs-content" data-content="2">
-							<div class="tabs-content__head d-flex">
-								<div class="tabs-item__img img-round"><img src="./img/doctor.jpg" width="196" alt="img"/></div>
-								<div class="tabs-item__title">
-									<h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
-									<div class="text-18 text-demi">
-										<p>врач - ортопед, специалист по 3D коррекции позаоночника</p>
-									</div>
-									<div class="text-18">
-										<p>Ведет первичный прием, делает 3D скан туловища, моделирует изделие, контролирует изготовление</p>
-									</div>
-								</div>
-							</div>
-							<div class="tabs-content__body">
-								<p><strong>Диагностика</strong>  – наиважнейший этап. На первом приеме врач ортопед проведет осмотр спины пациента, груди, таза и ног на предмет асимметрии. Узнает жалобы пациента, проверит результаты анализов и рентген-снимков (при наличии).</p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--============ кнопки =========-->
-				<div class="text-center">
-					<button class="button button--orange">Записаться на прием</button>
-				</div>
-				<div class="section-header__button--mobile"><a class="button" href="#">Все врачи</a></div>
-			</div>
-		</section>
-		<!--================= КОНЕЦ СЕКЦИИ ==========-->
-		<!--=================ВОПРОСЫ И ОТВЕТЫ ================-->
-		<section class="faq">
-			<div class="container">
-				<div class="faq-tabs" id="faqTabs">
-					<div id="faqArrow">
-						<div class="faq-tabs__arrow"></div>
-					</div>
-					<div class="faq-tabs__buttons-block">
-						<div class="faq-tabs__buttons swiper-wrapper">
-							<div class="swiper-slide" data-role="1">
-								<button class="faq-tabs__btn swiper-slide">Почему я не могу начать с других методов?</button>
-							</div>
-							<div class="swiper-slide" data-role="2">
-								<button class="faq-tabs__btn swiper-slide">Как носить корсет в офисе?</button>
-							</div>
-							<div class="swiper-slide" data-role="3">
-								<button class="faq-tabs__btn swiper-slide">Как привыкать к корсету Шено?</button>
-							</div>
-							<div class="swiper-slide" data-role="4">
-								<button class="faq-tabs__btn swiper-slide">Еще один  четвертый вопрос</button>
-							</div>
-							<div class="swiper-slide" data-role="5">
-								<button class="faq-tabs__btn swiper-slide">Еще один какой-то пятый вопрос</button>
-							</div>
-						</div>
-						<div class="faq-scrollbar"></div>
-					</div>
-					<div class="faq-tabs-wrapper">
-						<div class="faq-tabs__content active" data-content="1">
-							<div class="faq-content__text">
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="faq-content__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-						<div class="faq-tabs__content" data-content="2">
-							<div class="faq-content__text">
-								<p>content 22222</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="faq-content__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-						<div class="faq-tabs__content" data-content="3">
-							<div class="faq-content__text">
-								<p>content-33333</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="faq-content__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-						<div class="faq-tabs__content" data-content="4">
-							<div class="faq-content__text">
-								<p>content-444444</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="faq-content__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-						<div class="faq-tabs__content" data-content="5">
-							<div class="faq-content__text">
-								<p>content-55555</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="faq-content__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================= END ВОПРОСЫ И ОТВЕТЫ ================-->
-		<!--===============ВОПРОСЫ-ОТВЕТЫ МОБ ВЕРСИЯ АККОРДЕОН ============-->
-		<section class="faq-accordeon">
-			<div class="container">
-				<div class="accordeon-group">
-					<!--=== один вопрос============-->
-					<div class="accordeon-item">
-						<div class="accordeon-item-header" data-name="accordeon-title">
-							<h3>Почему я не могу начать с других методов?</h3>
-						</div>
-						<div class="accordeon-item-content loock hidden">
-							<div class="accordeon-item__text">
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="accordeon-item__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-					</div>
-					<!--=== один вопрос============-->
-					<div class="accordeon-item">
-						<div class="accordeon-item-header" data-name="accordeon-title">
-							<h3>Как носить корсет в офисе?</h3>
-						</div>
-						<div class="accordeon-item-content loock hidden">
-							<div class="accordeon-item__text">
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="accordeon-item__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-					</div>
-					<!--=== один вопрос============-->
-					<div class="accordeon-item">
-						<div class="accordeon-item-header" data-name="accordeon-title">
-							<h3>Как привыкать к корсету Шено?</h3>
-						</div>
-						<div class="accordeon-item-content loock hidden">
-							<div class="accordeon-item__text">
-								<p>Прием состоит из диагностики, изучения анализов и снимков, рекомендаций доктора и составления плана лечения и реабилитации.</p>
-							</div>
-							<div class="accordeon-item__img"><img src="./img/img.jpg" width="495" alt="alt"/></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--=============== КОНЕЦ ВОПРОСЫ-ОТВЕТЫ МОБ ВЕРСИЯ АККОРДЕОН ============-->
-		<!--=================СЕКЦИЯ А ЕЩЕ МОЖНО =================-->
-		<section class="benefits">
-			<div class="container">
-				<div class="benefits-content">
-					<h2 class="title-2">А еще можно</h2>
-					<div class="benefits-wrapper d-flex">
-						<!--====one card =======-->
-						<div class="benefits-card">
-							<div class="benefits-card__icon"><img src="./img/icons/sun.png" width="100" alt="alt"/></div>
-							<div class="benefits-card__body">
-								<div class="benefits-card__title">
-									<h3>Получить справку в&nbsp;ФСС</h3>
-								</div>
-								<div class="benefits-card__text">
-									<p>и упростить весь путь оформления документов на инвалидность</p>
-								</div>
-							</div><a class="button button-slim--dark" href="#">Подробнее</a>
-						</div>
-						<!--====one card =======-->
-						<div class="benefits-card">
-							<div class="benefits-card__icon"><img src="./img/icons/sun.png" width="100" alt="alt"/></div>
-							<div class="benefits-card__body">
-								<div class="benefits-card__title">
-									<h3>Пригласить&nbsp;врача&nbsp;в&nbsp;свой город</h3>
-								</div>
-								<div class="benefits-card__text">
-									<p>и упростить весь путь оформления документов на инвалидность</p>
-								</div>
-							</div><a class="button button-slim--dark" href="#">Подробнее</a>
-						</div>
-						<!--====one card =======-->
-						<div class="benefits-card">
-							<div class="benefits-card__icon"><img src="./img/icons/sun.png" width="100" alt="alt"/></div>
-							<div class="benefits-card__body">
-								<div class="benefits-card__title">
-									<h3>Получить рассрочку на&nbsp;лечение</h3>
-								</div>
-								<div class="benefits-card__text">
-									<p>и упростить весь путь оформления документов на инвалидность</p>
-								</div>
-							</div><a class="button button-slim--dark" href="#">Подробнее</a>
-						</div>
-					</div>
-					<!--======= mobile button==========-->
-					<div class="section-header__button--mobile"><a class="button button-slim--dark" href="#">Подробнее</a></div>
-				</div>
-			</div>
-		</section>
-		<!--=================КОНЕЦ СЕКЦИЯ А ЕЩЕ МОЖНО =================-->
-		<!--=================PRODUCTS ================-->
-		<section class="products">
-			<div class="container">
-				<div class="swiper-products">
-					<div class="products-wrapper swiper-wrapper">
-						<!--========== product-slide ==========-->
-						<div class="swiper-slide">
-							<div class="products-card d-flex">
-								<div class="products-card__text">
-									<div class="text-box">
-										<h3>Ортопедическая обувь ORFEYA</h3>
-										<p>Loren ipsum на пару строк на пару строк</p>
-									</div><a class="button button-slim--orange" href="#">Подробнее</a>
-								</div>
-								<div class="products-card__img"><img src="./img/product.jpg" width="205" alt="alt"/></div>
-							</div>
-						</div>
-						<!--========== product-slide ==========-->
-						<div class="swiper-slide">
-							<div class="products-card d-flex">
-								<div class="products-card__text">
-									<div class="text-box">
-										<h3>Ортопедические изделия для профилактики ORFEYA</h3>
-										<p>Loren ipsum на пару строк на пару строк</p>
-									</div><a class="button button-slim--orange" href="#">Подробнее</a>
-								</div>
-								<div class="products-card__img"><img src="./img/product.jpg" width="205" alt="alt"/></div>
-							</div>
-						</div>
-					</div>
-					<!--========== pagination ==========-->
-					<div class="swiper-products-pagination"></div>
-				</div>
-			</div>
-		</section>
-		<!--=================PRICE ================-->
-		<section class="price">
-			<div class="container">
-				<div class="price-content">
-					<div class="section-header d-flex">
-						<div class="section-header__title">
-							<h2 class="title-2">Цены</h2>
-						</div>
-						<div class="section-header__button"><a class="button" href="#">Все цены</a></div>
-					</div>
-					<div class="price-cards-wrapper">
-						<!--======PRICE CARD ========-->
-						<div class="price-card">
-							<h4>Комплексный прием врача ортопеда</h4>
-							<p>1 200 ₽</p>
-							<div class="dashed-link">Что входит в стоимость?</div>
-							<div class="price-card__list">
-								<ul>
-									<li>комплексный осмотр </li>
-									<li>ортопедические тесты </li>
-									<li>профилактические рекомендации </li>
-									<li>план лечения</li>
-								</ul><a class="red-text" href="#">Что взять с собой на прием</a>
-							</div>
-						</div>
-						<!--======PRICE CARD ========-->
-						<div class="price-card">
-							<h4>Комплексный прием врача ортопеда</h4>
-							<p>1 200 ₽</p>
-							<div class="dashed-link">Что входит в стоимость?</div>
-							<div class="price-card__list">
-								<ul>
-									<li>комплексный осмотр </li>
-									<li>ортопедические тесты </li>
-									<li>профилактические рекомендации </li>
-									<li>план лечения</li>
-								</ul><a class="red-text" href="#">Что взять с собой на прием</a>
-							</div>
-						</div>
-						<!--======PRICE CARD ========-->
-						<div class="price-card">
-							<h4>Комплексный прием врача ортопеда</h4>
-							<p>1 200 ₽</p>
-							<div class="dashed-link">Что входит в стоимость?</div>
-							<div class="price-card__list">
-								<ul>
-									<li>комплексный осмотр </li>
-									<li>ортопедические тесты </li>
-									<li>профилактические рекомендации </li>
-									<li>план лечения</li>
-								</ul><a class="red-text" href="#">Что взять с собой на прием</a>
-							</div>
-						</div>
-						<!--======PRICE CARD ========-->
-						<div class="price-card">
-							<h4>Комплексный прием врача ортопеда</h4>
-							<p>1 200 ₽</p>
-							<div class="dashed-link">Что входит в стоимость?</div>
-							<div class="price-card__list">
-								<ul>
-									<li>комплексный осмотр </li>
-									<li>ортопедические тесты </li>
-									<li>профилактические рекомендации </li>
-									<li>план лечения</li>
-								</ul><a class="red-text" href="#">Что взять с собой на прием</a>
-							</div>
-						</div>
-					</div>
-					<!--=====mobile-button ======-->
-					<div class="section-header__button--mobile"><a class="button" href="#">Все цены</a></div>
-				</div>
-			</div>
-		</section>
-		<!--=================СТАТЬИ ===============-->
-		<section class="articles">
-			<div class="container">
-				<div class="section-header d-flex">
-					<div class="section-header__title">
-						<h2 class="title-2">Статьи ведущих врачей ОРТО-МЕД</h2>
-						<div class="text-23">
-							<p>объясняем медицину просто</p>
-						</div>
-					</div>
-					<div class="section-header__button"><a class="button" href="#">Все статьи</a></div>
-				</div>
-				<div class="articles-swiper">
-					<div class="articles-content swiper-wrapper">
-						<!--==== карточка статьи==========-->
-						<div class="swiper-slide">
-							<div class="article-card">
-								<div class="article-card__img"><img src="./img/article.jpg" width="360" alt="alt"/></div>
-								<div class="article-card__text">
-									<h3>Личные истории, длинное название в две строки</h3>
-									<p>Симптомы страдающего тазобедренного сустава, это описание может быть на две или более строк текста.</p>
-								</div><a class="button button-slim--orange" href="#">Читать</a>
-							</div>
-						</div>
-						<!--==== карточка статьи==========-->
-						<div class="swiper-slide">
-							<div class="article-card">
-								<div class="article-card__img"><img src="./img/article.jpg" width="360" alt="alt"/></div>
-								<div class="article-card__text">
-									<h3>Личные истории, длинное название в две строки</h3>
-									<p>Симптомы страдающего тазобедренного сустава, это описание может быть на две или более строк текста.</p>
-								</div><a class="button button-slim--orange" href="#">Читать</a>
-							</div>
-						</div>
-						<!--==== карточка статьи==========-->
-						<div class="swiper-slide">
-							<div class="article-card">
-								<div class="article-card__img"><img src="./img/article.jpg" width="360" alt="alt"/></div>
-								<div class="article-card__text">
-									<h3>Личные истории, длинное название в две строки</h3>
-									<p>Симптомы страдающего тазобедренного сустава, это описание может быть на две или более строк текста.</p>
-								</div><a class="button button-slim--orange" href="#">Читать</a>
-							</div>
-						</div>
-					</div>
-					<div class="articles-swiper-pagination"></div>
-				</div>
-				<!--=====mobile-button ======-->
-				<div class="section-header__button--mobile"><a class="button" href="#">Все статьи</a></div>
-			</div>
-		</section>
-		<!--================= КОНЕЦ СЕКЦИИ ==========*/-->
-		<!--======== PINK SOCIAL ==========-->
-		<section class="pink-social">
-			<div class="container">
-				<div class="pink-social-content d-flex">
-					<div class="pink-social__text">
-						<p>Больше статей и&nbsp;полезных советов</p>
-					</div>
-					<div class="round-social"><a href="#"><img src="./img/icons/inst.png" width="57" alt="alt"/></a><a href="#"><img src="./img/icons/vk2.png" width="57" alt="alt"/></a><a href="#"><img src="./img/icons/yout.png" width="57" alt="alt"/></a></div>
-				</div>
-			</div>
-		</section>
-		<!--========FEEDBACK==========-->
-		<section class="feedback">
-			<div class="container">
-				<div class="feedback-content d-flex">
-					<div class="feedback-img" style="background-image: url(./img/feedback.jpg)"></div>
-					<div class="feedback-form">
-						<div class="feedback-form-header">
-							<div class="form-title">Записывайтесь на прием и подбор ортопедического изделия	</div>
-							<p>Наши операторы проконсультируют вас и подберут удобное время приёма</p>
-						</div>
-						<form class="contact-form" action="" method="">
-							<div class="form-group">
-								<input type="text" name="user_name" required="required" placeholder="Имя"/>
-							</div>
-							<div class="form-group">
-								<input type="text" name="user_phone" required="required" placeholder="Телефон"/>
-							</div>
-							<div class="form-btn">
-								<button class="button button-big--dark" type="submit">Записаться на прием</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--================== MAP ==============-->
-		<section class="map">
-			<div class="map-wrapper">
-				<iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A8c5fddf3b5378686e8b80caf34af9f65e763d81b669042f086676e024c1fa85b&amp;source=constructor" width="100%" height="100%" frameborder="0"></iframe>
-			</div>
-		</section>
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content d-flex">
-					<div class="footer-column">
-						<div class="footer-menu">
-							<ul>
-								<li><a href="#!">Направления</a></li>
-								<ul>
-									<li><a href="#!"></a></li>
-									<li><a href="#!"></a></li>
-									<li><a href="#!">Первичная консультация врача</a></li>
-									<li><a href="#!">Безоперационное лечение позвоночника</a></li>
-									<li><a href="#!">Ортопедическая коррекция и восстановление при травмах</a></li>
-									<li><a href="#!">Ортопедическая коррекция и реабилитация при ДЦП</a></li>
-									<li><a href="#!">Лечение заболеваний ОДА у детей раннего возраста</a></li>
-									<li><a href="#!">Лечение заболеваний ОДА у детей среднего возраста</a></li>
-									<li><a href="#!">Лечение заболеваний ОДА у взрослых</a></li>
-									<li><a href="#!">Лечение диабетической стопы</a></li>
-									<li><a href="#!">Индивидуальная ортопедическая обувь</a></li>
-									<li><a href="#!">Ортопедические стельки и вкладные пособия</a></li>
-									<li><a href="#!">Получение технических средств реабилитации</a></li>
-									<li><a href="#!">Ортопедический интернет магазин Ортолэнд</a></li>
-								</ul>
-							</ul>
-						</div>
-					</div>
-					<div class="footer-column d-flex">
-						<div class="footer-column-block d-flex">
-							<div class="footer-menu">
-								<ul>
-									<li><a href="#!">Врачи </a></li>
-									<li><a href="#">Адреса клиник</a></li>
-									<li><a href="#">Информация для пациентов</a></li>
-									<li><a href="#">Акции</a></li>
-									<li><a href="#">Цены</a></li>
-									<li><a href="#">Статьи о здоровье</a></li>
-									<li><a href="#">Обратная связь</a></li>
-									<li><a href="#">Работа в ОРТО-МЕД</a></li>
-									<li><a href="#">О клинике</a></li>
-									<li><a href="#">Информация для врачей</a></li>
-								</ul>
-							</div>
-							<div class="footer-buttons contacts-block">
-								<div class="contacts-block-phone"><a href="#">8 (800) 301-43-74</a></div>
-								<button class="button button-slim--white">Перезвоните мне</button>
-								<button class="button button-slim--orange">Online-консультация</button>
-							</div>
-						</div>
-						<div class="footer-copyright">
-							<p>© 2021. ОртоМед. Все права защищены. </p>
-							<p>Внимательная медицина с подтвержденной эффективностью</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
-		<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
-		<script src="js/main.js"></script>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper@7/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="./fonts/fonts.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <title>Главная</title>
+  </head>
+  <body>
+    <div id="overlay"></div>
+    <!--=====toggle mob menu ======-->
+    <div class="menu-toggle"><span></span></div>
+    <!--==============MOB MENU=============-->
+    <div class="header-menu">
+      <ul>
+        <!-- пункт меню  с подменю -->
+        <li class="drop-menu drop-menu_2">
+          <a href="#!">Направления</a><span class="drop-icon"></span>
+          <!-- второй  уровень-->
+          <div class="submenu submenu--medium submenu-2">
+            <ul>
+              <li class="drop-menu drop-menu_3">
+                <a href="#!">Лечение позвоночника</a
+                ><span class="drop-icon"></span>
+                <!-- третий уровень -->
+                <div class="submenu submenu-3">
+                  <ul>
+                    <li><a href="#!">Лечение сколиоза у детей</a></li>
+                    <li><a href="#!">Лечение сколиоза у взрослых</a></li>
+                    <li><a href="#!">Корсет Шено</a></li>
+                    <li><a href="#!">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="drop-menu drop-menu_3">
+                <a href="#!">Лечение позвоночника</a
+                ><span class="drop-icon"></span>
+                <!-- третий уровень -->
+                <div class="submenu submenu-3">
+                  <ul>
+                    <li><a href="#!">Лечение сколиоза у детей</a></li>
+                    <li><a href="#!">Лечение сколиоза у взрослых</a></li>
+                    <li><a href="#!">Корсет Шено</a></li>
+                    <li><a href="#!">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="drop-menu drop-menu_3">
+                <a href="#!">Лечение позвоночника</a
+                ><span class="drop-icon"></span>
+                <!-- третий уровень -->
+                <div class="submenu submenu-3">
+                  <ul>
+                    <li><a href="#!">Лечение сколиоза у детей</a></li>
+                    <li><a href="#!">Лечение сколиоза у взрослых</a></li>
+                    <li><a href="#!">Корсет Шено</a></li>
+                    <li><a href="#!">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li class="drop-menu drop-menu_3">
+                <a href="#!">Лечение позвоночника</a
+                ><span class="drop-icon"></span>
+                <!-- третий уровень -->
+                <div class="submenu submenu-3">
+                  <ul>
+                    <li><a href="#!">Лечение сколиоза у детей</a></li>
+                    <li><a href="#!">Лечение сколиоза у взрослых</a></li>
+                    <li><a href="#!">Корсет Шено</a></li>
+                    <li><a href="#!">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="#!">Врачи</a></li>
+        <li><a href="#!">Адреса</a></li>
+        <li><a href="#!">Для пациентов</a></li>
+        <li><a href="#!">Для врачей</a></li>
+        <li class="last-item"><a href="#!">Все разделы</a></li>
+      </ul>
+      <!--====строка поиска=====-->
+      <div class="search-block-mobile">
+        <form class="search-form-mobile" action="" method="method">
+          <div class="form-group">
+            <input
+              class="border-field"
+              type="text"
+              placeholder="Поиск по сайту"
+            />
+          </div>
+          <div class="form-btn">
+            <button type="submit"></button>
+          </div>
+        </form>
+      </div>
+      <!--====тел + кнопки=====-->
+      <div class="contacts-block">
+        <div class="contacts-block-phone">
+          <a href="#">8 (800) 301-43-74</a>
+        </div>
+        <button class="button button-slim--white">Перезвоните мне</button>
+        <button class="button button-slim--orange">Online-консультация</button>
+      </div>
+    </div>
+    <header class="header">
+      <!--============= HEADER TOP ======================-->
+      <div class="header-top">
+        <div class="container">
+          <div class="header-content d-flex">
+            <a class="logo" href="index.html"
+              ><img src="./img/logo.png" width="224" alt="logo"
+            /></a>
+            <div class="header-buttons">
+              <a class="phone-link" href="tel:88003014374">8 (800) 301-43-74</a>
+              <button class="button button-small">Перезвоните мне</button>
+              <button class="button button-small--orange">
+                Online-консультация
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--============= HEADER NAVIGATION ======================-->
+      <div class="header-bottom" id="headerNav">
+        <div class="container">
+          <div class="header-bottom-content d-flex">
+            <div class="header-navigation">
+              <ul>
+                <li data-role="1"><a href="#!">Направления</a></li>
+                <li data-role="2"><a href="#">Врачи</a></li>
+                <li data-role="3"><a href="#">Адреса</a></li>
+                <li data-role="4"><a href="#">Для пациентов</a></li>
+                <li data-role="5"><a href="#">Для врачей</a></li>
+              </ul>
+            </div>
+            <a class="phone-link" href="tel:88003014374">8 (800) 301-43-74</a>
+            <div class="header-search">
+              <button class="large-menu-btn" data-role="6">Все разделы</button>
+              <button class="search-button" id="showSearchForm"></button>
+            </div>
+            <div class="header-form" id="headerForm">
+              <form class="header-search-form" action="" method="method">
+                <div class="close-search-form" id="closeSearch">&#10006;</div>
+                <div class="form-group">
+                  <input
+                    class="border-field"
+                    type="text"
+                    placeholder="Поиск по сайту"
+                  />
+                </div>
+                <div class="form-btn">
+                  <button class="search-form-btn" type="submit"></button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--============= LARGE MENU ======================-->
+      <div class="header-dropdown" id="headerDrop">
+        <div class="header-dropdown__block" data-content="1">
+          <div class="large-menu">
+            <div class="container">
+              <div class="large-menu-content scroll-box">
+                <div class="large-menu-list">
+                  <h3>Лечение позвоночника</h3>
+                  <ul>
+                    <li><a href="#">Лечение сколиоза у детей</a></li>
+                    <li><a href="#">Лечение сколиоза у взрослых </a></li>
+                    <li><a href="#">Корсет Шено</a></li>
+                    <li><a href="#">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+                <div class="large-menu-list">
+                  <h3>Лечение позвоночника</h3>
+                  <ul>
+                    <li><a href="#">Лечение сколиоза у детей</a></li>
+                    <li><a href="#">Лечение сколиоза у взрослых </a></li>
+                    <li><a href="#">Корсет Шено</a></li>
+                    <li><a href="#">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+                <div class="large-menu-list">
+                  <h3>Лечение позвоночника</h3>
+                  <ul>
+                    <li><a href="#">Лечение сколиоза у детей</a></li>
+                    <li><a href="#">Лечение сколиоза у взрослых </a></li>
+                    <li><a href="#">Корсет Шено</a></li>
+                    <li><a href="#">Лечебная гимнастика</a></li>
+                  </ul>
+                </div>
+                <div class="large-menu-list">
+                  <h3>Лечение при травмах</h3>
+                  <ul>
+                    <li><a href="#">Индивидуальная обувь</a></li>
+                    <li><a href="#">Стельки </a></li>
+                    <li><a href="#">Аппараты</a></li>
+                    <li><a href="#">Ортопедические аксессуары</a></li>
+                  </ul>
+                </div>
+                <div class="large-menu-list">
+                  <h3>Лечение при травмах</h3>
+                  <ul>
+                    <li><a href="#">Индивидуальная обувь</a></li>
+                    <li><a href="#">Стельки </a></li>
+                    <li><a href="#">Аппараты</a></li>
+                    <li><a href="#">Ортопедические аксессуары</a></li>
+                  </ul>
+                </div>
+                <div class="large-menu-list">
+                  <h3>Лечение при травмах</h3>
+                  <ul>
+                    <li><a href="#">Индивидуальная обувь</a></li>
+                    <li><a href="#">Стельки </a></li>
+                    <li><a href="#">Аппараты</a></li>
+                    <li><a href="#">Ортопедические аксессуары</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header-dropdown__block" data-content="6">
+          <div class="large-menu">
+            <div class="container">
+              <div class="large-menu-content scroll-box">
+                <a href="#">Первичная консультация врача</a
+                ><a href="#">Безоперационное лечение позвоночника</a
+                ><a href="#"
+                  >Ортопедическая коррекция и восстановление при травмах</a
+                ><a href="#">Ортопедическая коррекция и реабилитация при ДЦП</a
+                ><a href="#">Лечение заболеваний ОДА у детей раннего возраста</a
+                ><a href="#"
+                  >Лечение заболеваний ОДА у детей среднего возраста</a
+                ><a href="#">Лечение заболеваний ОДА у взрослых</a
+                ><a href="#">Лечение диабетической стопы</a
+                ><a href="#">Индивидуальная ортопедическая обувь</a
+                ><a href="#">Ортопедические стельки и вкладные пособия</a
+                ><a href="#">Получение технических средств реабилитации</a
+                ><a href="#">Ортопедический интернет магазин Ортолэнд</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!--================= КОНЕЦ ШАПКИ ==========*/-->
+    <!--============= FIRST SCREEN ======================-->
+    <div class="main-banner">
+      <div class="container">
+        <div class="main-banner-content d-flex">
+          <!--======TEXT=====-->
+          <div class="main-banner__text">
+            <h1 class="title-1">Клиника ортопедического здоровья</h1>
+            <div class="text-24">
+              <p>Внимательная медицина с подтвержденной эффективностью</p>
+            </div>
+            <button class="button button-big--dark" type="button">
+              Записаться на прием
+            </button>
+          </div>
+          <!--======IMAGE=====-->
+          <div class="main-banner__img">
+            <div class="img-round">
+              <img src="./img/header/main.jpg" width="429" alt="img" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--======== ЗАДАЙТЕ ВОПРОС ===========-->
+    <section class="activity-direction">
+      <div class="container">
+        <div class="section-header d-flex">
+          <div class="section-header__title">
+            <h2 class="title-2">Выберите свой вопрос</h2>
+            <div class="text-23">
+              <p>лечение детей и взрослых</p>
+            </div>
+          </div>
+          <div class="section-header__button">
+            <a class="button" href="#">Все услуги</a>
+          </div>
+        </div>
+        <!--============color card ==========-->
+        <div class="direction-block">
+          <a class="direction-card" href="#" target="_blank">
+            <p>Лечение позвоночника</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Лечение ДЦП</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Ортопедия при травмах</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Лечение диабетической стопы</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Индивидуальная обувь</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Стельки и вкладные пособия</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Лечение детей раннего возраста</p></a
+          ><a class="direction-card" href="#" target="_blank">
+            <p>Лечение взрослых</p></a
+          >
+        </div>
+        <div class="section-header__button--mobile">
+          <a class="button" href="#">Все услуги</a>
+        </div>
+      </div>
+    </section>
+    <!--================= КОНЕЦ СЕКЦИИ ==========*/-->
+    <!--======== АКЦИИ ===========-->
+    <section class="discount">
+      <div class="container">
+        <div class="discount-content">
+          <div class="section-header d-flex">
+            <div class="section-header__title">
+              <h2 class="title-2">Акции</h2>
+            </div>
+            <div class="section-header__button">
+              <a class="button" href="#">Все акции</a>
+            </div>
+          </div>
+          <!--============== DESCKTOP CADRS ===============-->
+          <div class="card-grid">
+            <!--===== карточка акция ======-->
+            <div class="card-grid__item">
+              <div class="card-grid__item-content">
+                <h3>Хочу корсет</h3>
+                <p>Конкурс, где мы разыг&shy;рываем ортопедическое изделие</p>
+                <form class="light-form">
+                  <div class="form-group">
+                    <input type="text" name="user_name" placeholder="Имя" />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      name="user_phone"
+                      placeholder="Телефон"
+                    />
+                  </div>
+                  <div class="form-button">
+                    <button class="button button-big--dark" type="submit">
+                      Участвовать
+                    </button>
+                  </div>
+                  <a class="info-text" href="#!">Условия конкурса</a>
+                </form>
+              </div>
+            </div>
+            <!--===== карточка акция ======-->
+            <div class="card-grid__item">
+              <div class="card-grid__item-header">
+                <p>Онлайн консультация</p>
+              </div>
+              <div class="card-grid__item-footer d-flex">
+                <div class="price-block">0 &#8381;</div>
+                <a class="button button-slim--orange" href="#">Записаться</a>
+              </div>
+            </div>
+            <!--===== карточка акция ======-->
+            <div class="card-grid__item">
+              <div class="card-grid__item-header">
+                <p>8 занятий гимнастикой</p>
+              </div>
+              <div class="card-grid__item-footer d-flex">
+                <div class="price-block">5 500 &#8381;</div>
+                <a class="button button-slim--orange" href="#">Записаться</a>
+              </div>
+            </div>
+            <!--============== SLIDER MOBILE CADRS ===============-->
+          </div>
+          <div class="swiper">
+            <div class="card-grid card-grid-slider swiper-wrapper">
+              <!--=====одна карточка ============-->
+              <div class="swiper-slide">
+                <div class="card-grid__item">
+                  <div class="card-grid__item-content">
+                    <h3>Хочу корсет</h3>
+                    <p>
+                      Конкурс, где мы разыг&shy;рываем ортопедическое изделие
+                    </p>
+                    <form class="light-form">
+                      <div class="form-group">
+                        <input type="text" name="user_name" placeholder="Имя" />
+                      </div>
+                      <div class="form-group">
+                        <input
+                          type="text"
+                          name="user_phone"
+                          placeholder="Телефон"
+                        />
+                      </div>
+                      <div class="form-button">
+                        <button class="button button-big--dark" type="submit">
+                          Участвовать
+                        </button>
+                      </div>
+                      <a class="info-text" href="#!">Условия конкурса</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <!--=====одна карточка ============-->
+              <div class="swiper-slide">
+                <div class="card-grid__item">
+                  <div class="card-grid__item-header">
+                    <p>Онлайн консультация</p>
+                  </div>
+                  <div class="card-grid__item-footer d-flex">
+                    <div class="price-block">0 &#8381;</div>
+                    <a class="button button-slim--orange" href="#"
+                      >Записаться</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <!--=====одна карточка ============-->
+              <div class="swiper-slide">
+                <div class="card-grid__item">
+                  <div class="card-grid__item-header">
+                    <p>Онлайн консультация</p>
+                  </div>
+                  <div class="card-grid__item-footer d-flex">
+                    <div class="price-block">5 500 &#8381;</div>
+                    <a class="button button-slim--orange" href="#"
+                      >Записаться</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--====slider pagination ====-->
+            <div class="swiper-pagination"></div>
+          </div>
+          <!--=====mobile-button ======-->
+          <div class="section-header__button--mobile">
+            <a class="button" href="#">Все акции</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================= КОНЕЦ СЕКЦИИ ==========*/-->
+    <!--======== ЗЕЛЕНЫЙ БЛОК С СОЦСЕТЯМИ ===========-->
+    <section class="social-block pb-50">
+      <div class="container">
+        <div class="social-block__content d-flex">
+          <div class="social-block__text">
+            <div class="social-block__titile">
+              <p>Не знаете, с чего начать?</p>
+            </div>
+            <div class="text-24">
+              <p>
+                Задайте свой вопрос врачу клиники<br />
+                в любом удобном мэссенджере бесплатно
+              </p>
+            </div>
+          </div>
+          <div class="social-block__icons">
+            <nav>
+              <a href="#">
+                <p><img src="./img/icons/tg.png" width="58" alt="alt" /></p>
+                <p>Telegram</p></a
+              ><a href="#">
+                <p><img src="./img/icons/vk.png" width="60" alt="alt" /></p>
+                <p>Вконтакте</p></a
+              ><a href="#">
+                <p><img src="./img/icons/vb.png" width="50" alt="alt" /></p>
+                <p>Viber</p></a
+              >
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================= КОНЕЦ СЕКЦИИ ==========-->
+    <!--======== КОМАНДА ВРАЧЕЙ ===========-->
+    <section class="team">
+      <div class="container">
+        <div class="team-content">
+          <div class="section-header d-flex">
+            <div class="section-header__title">
+              <h2 class="title-2">Команда врачей</h2>
+              <div class="text-23">
+                <p>Специализация врачей и их подход к работе</p>
+              </div>
+            </div>
+            <div class="section-header__button">
+              <a class="button" href="#">Все врачи</a>
+            </div>
+          </div>
+        </div>
+        <div class="team-tabs" id="teamTabs">
+          <!--=========== БЛОК СЛЕВА С МАЛ ФОТО ==============-->
+          <div class="scroll-box">
+            <div class="tabs-button">
+              <!--===== tab block =====-->
+              <div class="tabs-button__item active" data-role="1">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <p>врач - ортопед, ортезист</p>
+                </div>
+              </div>
+              <!--===== tab block =====-->
+              <div class="tabs-button__item" data-role="2">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <p>врач - ортопед, ортезист</p>
+                </div>
+              </div>
+              <!--===== tab block =====-->
+              <div class="tabs-button__item" data-role="3">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <p>врач - ортопед, ортезист</p>
+                </div>
+              </div>
+              <!--===== tab block =====-->
+              <div class="tabs-button__item" data-role="4">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <p>врач - ортопед, ортезист</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--=========== БЛОК СПРАВА С БОЛЬШ ФОТО ВРАЧА ==============-->
+          <div class="tabs-content-wrapper">
+            <!--========= ОПИСАНИЕ ВРАЧА ============-->
+            <div class="tabs-content active" data-content="1">
+              <div class="tabs-content__head d-flex">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <div class="text-18 text-demi">
+                    <p>
+                      врач - ортопед, специалист по 3D коррекции позвоночника
+                    </p>
+                  </div>
+                  <div class="text-18">
+                    <p>
+                      Ведет первичный прием, делает 3D скан туловища, моделирует
+                      изделие, контролирует изготовление
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="tabs-content__body">
+                <p>
+                  <strong>Диагностика</strong> – наиважнейший этап. На первом
+                  приеме врач ортопед проведет осмотр спины пациента, груди,
+                  таза и ног на предмет асимметрии. Узнает жалобы пациента,
+                  проверит результаты анализов и рентген-снимков (при наличии).
+                </p>
+                <p>
+                  <strong>План лечения</strong> Мы составляем план лечения,
+                  после изучения которого у Вас не должно остаться вопросов. В
+                  плане подробно расписаны цели лечения, примерные сроки,
+                  промежуточные точки контроля, методы, которые будет
+                  использовать. Даны все необходимые рекомендации и советы на
+                  время лечения. (психолог например и предложение сразу пройти).
+                </p>
+                <button class="show-content">Весь текст</button>
+              </div>
+            </div>
+            <!--========= ОПИСАНИЕ ВРАЧА ============-->
+            <div class="tabs-content" data-content="2">
+              <div class="tabs-content__head d-flex">
+                <div class="tabs-item__img img-round">
+                  <img src="./img/doctor.jpg" width="196" alt="img" />
+                </div>
+                <div class="tabs-item__title">
+                  <h4><span>Крохалев</span><span>Никита Владимирович</span></h4>
+                  <div class="text-18 text-demi">
+                    <p>
+                      врач - ортопед, специалист по 3D коррекции позаоночника
+                    </p>
+                  </div>
+                  <div class="text-18">
+                    <p>
+                      Ведет первичный прием, делает 3D скан туловища, моделирует
+                      изделие, контролирует изготовление
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="tabs-content__body">
+                <p>
+                  <strong>Диагностика</strong> – наиважнейший этап. На первом
+                  приеме врач ортопед проведет осмотр спины пациента, груди,
+                  таза и ног на предмет асимметрии. Узнает жалобы пациента,
+                  проверит результаты анализов и рентген-снимков (при наличии).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--============ кнопки =========-->
+        <div class="text-center">
+          <button class="button button--orange">Записаться на прием</button>
+        </div>
+        <div class="section-header__button--mobile">
+          <a class="button" href="#">Все врачи</a>
+        </div>
+      </div>
+    </section>
+    <!--================= КОНЕЦ СЕКЦИИ ==========-->
+    <!--=================ВОПРОСЫ И ОТВЕТЫ ================-->
+    <section class="faq">
+      <div class="container">
+        <div class="faq-tabs" id="faqTabs">
+          <div id="faqArrow">
+            <div class="faq-tabs__arrow"></div>
+          </div>
+          <div class="faq-tabs__buttons-block">
+            <div class="faq-tabs__buttons swiper-wrapper">
+              <div class="swiper-slide" data-role="1">
+                <button class="faq-tabs__btn swiper-slide">
+                  Почему я не могу начать с других методов?
+                </button>
+              </div>
+              <div class="swiper-slide" data-role="2">
+                <button class="faq-tabs__btn swiper-slide">
+                  Как носить корсет в офисе?
+                </button>
+              </div>
+              <div class="swiper-slide" data-role="3">
+                <button class="faq-tabs__btn swiper-slide">
+                  Как привыкать к корсету Шено?
+                </button>
+              </div>
+              <div class="swiper-slide" data-role="4">
+                <button class="faq-tabs__btn swiper-slide">
+                  Еще один четвертый вопрос
+                </button>
+              </div>
+              <div class="swiper-slide" data-role="5">
+                <button class="faq-tabs__btn swiper-slide">
+                  Еще один какой-то пятый вопрос
+                </button>
+              </div>
+            </div>
+            <div class="faq-scrollbar"></div>
+          </div>
+          <div class="faq-tabs-wrapper">
+            <div class="faq-tabs__content active" data-content="1">
+              <div class="faq-content__text">
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="faq-content__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+            <div class="faq-tabs__content" data-content="2">
+              <div class="faq-content__text">
+                <p>content 22222</p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="faq-content__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+            <div class="faq-tabs__content" data-content="3">
+              <div class="faq-content__text">
+                <p>content-33333</p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="faq-content__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+            <div class="faq-tabs__content" data-content="4">
+              <div class="faq-content__text">
+                <p>content-444444</p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="faq-content__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+            <div class="faq-tabs__content" data-content="5">
+              <div class="faq-content__text">
+                <p>content-55555</p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="faq-content__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================= END ВОПРОСЫ И ОТВЕТЫ ================-->
+    <!--===============ВОПРОСЫ-ОТВЕТЫ МОБ ВЕРСИЯ АККОРДЕОН ============-->
+    <section class="faq-accordeon">
+      <div class="container">
+        <div class="accordeon-group">
+          <!--=== один вопрос============-->
+          <div class="accordeon-item">
+            <div class="accordeon-item-header" data-name="accordeon-title">
+              <h3>Почему я не могу начать с других методов?</h3>
+            </div>
+            <div class="accordeon-item-content loock hidden">
+              <div class="accordeon-item__text">
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="accordeon-item__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+          </div>
+          <!--=== один вопрос============-->
+          <div class="accordeon-item">
+            <div class="accordeon-item-header" data-name="accordeon-title">
+              <h3>Как носить корсет в офисе?</h3>
+            </div>
+            <div class="accordeon-item-content loock hidden">
+              <div class="accordeon-item__text">
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="accordeon-item__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+          </div>
+          <!--=== один вопрос============-->
+          <div class="accordeon-item">
+            <div class="accordeon-item-header" data-name="accordeon-title">
+              <h3>Как привыкать к корсету Шено?</h3>
+            </div>
+            <div class="accordeon-item-content loock hidden">
+              <div class="accordeon-item__text">
+                <p>
+                  Прием состоит из диагностики, изучения анализов и снимков,
+                  рекомендаций доктора и составления плана лечения и
+                  реабилитации.
+                </p>
+              </div>
+              <div class="accordeon-item__img">
+                <img src="./img/img.jpg" width="495" alt="alt" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=============== КОНЕЦ ВОПРОСЫ-ОТВЕТЫ МОБ ВЕРСИЯ АККОРДЕОН ============-->
+    <!--=================СЕКЦИЯ А ЕЩЕ МОЖНО =================-->
+    <section class="benefits">
+      <div class="container">
+        <div class="benefits-content">
+          <h2 class="title-2">А еще можно</h2>
+          <div class="benefits-wrapper d-flex">
+            <!--====one card =======-->
+            <div class="benefits-card">
+              <div class="benefits-card__icon">
+                <img src="./img/icons/sun.png" width="100" alt="alt" />
+              </div>
+              <div class="benefits-card__body">
+                <div class="benefits-card__title">
+                  <h3>Получить справку в&nbsp;ФСС</h3>
+                </div>
+                <div class="benefits-card__text">
+                  <p>
+                    и упростить весь путь оформления документов на инвалидность
+                  </p>
+                </div>
+              </div>
+              <a class="button button-slim--dark" href="#">Подробнее</a>
+            </div>
+            <!--====one card =======-->
+            <div class="benefits-card">
+              <div class="benefits-card__icon">
+                <img src="./img/icons/sun.png" width="100" alt="alt" />
+              </div>
+              <div class="benefits-card__body">
+                <div class="benefits-card__title">
+                  <h3>Пригласить&nbsp;врача&nbsp;в&nbsp;свой город</h3>
+                </div>
+                <div class="benefits-card__text">
+                  <p>
+                    и упростить весь путь оформления документов на инвалидность
+                  </p>
+                </div>
+              </div>
+              <a class="button button-slim--dark" href="#">Подробнее</a>
+            </div>
+            <!--====one card =======-->
+            <div class="benefits-card">
+              <div class="benefits-card__icon">
+                <img src="./img/icons/sun.png" width="100" alt="alt" />
+              </div>
+              <div class="benefits-card__body">
+                <div class="benefits-card__title">
+                  <h3>Получить рассрочку на&nbsp;лечение</h3>
+                </div>
+                <div class="benefits-card__text">
+                  <p>
+                    и упростить весь путь оформления документов на инвалидность
+                  </p>
+                </div>
+              </div>
+              <a class="button button-slim--dark" href="#">Подробнее</a>
+            </div>
+          </div>
+          <!--======= mobile button==========-->
+          <div class="section-header__button--mobile">
+            <a class="button button-slim--dark" href="#">Подробнее</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=================КОНЕЦ СЕКЦИЯ А ЕЩЕ МОЖНО =================-->
+    <!--=================PRODUCTS ================-->
+    <section class="products">
+      <div class="container">
+        <div class="swiper-products">
+          <div class="products-wrapper swiper-wrapper">
+            <!--========== product-slide ==========-->
+            <div class="swiper-slide">
+              <div class="products-card d-flex">
+                <div class="products-card__text">
+                  <div class="text-box">
+                    <h3>Ортопедическая обувь ORFEYA</h3>
+                    <p>Loren ipsum на пару строк на пару строк</p>
+                  </div>
+                  <a class="button button-slim--orange" href="#">Подробнее</a>
+                </div>
+                <div class="products-card__img">
+                  <img src="./img/product.jpg" width="205" alt="alt" />
+                </div>
+              </div>
+            </div>
+            <!--========== product-slide ==========-->
+            <div class="swiper-slide">
+              <div class="products-card d-flex">
+                <div class="products-card__text">
+                  <div class="text-box">
+                    <h3>Ортопедические изделия для профилактики ORFEYA</h3>
+                    <p>Loren ipsum на пару строк на пару строк</p>
+                  </div>
+                  <a class="button button-slim--orange" href="#">Подробнее</a>
+                </div>
+                <div class="products-card__img">
+                  <img src="./img/product.jpg" width="205" alt="alt" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--========== pagination ==========-->
+          <div class="swiper-products-pagination"></div>
+        </div>
+      </div>
+    </section>
+    <!--=================PRICE ================-->
+    <section class="price">
+      <div class="container">
+        <div class="price-content">
+          <div class="section-header d-flex">
+            <div class="section-header__title">
+              <h2 class="title-2">Цены</h2>
+            </div>
+            <div class="section-header__button">
+              <a class="button" href="#">Все цены</a>
+            </div>
+          </div>
+          <div class="price-cards-wrapper">
+            <!--======PRICE CARD ========-->
+            <div class="price-card">
+              <h4>Комплексный прием врача ортопеда</h4>
+              <p>1 200 ₽</p>
+              <div class="dashed-link">Что входит в стоимость?</div>
+              <div class="price-card__list">
+                <ul>
+                  <li>комплексный осмотр</li>
+                  <li>ортопедические тесты</li>
+                  <li>профилактические рекомендации</li>
+                  <li>план лечения</li>
+                </ul>
+                <a class="red-text" href="#">Что взять с собой на прием</a>
+              </div>
+            </div>
+            <!--======PRICE CARD ========-->
+            <div class="price-card">
+              <h4>Комплексный прием врача ортопеда</h4>
+              <p>1 200 ₽</p>
+              <div class="dashed-link">Что входит в стоимость?</div>
+              <div class="price-card__list">
+                <ul>
+                  <li>комплексный осмотр</li>
+                  <li>ортопедические тесты</li>
+                  <li>профилактические рекомендации</li>
+                  <li>план лечения</li>
+                </ul>
+                <a class="red-text" href="#">Что взять с собой на прием</a>
+              </div>
+            </div>
+            <!--======PRICE CARD ========-->
+            <div class="price-card">
+              <h4>Комплексный прием врача ортопеда</h4>
+              <p>1 200 ₽</p>
+              <div class="dashed-link">Что входит в стоимость?</div>
+              <div class="price-card__list">
+                <ul>
+                  <li>комплексный осмотр</li>
+                  <li>ортопедические тесты</li>
+                  <li>профилактические рекомендации</li>
+                  <li>план лечения</li>
+                </ul>
+                <a class="red-text" href="#">Что взять с собой на прием</a>
+              </div>
+            </div>
+            <!--======PRICE CARD ========-->
+            <div class="price-card">
+              <h4>Комплексный прием врача ортопеда</h4>
+              <p>1 200 ₽</p>
+              <div class="dashed-link">Что входит в стоимость?</div>
+              <div class="price-card__list">
+                <ul>
+                  <li>комплексный осмотр</li>
+                  <li>ортопедические тесты</li>
+                  <li>профилактические рекомендации</li>
+                  <li>план лечения</li>
+                </ul>
+                <a class="red-text" href="#">Что взять с собой на прием</a>
+              </div>
+            </div>
+          </div>
+          <!--=====mobile-button ======-->
+          <div class="section-header__button--mobile">
+            <a class="button" href="#">Все цены</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=================СТАТЬИ ===============-->
+    <section class="articles">
+      <div class="container">
+        <div class="section-header d-flex">
+          <div class="section-header__title">
+            <h2 class="title-2">Статьи ведущих врачей ОРТО-МЕД</h2>
+            <div class="text-23">
+              <p>объясняем медицину просто</p>
+            </div>
+          </div>
+          <div class="section-header__button">
+            <a class="button" href="#">Все статьи</a>
+          </div>
+        </div>
+        <div class="articles-swiper">
+          <div class="articles-content swiper-wrapper">
+            <!--==== карточка статьи==========-->
+            <div class="swiper-slide">
+              <div class="article-card">
+                <div class="article-card__img">
+                  <img src="./img/article.jpg" width="360" alt="alt" />
+                </div>
+                <div class="article-card__text">
+                  <h3>Личные истории, длинное название в две строки</h3>
+                  <p>
+                    Симптомы страдающего тазобедренного сустава, это описание
+                    может быть на две или более строк текста.
+                  </p>
+                </div>
+                <a class="button button-slim--orange" href="#">Читать</a>
+              </div>
+            </div>
+            <!--==== карточка статьи==========-->
+            <div class="swiper-slide">
+              <div class="article-card">
+                <div class="article-card__img">
+                  <img src="./img/article.jpg" width="360" alt="alt" />
+                </div>
+                <div class="article-card__text">
+                  <h3>Личные истории, длинное название в две строки</h3>
+                  <p>
+                    Симптомы страдающего тазобедренного сустава, это описание
+                    может быть на две или более строк текста.
+                  </p>
+                </div>
+                <a class="button button-slim--orange" href="#">Читать</a>
+              </div>
+            </div>
+            <!--==== карточка статьи==========-->
+            <div class="swiper-slide">
+              <div class="article-card">
+                <div class="article-card__img">
+                  <img src="./img/article.jpg" width="360" alt="alt" />
+                </div>
+                <div class="article-card__text">
+                  <h3>Личные истории, длинное название в две строки</h3>
+                  <p>
+                    Симптомы страдающего тазобедренного сустава, это описание
+                    может быть на две или более строк текста.
+                  </p>
+                </div>
+                <a class="button button-slim--orange" href="#">Читать</a>
+              </div>
+            </div>
+          </div>
+          <div class="articles-swiper-pagination"></div>
+        </div>
+        <!--=====mobile-button ======-->
+        <div class="section-header__button--mobile">
+          <a class="button" href="#">Все статьи</a>
+        </div>
+      </div>
+    </section>
+    <!--================= КОНЕЦ СЕКЦИИ ==========*/-->
+    <!--======== PINK SOCIAL ==========-->
+    <section class="pink-social">
+      <div class="container">
+        <div class="pink-social-content d-flex">
+          <div class="pink-social__text">
+            <p>Больше статей и&nbsp;полезных советов</p>
+          </div>
+          <div class="round-social">
+            <a href="#"
+              ><img src="./img/icons/inst.png" width="57" alt="alt" /></a
+            ><a href="#"
+              ><img src="./img/icons/vk2.png" width="57" alt="alt" /></a
+            ><a href="#"
+              ><img src="./img/icons/yout.png" width="57" alt="alt"
+            /></a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--========FEEDBACK==========-->
+    <section class="feedback">
+      <div class="container">
+        <div class="feedback-content d-flex">
+          <div
+            class="feedback-img"
+            style="background-image: url(./img/feedback.jpg)"
+          ></div>
+          <div class="feedback-form">
+            <div class="feedback-form-header">
+              <div class="form-title">
+                Записывайтесь на прием и подбор ортопедического изделия
+              </div>
+              <p>
+                Наши операторы проконсультируют вас и подберут удобное время
+                приёма
+              </p>
+            </div>
+            <form class="contact-form" action="" method="">
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="user_name"
+                  required="required"
+                  placeholder="Имя"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  name="user_phone"
+                  required="required"
+                  placeholder="Телефон"
+                />
+              </div>
+              <div class="form-btn">
+                <button class="button button-big--dark" type="submit">
+                  Записаться на прием
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--================== MAP ==============-->
+    <section class="map">
+      <div class="map-wrapper">
+        <iframe
+          src="https://yandex.ru/map-widget/v1/?um=constructor%3A8c5fddf3b5378686e8b80caf34af9f65e763d81b669042f086676e024c1fa85b&amp;source=constructor"
+          width="100%"
+          height="100%"
+          frameborder="0"
+        ></iframe>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content d-flex">
+          <div class="footer-column">
+            <div class="footer-menu">
+              <ul>
+                <li><a href="#!">Направления</a></li>
+                <ul>
+                  <li><a href="#!"></a></li>
+                  <li><a href="#!"></a></li>
+                  <li><a href="#!">Первичная консультация врача</a></li>
+                  <li><a href="#!">Безоперационное лечение позвоночника</a></li>
+                  <li>
+                    <a href="#!"
+                      >Ортопедическая коррекция и восстановление при травмах</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#!"
+                      >Ортопедическая коррекция и реабилитация при ДЦП</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#!"
+                      >Лечение заболеваний ОДА у детей раннего возраста</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#!"
+                      >Лечение заболеваний ОДА у детей среднего возраста</a
+                    >
+                  </li>
+                  <li><a href="#!">Лечение заболеваний ОДА у взрослых</a></li>
+                  <li><a href="#!">Лечение диабетической стопы</a></li>
+                  <li><a href="#!">Индивидуальная ортопедическая обувь</a></li>
+                  <li>
+                    <a href="#!">Ортопедические стельки и вкладные пособия</a>
+                  </li>
+                  <li>
+                    <a href="#!">Получение технических средств реабилитации</a>
+                  </li>
+                  <li>
+                    <a href="#!">Ортопедический интернет магазин Ортолэнд</a>
+                  </li>
+                </ul>
+              </ul>
+            </div>
+          </div>
+          <div class="footer-column d-flex">
+            <div class="footer-column-block d-flex">
+              <div class="footer-menu">
+                <ul>
+                  <li><a href="#!">Врачи </a></li>
+                  <li><a href="#">Адреса клиник</a></li>
+                  <li><a href="#">Информация для пациентов</a></li>
+                  <li><a href="#">Акции</a></li>
+                  <li><a href="#">Цены</a></li>
+                  <li><a href="#">Статьи о здоровье</a></li>
+                  <li><a href="#">Обратная связь</a></li>
+                  <li><a href="#">Работа в ОРТО-МЕД</a></li>
+                  <li><a href="#">О клинике</a></li>
+                  <li><a href="#">Информация для врачей</a></li>
+                </ul>
+              </div>
+              <div class="footer-buttons contacts-block">
+                <div class="contacts-block-phone">
+                  <a href="#">8 (800) 301-43-74</a>
+                </div>
+                <button class="button button-slim--white">
+                  Перезвоните мне
+                </button>
+                <button class="button button-slim--orange">
+                  Online-консультация
+                </button>
+              </div>
+            </div>
+            <div class="footer-copyright">
+              <p>© 2021. ОртоМед. Все права защищены.</p>
+              <p>Внимательная медицина с подтвержденной эффективностью</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+    <script src="js/Hover_menu.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>
