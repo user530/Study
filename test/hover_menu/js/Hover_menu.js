@@ -211,7 +211,6 @@
           // Deffault initialization
           if (menuOptions === "default" || menuOptions === "") {
             btnItm = new HoverMenuItem();
-            console.log(btnItm);
           }
           // Custom option initialization
           if (typeof menuOptions === "object" && menuOptions.length === 8) {
