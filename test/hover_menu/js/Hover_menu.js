@@ -1,140 +1,19 @@
-// const a = document.querySelectorAll("[data-role]");
-// const b = document.querySelectorAll("[data-content]");
-
-// const btnDataAtr = "data-role";
-// const menuDataAtr = "data-content";
-// const btnVal = 1;
-// const menuVal = 1;
-// const menuActiveClassName = "active";
-// const overlayId = "overlay";
-
-function hoverMenu(
-  _btnVal,
-  _menuVal,
-  _btnDataAtr = "data-role",
-  _menuDataAtr = "data-content",
-  _menuActiveClassName = "active",
-  _btnHiglight = true,
-  _overlayOn = true,
-  _overlayId = "overlay",
-  _lockBodyScroll = true,
-  _scrollBlockClass = "noscroll"
-) {
-  // Selector's for further user
-  const btnSelector = `[${_btnDataAtr}="${_btnVal}"]`;
-  const menuSelector = `[${_menuDataAtr}="${_menuVal}"]`;
-
-  // Btn and menu elements
-  const btnEl = document.querySelector(btnSelector);
-  const menuEl = document.querySelector(menuSelector);
-
-  // Optional overlay
-  let overlay;
-
-  if (_overlayOn) {
-    overlay = document.querySelector(`#${_overlayId}`);
-  }
-
-  // Create listener on button element
-  btnEl.addEventListener("mouseover", function activateMenu() {
-    // Only react if menu is not already present
-    if (!menuEl.classList.contains(_menuActiveClassName)) {
-      // Show menu
-      menuEl.classList.add(_menuActiveClassName);
-
-      // Show overlay if option is turned on
-      if (_overlayOn) {
-        overlay.classList.add(_menuActiveClassName);
-      }
-
-      // Highlight button if option is turned on
-      if (_btnHiglight) {
-        btnEl.classList.add(_menuActiveClassName);
-      }
-
-      //   Block body scroll if option is turned on
-      if (_lockBodyScroll) {
-        document.body.classList.add(_scrollBlockClass);
-      }
-
-      // Hide menu on resize
-      window.addEventListener("resize", function hideMenu() {
-        // Remove visibility from all elements
-        menuEl.classList.remove(_menuActiveClassName);
-        overlay.classList.remove(_menuActiveClassName);
-        btnEl.classList.remove(_menuActiveClassName);
-        document.body.classList.remove(_scrollBlockClass);
-        window.removeEventListener("resize", hideMenu);
-      });
-
-      const btnRect = btnEl.getBoundingClientRect();
-      const menuRect = menuEl.getBoundingClientRect();
-
-      btnEl.addEventListener("mouseleave", function destroyMenu(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        const onPoint = isInArea(
-          ev.x,
-          ev.y,
-          menuRect.x,
-          menuRect.y,
-          menuRect.width,
-          menuRect.y + menuRect.height
-        );
-
-        if (!onPoint) {
-          menuEl.classList.remove(_menuActiveClassName);
-          overlay.classList.remove(_menuActiveClassName);
-          btnEl.classList.remove(_menuActiveClassName);
-          document.body.classList.remove(_scrollBlockClass); //aaaa
-          btnEl.removeEventListener("mouseleave", destroyMenu);
-        }
-      });
-
-      menuEl.addEventListener("mouseleave", function destroyMenu(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        const onPoint = isInArea(
-          ev.x,
-          ev.y,
-          btnRect.x,
-          btnRect.y,
-          btnRect.width,
-          btnRect.y + btnRect.height
-        );
-
-        if (!onPoint) {
-          menuEl.classList.remove(_menuActiveClassName);
-          overlay.classList.remove(_menuActiveClassName);
-          btnEl.classList.remove(_menuActiveClassName);
-          document.body.classList.remove(_scrollBlockClass); //aaaa
-          menuEl.removeEventListener("mouseleave", destroyMenu);
-        }
-      });
-    }
-  });
-}
-
-/** Function to test if point is in target square area */
-function isInArea(_x, _y, _areaX, _areaY, _areaWidth, _areaHeight) {
-  return (
-    _x >= _areaX &&
-    _x <= _areaX + _areaWidth &&
-    _y >= _areaY &&
-    _y <= _areaY + _areaHeight
-  );
-}
-
-// hoverMenu(1, 1);
-// hoverMenu(6, 6);
-
-class HoverMenu {
+/** Class for a single hover menu item
+ * @param {string} _btnDataAtr Data attribute for the hover menu button, default value = "data-role";
+ * @param {string} _menuDataAtr - Data attribute for the dropdown menu element, default value = "data-content";
+ * @param {string} _menuActiveClassName - Class name of the visible elements, default value = "active";
+ * @param {boolean} _btnHighlight - If true adds _menuActiveClassName to the button when menu is opened, default value = "true";
+ * @param {boolean} _overlayOn - If true adds overlay to the body while menu is active, default value = "true";
+ * @param {string} _overlayId - ID name of the overlay element (if overlayOn is ON), default value = "overlay";
+ * @param {boolean} _lockBodyScroll - If true locks body when menu is active, default value = "true";
+ * @param {string} _scrollBlockClass - Class name that will be added to the body to block scroll (if lockBodyScroll is ON), default value = "noscroll";
+ * */
+class HoverMenuItem {
   #btnDataAtr;
   #menuDataAtr;
   #menuActiveClassName;
   #btnHighlight;
+  #overlay;
   #overlayOn;
   #overlayId;
   #lockBodyScroll;
@@ -142,6 +21,7 @@ class HoverMenu {
   #btnEl;
   #menuEl;
 
+  /** Constructor method */
   constructor(
     _btnDataAtr = "data-role",
     _menuDataAtr = "data-content",
@@ -162,7 +42,8 @@ class HoverMenu {
     this.#scrollBlockClass = _scrollBlockClass;
   }
 
-  addMenuElement(_btnVal, _menuVal) {
+  /** Method to initialize single hover menu item */
+  initBtn(_btnVal, _menuVal) {
     // Selectors for further user
     const btnSelector = `[${this.#btnDataAtr}="${_btnVal}"]`;
     const menuSelector = `[${this.#menuDataAtr}="${_menuVal}"]`;
@@ -172,9 +53,8 @@ class HoverMenu {
     this.#menuEl = document.querySelector(menuSelector);
 
     // Optional overlay
-    let overlay;
     if (this.#overlayOn) {
-      overlay = document.querySelector(`#${this.#overlayId}`);
+      this.#overlay = document.querySelector(`#${this.#overlayId}`);
     }
 
     // Initialize hover menu functionality on btn element
@@ -186,13 +66,14 @@ class HoverMenu {
     return x >= left && x <= right && y >= top && y <= bot;
   }
 
+  /** Method that handles menu activation and other options */
   #toggleOnAll() {
     // Show menu
     this.#menuEl.classList.add(this.#menuActiveClassName);
 
     // Show overlay if option is turned on
     if (this.#overlayOn) {
-      overlay.classList.add(this.#menuActiveClassName);
+      this.#overlay.classList.add(this.#menuActiveClassName);
     }
 
     // Highlight button if option is turned on
@@ -200,36 +81,39 @@ class HoverMenu {
       this.#btnEl.classList.add(this.#menuActiveClassName);
     }
 
-    //   Block body scroll if option is turned on
+    // Block body scroll if option is turned on
     if (this.#lockBodyScroll) {
       document.body.classList.add(this.#scrollBlockClass);
     }
   }
 
+  /** Method that handles menu deactivation and other options */
   #toggleOffAll() {
     //   Clear menu
     this.#menuEl.classList.remove(this.#menuActiveClassName);
 
     // Clear overlay if option is activated
     if (this.#overlayOn) {
-      overlay.classList.remove(this.#menuActiveClassName);
+      this.#overlay.classList.remove(this.#menuActiveClassName);
     }
 
-    // Clear overlay if option is activated
+    // Clear btn highlight if option is activated
     if (this.#btnHighlight) {
       this.#btnEl.classList.remove(this.#menuActiveClassName);
     }
 
-    // Clear overlay if option is activated
+    // Clear scrolllock if option is activated
     if (this.#lockBodyScroll) {
       document.body.classList.remove(this.#scrollBlockClass);
     }
   }
 
-  #handleOnLeave(event, safeLeft, safeTop, safeRight, safeBot) {
+  /** Method to toggle off menu if mouse leaves element and safezone */
+  #handleOnLeave(event, handler, safeLeft, safeTop, safeRight, safeBot) {
     event.preventDefault();
     event.stopPropagation();
 
+    // Check if mouse is inside the safe zone after mouseleave
     const safeSpot = this.#isInArea(
       event.x,
       event.y,
@@ -239,33 +123,41 @@ class HoverMenu {
       safeBot
     );
 
+    // If mouse leaved element and not in safezone -> clear all and remove listener
     if (!safeSpot) {
       this.#toggleOffAll();
+      event.target.removeEventListener("mouseleave", handler);
     }
   }
 
+  /** Method to handle hover menu functionality */
   #handleHover() {
     // Create listener on button element
     this.#btnEl.addEventListener("mouseover", () => {
+      // Refference to the menu item object
+      const here = this;
       // Only react if menu is not already present
       if (!this.#menuEl.classList.contains(this.#menuActiveClassName)) {
         // Toggle menu and all optional elements
         this.#toggleOnAll();
 
         // Hide menu on resize
-        window.addEventListener("resize", () => {
+        window.addEventListener("resize", function resizeListener() {
           // Remove visibility from all elements
-          this.#toggleOffAll();
+          here.#toggleOffAll();
+          // Remove listener
+          window.removeEventListener("resize", resizeListener);
         });
 
-        // Btn and menu coordinates
-        const btnRect = this.#btnEl.getBoundingClientRect();
-        const menuRect = this.#menuEl.getBoundingClientRect();
-
         // Add leave handle for btn
-        this.#btnEl.addEventListener("mouseleave", (ev) => {
-          this.#handleOnLeave(
+        this.#btnEl.addEventListener("mouseleave", function menuLeave(ev) {
+          // Menu coordinates
+          const menuRect = here.#menuEl.getBoundingClientRect();
+
+          // Handle leave from btn
+          here.#handleOnLeave(
             ev,
+            menuLeave,
             menuRect.left,
             menuRect.top,
             menuRect.right,
@@ -274,9 +166,13 @@ class HoverMenu {
         });
 
         // Add leave handle for menu
-        this.#menuEl.addEventListener("mouseleave", (ev) => {
-          this.#handleOnLeave(
+        this.#menuEl.addEventListener("mouseleave", function btnLeave(ev) {
+          // Btn coordinates
+          const btnRect = here.#btnEl.getBoundingClientRect();
+          // Handle leave from menu
+          here.#handleOnLeave(
             ev,
+            btnLeave,
             btnRect.left,
             btnRect.top,
             btnRect.right,
@@ -288,5 +184,26 @@ class HoverMenu {
   }
 }
 
-const a = new HoverMenu();
-a.addMenuElement(1, 1);
+/** Class for all hover menu buttons
+ * @param {...number} btnInfoPairs - spread of 2 element arrays...
+ * @param {string} _btnDataAtr - 1st argument of the array, data attribute of the button;
+ * @param {string} _menuDataAtr - 2nd argument of the array, data attribute of the menu;
+ */
+class HoverMenu {
+  #menuBtns = [];
+
+  /** Constructor */
+  constructor(...btnInfoPairs) {
+    try {
+      for (let [arg1, arg2] of btnInfoPairs) {
+        const btnItm = new HoverMenuItem();
+        btnItm.initBtn(arg1, arg2);
+        this.#menuBtns.push(btnItm);
+      }
+    } catch (error) {
+      console.log("Wrong argument!");
+    }
+  }
+}
+
+const menu = new HoverMenu([1, 1], [6, 6]);

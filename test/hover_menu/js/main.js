@@ -213,49 +213,64 @@ const swiper2 = new Swiper(".faq-tabs__buttons-block", {
   // and switches to a dual-column layout
   const breakpoint = window.matchMedia("(min-width:768px)");
 
-  // keep track of swiper instances to destroy later
-  let mySwiper; ///////////////////////////////////////////
+  // Create a wariable to hold swipers
+  let swipers = [];
 
-  const breakpointChecker = function () {
+  /** Function to switch styles according to the breakpoint */
+  const massBreakpointCheker = function (...args) {
     // if larger viewport and multi-row layout needed
-    if (breakpoint.matches === true) {
-      // clean up old instances and inline styles when available
-      if (mySwiper !== undefined) mySwiper.destroy(true, true);
-
-      // or/and do nothing
-      return;
-
+    for (let i = 0; i < args.length; i++) {
+      if (breakpoint.matches === true) {
+        // clean up old instances and inline styles when available
+        if (swipers[i] !== undefined) {
+          swipers[i].destroy(true, true);
+          swipers.shift();
+        }
+        // or/and do nothing
+        return;
+      }
       // else if a small viewport and single column layout needed
-    } else if (breakpoint.matches === false) {
-      // fire small viewport version of swiper
-      return enableSwiper();
+      else if (breakpoint.matches === false) {
+        // fire small viewport version of swiper
+        return activateSwiper(swipers, args[i][0], args[i][1]);
+      }
     }
   };
-  const enableSwiper = function () {
-    mySwiper = new Swiper(".swiper-products", {
-      loop: true,
 
-      slidesPerView: 1,
-      spaceBetween: 30,
-      centeredSlides: true,
+  /** Initiate swiper with argument params */
+  function activateSwiper(swiperArr, clName1, clName2) {
+    swiperArr.push(
+      new Swiper(clName1, {
+        loop: true,
 
-      a11y: true,
-      keyboardControl: true,
-      grabCursor: true,
+        slidesPerView: 1,
+        spaceBetween: 30,
+        centeredSlides: true,
 
-      // pagination
-      pagination: {
-        el: ".swiper-products-pagination",
-        clickable: true,
-      },
-    });
-  };
+        a11y: true,
+        keyboardControl: true,
+        grabCursor: true,
 
-  // keep an eye on viewport size changes
-  breakpoint.addListener(breakpointChecker);
+        // pagination
+        pagination: {
+          el: clName2,
+          clickable: true,
+        },
+      })
+    );
+  }
 
-  // kickstart
-  breakpointChecker();
+  // Example swiper arguments, add thme to massBreakpointChecker
+  const swips1 = [".swiper-products", ".swiper-products-pagination"];
+  const swips2 = [".swiper", ".swiper-pagination"];
+
+  // Listener to react on the resize
+  breakpoint.addListener(() => {
+    massBreakpointCheker(swips1, swips2);
+  });
+
+  // Initiate sweepers, Add arguments here
+  massBreakpointCheker(swips1, swips2);
 })(); /* IIFE end */
 (function () {
   "use strict";
@@ -317,6 +332,8 @@ const swiper2 = new Swiper(".faq-tabs__buttons-block", {
 
   // kickstart
   breakpointChecker();
+
+  function swiperGenerator(className1, className2) {}
 })(); /* IIFE end */
 
 /*============faq accordeon=============*/
