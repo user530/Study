@@ -1,3 +1,11 @@
+/** Aggregator function for swipers
+ * @method addSwiper() - add swiper to the wrapper;
+ * @param {string} swiperSelector - query selector for the swiper element;
+ * @param {string} breakResolution - media selector for the breakpoint;
+ * @param {Object} swiperOptions - swiper options in form of the object;
+ * @method init() - initialize aggregator;
+ */
+
 class Swips {
   // Swiper storage
   #swipers = new Map();
@@ -95,130 +103,3 @@ class Swips {
     return this.#swipers;
   }
 }
-
-//
-const swips = new Swips();
-swips.addSwiper(".swiper", "", {
-  autoplay: {
-    delay: 5000,
-  },
-  speed: 2000,
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-});
-swips.addSwiper(".faq-tabs__buttons-block", "", {
-  slidesPerView: 3.5,
-
-  navigation: {
-    nextEl: "#faqArrow",
-  },
-  scrollbar: {
-    el: ".faq-scrollbar",
-    draggable: true,
-  },
-  watchOverflow: "true",
-});
-swips.addSwiper(".swiper-products", "min-width:768px", {
-  loop: true,
-  slidesPerView: 1,
-  spaceBetween: 30,
-  centeredSlides: true,
-
-  a11y: true,
-  keyboardControl: true,
-  grabCursor: true,
-
-  // pagination
-  pagination: {
-    el: ".swiper-products-pagination",
-    clickable: true,
-  },
-});
-swips.addSwiper(".swiper-result", "min-width:768px", {
-  loop: true,
-  slidesPerView: 1,
-  spaceBetween: 30,
-  centeredSlides: true,
-
-  a11y: true,
-  keyboardControl: true,
-  grabCursor: true,
-
-  // pagination
-  pagination: {
-    el: ".swiper-result-pagination",
-    clickable: true,
-  },
-});
-swips.addSwiper(".swiper-library", "min-width:768px", {
-  loop: true,
-  slidesPerView: 1,
-  spaceBetween: 30,
-  centeredSlides: true,
-
-  a11y: true,
-  keyboardControl: true,
-  grabCursor: true,
-
-  // pagination
-  pagination: {
-    el: ".swiper-library-pagination",
-    clickable: true,
-  },
-});
-swips.addSwiper(".articles-swiper", "min-width:992px", {
-  loop: true,
-
-  slidesPerView: 1,
-  spaceBetween: 30,
-  centeredSlides: true,
-
-  a11y: true,
-  keyboardControl: true,
-  grabCursor: true,
-
-  // pagination
-  pagination: {
-    el: ".articles-swiper-pagination",
-    clickable: true,
-  },
-  breakpoints: {
-    574: {
-      slidesPerView: 1.8,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 2.5,
-      spaceBetween: 30,
-    },
-  },
-});
-swips.addSwiper(".articles-swiper2", "min-width:992px", {
-  loop: true,
-  slidesPerView: 1,
-  spaceBetween: 30,
-  centeredSlides: true,
-
-  a11y: true,
-  keyboardControl: true,
-  grabCursor: true,
-
-  // pagination
-  pagination: {
-    el: ".articles-swiper-pagination",
-    clickable: true,
-  },
-  breakpoints: {
-    574: {
-      slidesPerView: 1.8,
-      spaceBetween: 10,
-    },
-    768: {
-      slidesPerView: 2.5,
-      spaceBetween: 30,
-    },
-  },
-});
-swips.init();

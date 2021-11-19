@@ -427,55 +427,184 @@ for (let item of priceCardsLink) {
   });
 }
 /************/
-$(document).ready(function () {
-  // Assign some jquery elements we'll need
-  var $swiper = $(".swiper-container");
-  var $bottomSlide = null; // Slide whose content gets 'extracted' and placed
-  // into a fixed position for animation purposes
-  var $bottomSlideContent = null; // Slide content that gets passed between the
-  // panning slide stack and the position 'behind'
-  // the stack, needed for correct animation style
+// $(document).ready(function () {
+//   // Assign some jquery elements we'll need
+//   var $swiper = $(".swiper-container");
+//   var $bottomSlide = null; // Slide whose content gets 'extracted' and placed
+//   // into a fixed position for animation purposes
+//   var $bottomSlideContent = null; // Slide content that gets passed between the
+//   // panning slide stack and the position 'behind'
+//   // the stack, needed for correct animation style
 
-  var mySwiper = new Swiper(".swiper-container", {
-    spaceBetween: 10,
-    slidesPerView: 1,
-    centeredSlides: true,
-    roundLengths: true,
-    loop: true,
-    loopAdditionalSlides: 30,
+//   var mySwiper = new Swiper(".swiper-container", {
+//     spaceBetween: 10,
+//     slidesPerView: 1,
+//     centeredSlides: true,
+//     roundLengths: true,
+//     loop: true,
+//     loopAdditionalSlides: 30,
+//     navigation: {
+//       nextEl: ".swiper-button-next",
+//       prevEl: ".swiper-button-prev",
+//     },
+//     breakpoints: {
+//       574: {
+//         slidesPerView: 1,
+//         spaceBetween: 10,
+//       },
+//       768: {
+//         slidesPerView: 3,
+//         spaceBetween: -30,
+//       },
+//       1200: {
+//         slidesPerView: 3,
+//         spaceBetween: -30,
+//       },
+//     },
+//   });
+// });
+// var aboutSwiper = new Swiper(".swiper-about", {
+//   spaceBetween: 30,
+//   slidesPerView: 1,
+//   centeredSlides: true,
+//   roundLengths: true,
+//   loop: true,
+
+//   navigation: {
+//     nextEl: ".swiper-button-next",
+//     prevEl: ".swiper-button-prev",
+//   },
+//   pagination: {
+//     el: ".about-swiper-pagination",
+//     clickable: true,
+//   },
+// });
+
+(function () {
+  // Activate swipers
+  const swips = new Swips();
+  swips.addSwiper(".swiper", "", {
+    autoplay: {
+      delay: 5000,
+    },
+    speed: 2000,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+  swips.addSwiper(".faq-tabs__buttons-block", "", {
+    slidesPerView: 3.5,
+
     navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
+      nextEl: "#faqArrow",
+    },
+    scrollbar: {
+      el: ".faq-scrollbar",
+      draggable: true,
+    },
+    watchOverflow: "true",
+  });
+  swips.addSwiper(".swiper-products", "min-width:768px", {
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+    centeredSlides: true,
+
+    a11y: true,
+    keyboardControl: true,
+    grabCursor: true,
+
+    // pagination
+    pagination: {
+      el: ".swiper-products-pagination",
+      clickable: true,
+    },
+  });
+  swips.addSwiper(".swiper-result", "min-width:768px", {
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+    centeredSlides: true,
+
+    a11y: true,
+    keyboardControl: true,
+    grabCursor: true,
+
+    // pagination
+    pagination: {
+      el: ".swiper-result-pagination",
+      clickable: true,
+    },
+  });
+  swips.addSwiper(".swiper-library", "min-width:768px", {
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+    centeredSlides: true,
+
+    a11y: true,
+    keyboardControl: true,
+    grabCursor: true,
+
+    // pagination
+    pagination: {
+      el: ".swiper-library-pagination",
+      clickable: true,
+    },
+  });
+  swips.addSwiper(".articles-swiper", "min-width:992px", {
+    loop: true,
+
+    slidesPerView: 1,
+    spaceBetween: 30,
+    centeredSlides: true,
+
+    a11y: true,
+    keyboardControl: true,
+    grabCursor: true,
+
+    // pagination
+    pagination: {
+      el: ".articles-swiper-pagination",
+      clickable: true,
     },
     breakpoints: {
       574: {
-        slidesPerView: 1,
+        slidesPerView: 1.8,
         spaceBetween: 10,
       },
       768: {
-        slidesPerView: 3,
-        spaceBetween: -30,
-      },
-      1200: {
-        slidesPerView: 3,
-        spaceBetween: -30,
+        slidesPerView: 2.5,
+        spaceBetween: 30,
       },
     },
   });
-});
-var aboutSwiper = new Swiper(".swiper-about", {
-  spaceBetween: 30,
-  slidesPerView: 1,
-  centeredSlides: true,
-  roundLengths: true,
-  loop: true,
+  swips.addSwiper(".articles-swiper2", "min-width:992px", {
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+    centeredSlides: true,
 
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  pagination: {
-    el: ".about-swiper-pagination",
-    clickable: true,
-  },
-});
+    a11y: true,
+    keyboardControl: true,
+    grabCursor: true,
+
+    // pagination
+    pagination: {
+      el: ".articles-swiper-pagination",
+      clickable: true,
+    },
+    breakpoints: {
+      574: {
+        slidesPerView: 1.8,
+        spaceBetween: 10,
+      },
+      768: {
+        slidesPerView: 2.5,
+        spaceBetween: 30,
+      },
+    },
+  });
+  swips.init();
+})();
