@@ -18,9 +18,11 @@ class Swips {
       if (breakpointStr !== "") {
         // Create a breakpoint
         const match = window.matchMedia(`(${breakpointStr})`);
+        // Initiate from the start
+        this.#swiperActivate(match, swipersMap);
         // Add listener to breakpoint
         match.addListener(() => {
-          this.#swiperListener(match, swipersMap);
+          this.#swiperActivate(match, swipersMap);
         });
       }
       // If swiper category doesn't have breakpoint
@@ -34,7 +36,7 @@ class Swips {
   }
 
   /** Function to handle swipers on different screen sizes */
-  #swiperListener(match, breakpointMap) {
+  #swiperActivate(match, breakpointMap) {
     // When category listener fires
     if (match.matches) {
       // iterate over all swipers from this category
@@ -44,10 +46,6 @@ class Swips {
           // destroy it
           obj.swiper.destroy(true, true);
         }
-        // aaa
-        // else {
-        //   return;
-        // }
       });
     } else {
       breakpointMap.forEach((obj) => {
