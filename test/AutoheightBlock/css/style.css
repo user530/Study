@@ -1,0 +1,24 @@
+*{box-sizing:border-box;}
+.container{
+	padding-left: 15px;
+	padding-right: 15px;
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.autoHeight-wrapper{
+	-webkit-align-items: flex-start;
+	        align-items: flex-start;
+	display: flex;
+	-webkit-justify-content: space-between;
+	        justify-content: space-between;
+}
+.autoHeight-left{
+	width: 50%;
+	border: 10px solid red;
+	padding: 40px;
+}
+.autoHeight-right{
+	width: 45%;
+	border: 10px solid green;
+}
