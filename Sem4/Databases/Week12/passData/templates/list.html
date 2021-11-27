@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PassingData Lab</title>
+  </head>
+  <body>
+    <h1>Item list</h1>
+    <h3>
+      You can see names and prices of all available books at our bookshop:
+    </h3>
+    <ul>
+      <% availableBooks.forEach((book,ind)=>{ %>
+      <li>Book <%= (ind +1) %> : <%=book.name %>, price: <%=book.price %>$</li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

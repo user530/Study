@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variables to templates lab</title>
+  </head>
+  <body>
+    <h1>Search page</h1>
+    <!-- <form action="" method="get" name="searchValue" > -->
+    <form action="/list" method="get" name="search">
+      <input type="text" name="bookName" value="NewBook" />
+      <input type="hidden" name="search" value="true" />
+      <input type="submit" value="Search book!" />
+    </form>
+
+    <a href="/">Main page</a><br />
+    <a href="/list">Check all items</a><br />
+    <a href="/addBook">Add new book</a><br />
+  </body>
+</html>

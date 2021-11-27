@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Variables to templates lab</title>
+  </head>
+  <body>
+    <% if(search){ %>
+    <h1>Search result:</h1>
+    <%} else{%>
+    <h1>List of all books:</h1>
+    <% } if(data.length>0){ data.forEach((item, ind)=>{ %>
+    <li><%=(ind+1)%>) <%=item.name%> - <%=item.price%>$</li>
+    <br />
+    <%})} else{ %>
+    <p>There is no matching results. Try another book...</p>
+    <% } ;%>
+
+    <a href="/">Main page</a><br />
+    <a href="/search">Search book</a><br />
+    <a href="/addBook">Add new book</a><br />
+  </body>
+</html>

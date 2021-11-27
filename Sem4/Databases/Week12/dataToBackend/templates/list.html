@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data To Backend Lab</title>
+  </head>
+  <body>
+    <h1>Database data page</h1>
+    <ul>
+      <% backendData.forEach((line, ind)=>{ %>
+      <li>Book <%=ind + 1 %>: <%= line.name%> - <%=line.price%></li>
+      <%})%>
+    </ul>
+    <a href="/">Main page</a><br />
+    <a href="/addBook">Add new book</a>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "smart_house_interface",
+  "version": "1.0.0",
+  "description": "UOL - Databases, networks and the web - Midterm project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user530/expressProjectDB.git"
+  },
+  "keywords": [
+    "js",
+    "express",
+    "mysql",
+    "databases"
+  ],
+  "author": "TMV (m.timarsuev@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/user530/expressProjectDB/issues"
+  },
+  "homepage": "https://github.com/user530/expressProjectDB#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
+  }
+}
