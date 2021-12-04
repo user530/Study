@@ -1,0 +1,32 @@
+<!-- 
+    - R3A: Display  a  form  to  users  to  add  a  new device to  the  database.The  form  should consist of the following items: name of the device to be selected from a pre-defined set of  devices and  other  input  fields  such  as  on/off,  open/close,  temperature,  volume,  etc. Depending on the chosen device other input fields might be applicable or not applicable. The minimum number of devices in the pre-defined list is 20. Display a link to the home page or a navigation bar thatcontains links to other pages.
+    - R3B: Collect  form  data  to  be  passed  to the  back-end  (database)and  store the device name and its corresponding initial status in  the  database.  Each device item  consists  of input fields such  as name, on/off, open/close,  temperature,  volume,  etc.  Some  fields might  not  be  applicable  for  some  devices.  As  an  example, the open/close  field  is  not relatedto a heating  device  but appliesto  a  blind  or a curtain,or  a  door.  As  another example volume does not apply to the heating system, but the temperature does. Display a message indicating that add device operation has been done successfully.
+    - R3C: Improve R3B by automatically assigning ‘not applicable’ initial value to the fields that do  not  apply to  the  chosen  device.  It  is  even  better  to  disable  or  hide  those  input fields from users when adding a new device. As an example, if a user adds a new device called ‘heating’ then the minimumrequired input fields to be displayed and initialised by the user  are:  on/off  and  temperature  and  all  othernon-related  inputfieldsmust  be initialised to NA (not applicable) status.
+    - R3D:  Form  validation,  make  sure  all  required  formdata  is  filled  and also valid  data  is entered by user.If required fields are empty or data is not valid,re-display the form to the user with appropriatemessage to fill itagain. As an example, entering a string or a value of 400 is not valid for the temperature of a‘heating’ device.
+ -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MySmartHome - Add device</title>
+  </head>
+  <body>
+    <h1>Add new smart device</h1>
+    <p>
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum
+      repudiandae suscipit cum amet, laboriosam libero natus, rerum quod
+      eligendi accusantium fuga voluptas? Doloremque ex veniam consequatur
+      voluptate, cupiditate eum unde.
+    </p>
+    <ul>
+      <li><a href="/"> Main page</a></li>
+      <li><a href="/about"> About</a></li>
+      <li><a href="/list"> Devices list</a></li>
+      <li><a href="/deviceDelete"> Delete device</a></li>
+      <li><a href="/deviceStatus"> Check device status</a></li>
+      <li><a href="/deviceUpdate"> Update device</a></li>
+    </ul>
+  </body>
+</html>

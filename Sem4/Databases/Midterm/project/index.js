@@ -36,7 +36,7 @@ require(`./routes/main`)(app);
 
 // Setup server
 // Set template folder
-app.set(`views`, `${__dirname}\\templates`);
+app.set(`views`, `${__dirname}\\views`);
 // Set rendering engine
 app.set(`view engine`, `ejs`);
 // Setup rendering engine to render html pages

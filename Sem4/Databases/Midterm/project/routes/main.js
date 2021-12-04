@@ -1,24 +1,37 @@
 module.exports = (app) => {
+  // Main page route - if non existing link is given, reroute to main
   app.get(`/`, (req, res) => {
     res.render(`index.html`);
   });
 
-  app.get(`/test`, (req, res) => {
-    res.render(`test.html`);
-  });
-
-  app.post(`/test`, (req, res) => {
-    const sanitized_inp = req.sanitize(req.body.input);
-    res.send({ lel: sanitized_inp });
+  app.get(`/about`, (req, res) => {
+    res.render(`about.html`);
   });
 
   app.get(`/list`, (req, res) => {
-    const sql = `SELECT * FROM test1`;
-    db.query(sql, (err, result) => {
-      if (err) {
-        console.log(`No results!`);
-      }
-      res.render(`list.html`, { dbData: result });
-    });
+    res.render(`list.html`);
+  });
+  app.get(`/deviceAdd`, (req, res) => {
+    res.render(`deviceAdd.html`);
+  });
+  app.get(`/deviceDelete`, (req, res) => {
+    res.render(`deviceDelete.html`);
+  });
+  app.get(`/deviceStatus`, (req, res) => {
+    res.render(`deviceStatus.html`);
+  });
+  app.get(`/deviceUpdate`, (req, res) => {
+    res.render(`deviceUpdate.html`);
+  });
+
+  // Handle 404 requests -> Show
+  app.use((req, res) => {
+    res.status(404).render(`404.html`);
+  });
+
+  // Handle error
+  app.use((err, req, res) => {
+    console.error(err.stack);
+    res.status(500).send(`Unexpected error`);
   });
 };
