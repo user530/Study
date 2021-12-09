@@ -13,7 +13,7 @@ module.exports = (app) => {
 
   app.get(`/list`, (req, res) => {
     // Query string to select all information from devices table
-    const queryStr = `SELECT * FROM devices_base`;
+    const queryStr = `SELECT * FROM devices_properties`;
     // Execute query
     db.query(queryStr, (err, dbResult) => {
       // Handle possible error
@@ -30,7 +30,7 @@ module.exports = (app) => {
   app.get(`/deviceAdd`, (req, res) => {
     if (req.query.show) {
       // Request to get new properties list
-      const reqNewProper = `SELECT * FROM devices_base WHERE type=?`;
+      const reqNewProper = `SELECT * FROM devices_properties WHERE type=?`;
       // Sanitized input - type of the device to get properties
       const sanitInp = req.sanitize(req.query.show);
 
@@ -45,7 +45,7 @@ module.exports = (app) => {
         res.send(cleanQuery(resNewProper));
       });
     } else {
-      const reqTypes = `SELECT type FROM devices_base`;
+      const reqTypes = `SELECT type FROM devices_properties`;
       db.query(reqTypes, (err, resTypes) => {
         // Handle error
         if (err) {
@@ -54,7 +54,7 @@ module.exports = (app) => {
         }
 
         // Get properties of 1st device
-        const reqInitProper = `SELECT * FROM devices_base LIMIT 1`;
+        const reqInitProper = `SELECT * FROM devices_properties LIMIT 1`;
         db.query(reqInitProper, (err2, resProper) => {
           // Handle error
           if (err2) {
