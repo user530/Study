@@ -1,3 +1,6 @@
+const { cleanQuery, ajaxReq } = require("../functions");
+const functions = require(`../functions`);
+
 module.exports = (app) => {
   // Main page route - if non existing link is given, reroute to main
   app.get(`/`, (req, res) => {
@@ -9,11 +12,22 @@ module.exports = (app) => {
   });
 
   app.get(`/list`, (req, res) => {
-    res.render(`list.html`);
+    // Query string to select all information from devices table
+    const queryStr = `SELECT * FROM devices_base`;
+    // Execute query
+    db.query(queryStr, (err, dbResult) => {
+      // Handle possible error
+      if (err) {
+        // Log error and redirect to the main page
+        console.error(err);
+        res.redirect(`/`);
+      }
+      // Render page if there is no error
+      res.render(`list.html`, { devices: cleanQuery(dbResult) });
+    });
   });
-  app.get(`/deviceAdd`, (req, res) => {
-    res.render(`deviceAdd.html`);
-  });
+
+  app.get(`/deviceAdd`, (req, res) => {});
   app.get(`/deviceDelete`, (req, res) => {
     res.render(`deviceDelete.html`);
   });

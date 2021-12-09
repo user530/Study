@@ -14,12 +14,8 @@
   </head>
   <body>
     <h1>Add new smart device</h1>
-    <p>
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum
-      repudiandae suscipit cum amet, laboriosam libero natus, rerum quod
-      eligendi accusantium fuga voluptas? Doloremque ex veniam consequatur
-      voluptate, cupiditate eum unde.
-    </p>
+    <select name="device" id="select" onchange="ajaxReq(this.value)"></select>
+
     <ul>
       <li><a href="/"> Main page</a></li>
       <li><a href="/about"> About</a></li>
@@ -29,4 +25,16 @@
       <li><a href="/deviceUpdate"> Update device</a></li>
     </ul>
   </body>
+  <script>
+    function ajaxReq(arg) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          console.log(xhttp.responseText);
+        }
+      };
+      xhttp.open(`GET`, `?show=${arg}`, true);
+      xhttp.send();
+    }
+  </script>
 </html>
