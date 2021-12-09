@@ -1,4 +1,4 @@
-const { cleanQuery, ajaxReq } = require("../functions");
+const { cleanQuery, ajaxReq, dataToForm } = require("../functions");
 const functions = require(`../functions`);
 
 module.exports = (app) => {
@@ -28,6 +28,7 @@ module.exports = (app) => {
   });
 
   app.get(`/deviceAdd`, (req, res) => {
+    // When user selects input
     if (req.query.show) {
       // Request to get new properties list
       const reqNewProper = `SELECT * FROM devices_properties WHERE type=?`;
@@ -42,9 +43,12 @@ module.exports = (app) => {
           res.redirect(`/`);
         }
         // if no errors, send new data back
-        res.send(cleanQuery(resNewProper));
+        const info = cleanQuery(resNewProper);
+        res.send(dataToForm(info[0]));
       });
-    } else {
+    }
+    // On initial load
+    else {
       const reqTypes = `SELECT type FROM devices_properties`;
       db.query(reqTypes, (err, resTypes) => {
         // Handle error

@@ -42,81 +42,13 @@
         if (this.readyState == 4 && this.status == 200) {
           const elem = document.querySelector(`#addDevice`);
           if (elem) {
-            const response = JSON.parse(xhttp.response)[0];
-            elem.innerHTML = dataToForm(response);
+            // Load new form
+            elem.innerHTML = xhttp.responseText;
           }
         }
       };
       xhttp.open(`GET`, `?show=${arg}`, true);
       xhttp.send();
-    }
-    function dataToForm(dataObj) {
-      // Check for correct argument
-      if (
-        Object.getPrototypeOf(dataObj) === Object.prototype &&
-        Object.keys(dataObj).length !== 0
-      ) {
-        // Prepare form html
-        let form = `<form action="" method="post">`;
-        // Iterate over key's
-        for (const key in dataObj) {
-          if (key !== `type`) {
-            // make input depending on key/value
-            form += createInput(key, dataObj[key]);
-          }
-        }
-        form += `<input type="submit" value="Add device"></form>`;
-        return form;
-      }
-    }
-    function propertyGetName(propertyString) {
-      let propertyName = propertyString.slice(0, propertyString.indexOf(`[`));
-      propertyName = propertyName.split(`_`);
-      propertyName = propertyName.join(` `);
-      propertyName = propertyName[0].toUpperCase() + propertyName.slice(1);
-      return propertyName;
-    }
-    function propertyGetInput(propertyString) {
-      const propertyInputStr = propertyString.slice(
-        propertyString.indexOf(`[`) + 1,
-        propertyString.indexOf(`]`)
-      );
-      return propertyInputStr;
-    }
-    function parseValue(value) {
-      const res = value.split(`,`);
-      return res.map((str) => {
-        str = str.trim();
-        return str.slice(1, str.length - 1);
-      });
-    }
-    function createInput(key, value) {
-      const name = propertyGetName(key);
-      const input = propertyGetInput(key);
-      const properties = parseValue(value);
-      // console.log(`Name - ${name}, input - ${input}, prop - ${properties}`);
-      let html = `<div id="${name}">${name}<br>`;
-      switch (input) {
-        case `radio`:
-          properties.forEach((option) => {
-            html += `<label><span>${option}</span>
-            <input type="${input}" name="${name}" value="${option}">
-            </label>`;
-          });
-          break;
-        case `time`:
-          break;
-        case `range`:
-          break;
-        case `color`:
-          break;
-        case `text`:
-          break;
-        case `datetime`:
-          break;
-      }
-      html += `</div>`;
-      return html;
     }
   </script>
 </html>
