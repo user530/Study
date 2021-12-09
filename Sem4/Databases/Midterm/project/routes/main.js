@@ -29,9 +29,21 @@ module.exports = (app) => {
 
   app.get(`/deviceAdd`, (req, res) => {
     if (req.query.show) {
-      // Send new data
-      console.log(`Req show!`);
-      res.send(`kek`);
+      // Request to get new properties list
+      const reqNewProper = `SELECT * FROM devices_base WHERE type=?`;
+      // Sanitized input - type of the device to get properties
+      const sanitInp = req.sanitize(req.query.show);
+
+      // DB Request
+      db.query(reqNewProper, sanitInp, (err, resNewProper) => {
+        // handle errors
+        if (err) {
+          console.error(err);
+          res.redirect(`/`);
+        }
+        // if no errors, send new data back
+        res.send(cleanQuery(resNewProper));
+      });
     } else {
       const reqTypes = `SELECT type FROM devices_base`;
       db.query(reqTypes, (err, resTypes) => {
@@ -43,7 +55,7 @@ module.exports = (app) => {
 
         // Get properties of 1st device
         const reqInitProper = `SELECT * FROM devices_base LIMIT 1`;
-        db.query(reqInitProper, (err2, resProp) => {
+        db.query(reqInitProper, (err2, resProper) => {
           // Handle error
           if (err2) {
             console.error(err2);
@@ -53,7 +65,7 @@ module.exports = (app) => {
           // Render page
           res.render(`deviceAdd.html`, {
             types: resTypes,
-            properties: cleanQuery(resProp),
+            properties: cleanQuery(resProper),
           });
         });
       });
