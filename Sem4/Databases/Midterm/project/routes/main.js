@@ -27,7 +27,38 @@ module.exports = (app) => {
     });
   });
 
-  app.get(`/deviceAdd`, (req, res) => {});
+  app.get(`/deviceAdd`, (req, res) => {
+    if (req.query.show) {
+      // Send new data
+      console.log(`Req show!`);
+      res.send(`kek`);
+    } else {
+      const reqTypes = `SELECT type FROM devices_base`;
+      db.query(reqTypes, (err, resTypes) => {
+        // Handle error
+        if (err) {
+          console.error(err);
+          res.redirect(`/`);
+        }
+
+        // Get properties of 1st device
+        const reqInitProper = `SELECT * FROM devices_base LIMIT 1`;
+        db.query(reqInitProper, (err2, resProp) => {
+          // Handle error
+          if (err2) {
+            console.error(err2);
+            res.redirect(`/`);
+          }
+
+          // Render page
+          res.render(`deviceAdd.html`, {
+            types: resTypes,
+            properties: cleanQuery(resProp),
+          });
+        });
+      });
+    }
+  });
   app.get(`/deviceDelete`, (req, res) => {
     res.render(`deviceDelete.html`);
   });

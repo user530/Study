@@ -14,7 +14,17 @@
   </head>
   <body>
     <h1>Add new smart device</h1>
-    <select name="device" id="select" onchange="ajaxReq(this.value)"></select>
+    <select name="device" id="select" onchange="ajaxReq(this.value)">
+      <% types.forEach(row => {%>
+      <option value="<%= row.type %>"><%= row.type %></option>
+      <%}) %>
+    </select>
+    <form action="" method="post" id="addDevice">
+      <% properties.forEach(row => { for(const key in row){ if(key !==
+      `type`){%>
+      <p><%=key%> - <%=row[key]%></p>
+      <%} } }) %>
+    </form>
 
     <ul>
       <li><a href="/"> Main page</a></li>
@@ -30,7 +40,6 @@
       const xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-          console.log(xhttp.responseText);
         }
       };
       xhttp.open(`GET`, `?show=${arg}`, true);
