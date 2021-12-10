@@ -36,10 +36,11 @@ function dataToForm(dataObj) {
     Object.keys(dataObj).length !== 0
   ) {
     // Create form
-    let formHtml = `<form action="" method="post" id="deviceAddForm">`;
+    let formHtml = `<form action="/deviceAdd" method="post" id="deviceAddForm">`;
+
     // Iterate over key's
     for (const key in dataObj) {
-      if (key !== `type`) {
+      if (key !== `id` && key !== `type`) {
         // make input depending on key/value
         formHtml += createInput(key, dataObj[key]);
       }
@@ -93,21 +94,26 @@ function parseValue(value) {
  *  @returns {string} current time in format HH:MM
  */
 function getTime() {
-  // Current date
-  const now = new Date();
-  return `${now.getHours()}:${now.getMinutes()}`;
+  // Current time
+  const nowTime = new Date().toLocaleTimeString(`en-GB`, {
+    hour: `2-digit`,
+    minute: `2-digit`,
+  });
+  return nowTime;
 }
 
 /** Function to get current date and time
- *  @param {number=0} offsetYears optional: offset from current date in years
+ *  @param {number=0} addMin optional: offset from current date in minutes
  * @returns {string} date:time in form of YYYY:MM:DD HH:MM
  */
-function getDateTime(offsetYears = 0) {
+function getDateTime(addMin = 0) {
   // Current date
-  const now = new Date();
-  return `${
-    now.getFullYear() + offsetYears
-  }-${now.getMonth()}-${now.getDay()}T${now.getHours()}:${now.getMinutes()}`;
+  let nowDate = new Date();
+  const offset = nowDate.getTimezoneOffset();
+  nowDate = new Date(nowDate.getTime() + addMin * 60000 - offset * 60 * 1000);
+
+  // Format string
+  return `${nowDate.toISOString().slice(0, 16)}`;
 }
 
 /** Function to create input(-s) fields from data pair
@@ -118,6 +124,7 @@ function getDateTime(offsetYears = 0) {
 function createInput(key, value) {
   // Get data from key-value pair
   const name = propertyGetName(key);
+  const formName = key.slice(0, key.indexOf(`[`));
   const input = propertyGetInput(key);
   const properties = parseValue(value);
   // Create input form wrapper and fill it with appropriate content
@@ -128,7 +135,7 @@ function createInput(key, value) {
       properties.forEach((option, ind) => {
         // add radio buttons for all options (with labels)
         html += `<label><span>${option}</span>
-            <input type="${input}" name="${name}" value="${option}"`;
+            <input type="${input}" name="${formName}" value="${option}"`;
         // set checked for last option
         if (ind === properties.length - 1) {
           html += ` checked`;
@@ -139,11 +146,11 @@ function createInput(key, value) {
       break;
     case `time`:
       // Create appropriate input, default - current time
-      html += `<input type="${input}" name="${name}" value="${getTime()}">`;
+      html += `<input type="${input}" name="${formName}" value="${getTime()}">`;
       break;
     case `range`:
       // Create range input, based on the properties
-      html += `<input type="${input}" name="${name}" min="${
+      html += `<input type="${input}" name="${formName}" min="${
         properties[0]
       }" max="${properties[1]}" step="${
         properties[2]
@@ -153,17 +160,17 @@ function createInput(key, value) {
       break;
     case `color`:
       // Create color input
-      html += `<input type="${input}" name="${name}">`;
+      html += `<input type="${input}" name="${formName}" value="${properties[0]}">`;
       break;
     case `text`:
       // Create text input, based on the properties
-      html += `<input type="${input}" name="${name}" maxlength="${properties}">`;
+      html += `<input type="${input}" name="${formName}" maxlength="${properties[1]}" value="${properties[0]}">`;
       break;
     case `datetime`:
       // Create date-time input, based on the properties
-      html += `input type="${input}-local" name="${name}" min="${getDateTime()}" max="${getDateTime(
-        1
-      )}"`;
+      html += `<input type="${input}-local" name="${formName}" min="${getDateTime()}" value="${getDateTime(
+        5
+      )}">`;
       break;
   }
   // Finish and return input form wrapper

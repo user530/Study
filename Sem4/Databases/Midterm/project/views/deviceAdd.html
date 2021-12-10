@@ -14,7 +14,23 @@
   </head>
   <body>
     <h1>Add new smart device</h1>
-    <select name="device" id="select" onchange="ajaxReq(this.value)">
+
+    <span>Device name: </span>
+    <input
+      type="text"
+      id="device_name"
+      name="device_name"
+      form="deviceAddForm"
+      maxlength="50"
+      required
+    />
+    <span>Select your device type:</span>
+    <select
+      id="device_type"
+      name="device_type"
+      form="deviceAddForm"
+      onchange="ajaxReq(this.value)"
+    >
       <% types.forEach(row => {%>
       <option value="<%= row.type %>"><%= row.type %></option>
       <%}) %>

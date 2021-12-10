@@ -75,6 +75,12 @@ module.exports = (app) => {
       });
     }
   });
+
+  app.post(`/deviceAdd`, (req, res) => {
+    console.log(req.body);
+    res.render(`index.html`);
+  });
+
   app.get(`/deviceDelete`, (req, res) => {
     res.render(`deviceDelete.html`);
   });
