@@ -67,7 +67,7 @@ function createInput(key, value) {
   const name = propertyGetName(key);
   const input = propertyGetInput(key);
   const properties = parseValue(value);
-  let html = `<div id="${name}">${name}<br>`;
+  let html = `<div id="${name}"><span>${name}: </span>`;
   switch (input) {
     case `radio`:
       properties.forEach((option, ind) => {
@@ -83,14 +83,25 @@ function createInput(key, value) {
       });
       break;
     case `time`:
+      html += `<input type="${input}" name="${name}" value="00:00">`;
       break;
     case `range`:
+      html += `<input type="${input}" name="${name}" min="${
+        properties[0]
+      }" max="${properties[1]}" step="${
+        properties[2]
+      }" oninput="this.nextSibling.innerText=this.value"><span>${
+        (+properties[0] + +properties[1]) / 2
+      }</span>`;
       break;
     case `color`:
+      html += `<input type="${input}" name="${name}">`;
       break;
     case `text`:
+      html += `<input type="${input}" name="${name}" maxlength="${properties}">`;
       break;
     case `datetime`:
+      html += `input type="${input}-local" name="${name}" min="" max=""`;
       break;
   }
   html += `</div>`;

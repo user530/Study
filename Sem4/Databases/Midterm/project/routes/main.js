@@ -69,7 +69,7 @@ module.exports = (app) => {
           // Render page
           res.render(`deviceAdd.html`, {
             types: resTypes,
-            properties: cleanQuery(resProper),
+            form: dataToForm(cleanQuery(resProper)[0]),
           });
         });
       });
