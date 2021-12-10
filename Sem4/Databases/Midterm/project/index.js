@@ -23,13 +23,12 @@ app.use(sanitizer());
 // Port
 const port = 8089;
 
-// Database connection
-const connection = mysql.createConnection({
+const dbconfig = {
   host: `localhost`,
   user: `root`,
   password: ``,
   database: `express_project`,
-});
+};
 
 // Routing script
 require(`./routes/main`)(app);
@@ -46,14 +45,57 @@ app.listen(port, () => {
   console.log(`Express server is up and running at port ${port}`);
 });
 
-// Connect to database
-connection.connect((err) => {
-  if (err) {
-    console.error(`Problem with database connection...`, err);
-    throw err;
-  }
-  console.log(`Database connection established successfully...`);
-});
+// Database connection
+// const connection = mysql.createConnection(dbconfig);
 
-// Make database available from everywhere
-global.db = connection;
+// Connect to database
+// connection.connect((err) => {
+//   if (err) {
+//     console.error(`Problem with database connection...`, err);
+//     throw err;
+//   }
+//   console.log(`Database connection established successfully...`);
+// });
+
+// Database connection function
+function databaseConnection() {
+  // Create connection / Recreate, because we can't reuse the old one
+  let connection = mysql.createConnection(dbconfig);
+  // Connect to database
+  connection.connect((err) => {
+    // Check for problems
+    if (err) {
+      // Signal connection problem
+      console.error(`Problem with database connection...`, err);
+      // Try to re-establish connection
+      setTimeout(databaseConnection, 2000);
+    }
+    // Signal if case of success
+    console.log(`Database connection established successfully...`);
+  });
+
+  // Error event handler
+  connection.on(`error`, (err) => {
+    // Signal error
+    console.log(`Database error!`, err);
+    // If connection was lost
+    if (err.code === `PROTOCOL_CONNECTION_LOST`) {
+      // try to recconect
+      databaseConnection();
+    }
+    // in case of other error
+    else {
+      // throw it
+      throw err;
+    }
+  });
+
+  // Make database available from everywhere
+  global.db = connection;
+}
+
+// Initial database connection
+databaseConnection();
+
+// // Make database available from everywhere
+// global.db = connection;
