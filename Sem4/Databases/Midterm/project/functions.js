@@ -1,6 +1,6 @@
 /** Function to clean result from null properties
- * @param {array} sqlQueryResult array of objects, result of the mysql query
- * @returns {array} array of objects, cleared from keys with null values
+ * @param {Array.<object>} sqlQueryResult array of objects, result of the mysql query
+ * @returns {Array.<object>} array of objects, cleared from keys with null values
  */
 function cleanQuery(sqlQueryResult) {
   // Result variable
@@ -81,7 +81,7 @@ function propertyGetInput(propertyString) {
 
 /** Function to get values
  *  @param {string} value string value containing additional information about device
- *  @returns {array} array of properties
+ *  @returns {Array.<string>} array of properties
  */
 function parseValue(value) {
   const res = value.split(`,`);
@@ -154,9 +154,9 @@ function createInput(key, value) {
         properties[0]
       }" max="${properties[1]}" step="${
         properties[2]
-      }" oninput="this.nextSibling.innerText=this.value"><span>${
+      }" oninput="this.nextSibling.innerText=this.value"><span>${Math.floor(
         (+properties[0] + +properties[1]) / 2
-      }</span>`;
+      )}</span>`;
       break;
     case `color`:
       // Create color input
@@ -178,6 +178,31 @@ function createInput(key, value) {
   return html;
 }
 
+/** Function to create insert prepared sql statement template
+ * @param {number} dataLength number of params to be inserted
+ * @param {Array.<string>} keys array of row names (strings)
+ * @returns {string} sql insert prepared statement template
+ */
+function insertTemplate(dataLength, keys) {
+  // Check that request is not empty
+  if (dataLength > 0) {
+    // param string base
+    let str = `?,`;
+    // Make str of repeated number of params, delete last coma
+    str = str.repeat(dataLength).slice(0, -1);
+    // Insert query template
+    let sqlInsert = `INSERT INTO devices(`;
+    // Iterate over keys
+    keys.forEach((key) => {
+      // because our row names include special characters we need to add backticks
+      sqlInsert += `\`${key}\`,`;
+    });
+    // finish insert statement string and return it
+    sqlInsert = `${sqlInsert.slice(0, -1)}) VALUES (${str})`;
+    return sqlInsert;
+  }
+}
+
 module.exports = {
   cleanQuery: cleanQuery,
   dataToForm: dataToForm,
@@ -185,4 +210,5 @@ module.exports = {
   propertyGetInput: propertyGetInput,
   parseValue: parseValue,
   createInput: createInput,
+  insertTemplate: insertTemplate,
 };

@@ -1,4 +1,4 @@
-const { cleanQuery, ajaxReq, dataToForm } = require("../functions");
+const { query } = require("express");
 const functions = require(`../functions`);
 
 module.exports = (app) => {
@@ -13,7 +13,7 @@ module.exports = (app) => {
 
   app.get(`/list`, (req, res) => {
     // Query string to select all information from devices table
-    const queryStr = `SELECT * FROM devices_properties`;
+    const queryStr = `SELECT * FROM devices`;
     // Execute query
     db.query(queryStr, (err, dbResult) => {
       // Handle possible error
@@ -23,7 +23,7 @@ module.exports = (app) => {
         res.redirect(`/`);
       }
       // Render page if there is no error
-      res.render(`list.html`, { devices: cleanQuery(dbResult) });
+      res.render(`list.html`, { devices: functions.cleanQuery(dbResult) });
     });
   });
 
@@ -31,7 +31,7 @@ module.exports = (app) => {
     // When user selects input
     if (req.query.show) {
       // Request to get new properties list
-      const reqNewProper = `SELECT * FROM devices_properties WHERE type=?`;
+      const reqNewProper = `SELECT * FROM properties WHERE type=?`;
       // Sanitized input - type of the device to get properties
       const sanitInp = req.sanitize(req.query.show);
 
@@ -43,13 +43,13 @@ module.exports = (app) => {
           res.redirect(`/`);
         }
         // if no errors, send new data back
-        const info = cleanQuery(resNewProper);
-        res.send(dataToForm(info[0]));
+        const info = functions.cleanQuery(resNewProper);
+        res.send(functions.dataToForm(info[0]));
       });
     }
     // On initial load
     else {
-      const reqTypes = `SELECT type FROM devices_properties`;
+      const reqTypes = `SELECT type FROM properties`;
       db.query(reqTypes, (err, resTypes) => {
         // Handle error
         if (err) {
@@ -58,7 +58,7 @@ module.exports = (app) => {
         }
 
         // Get properties of 1st device
-        const reqInitProper = `SELECT * FROM devices_properties LIMIT 1`;
+        const reqInitProper = `SELECT * FROM properties LIMIT 1`;
         db.query(reqInitProper, (err2, resProper) => {
           // Handle error
           if (err2) {
@@ -69,7 +69,7 @@ module.exports = (app) => {
           // Render page
           res.render(`deviceAdd.html`, {
             types: resTypes,
-            form: dataToForm(cleanQuery(resProper)[0]),
+            form: functions.dataToForm(functions.cleanQuery(resProper)[0]),
           });
         });
       });
@@ -77,8 +77,28 @@ module.exports = (app) => {
   });
 
   app.post(`/deviceAdd`, (req, res) => {
-    console.log(req.body);
-    res.render(`index.html`);
+    // Keys from data object passed through post request
+    const bodyKeys = Object.keys(req.body);
+    // Prepare statement template
+    const template = functions.insertTemplate(bodyKeys.length, bodyKeys);
+    // Prepare params
+    const sqlParams = [];
+    // Iterate over all keys
+    bodyKeys.forEach((key) => {
+      // Sanitize data passed and add to the param array
+      sqlParams.push(req.sanitize(req.body[key]));
+    });
+
+    // Query to new device data
+    db.query(template, sqlParams, (sqlErr, insertRes) => {
+      // Handle errors
+      if (sqlErr) {
+        console.error(sqlErr);
+        res.redirect(`/`);
+      }
+      // Render page
+      res.render(`index.html`, { message: insertRes });
+    });
   });
 
   app.get(`/deviceDelete`, (req, res) => {
