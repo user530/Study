@@ -5,6 +5,9 @@ const app = express();
 // Body-parser
 const parser = require(`body-parser`);
 
+// Cookie-parser
+const cookieParser = require(`cookie-parser`);
+
 // Mysql
 const mysql = require(`mysql`);
 
@@ -16,6 +19,9 @@ const md5 = require(`md5`);
 
 // Setup body-parser
 app.use(parser.urlencoded({ extended: true }));
+
+// Setup cookie-parser
+app.use(cookieParser(`cookie key`));
 
 // Setup express sanitizer
 app.use(sanitizer());
@@ -42,20 +48,8 @@ app.set(`view engine`, `ejs`);
 app.engine(`html`, require(`ejs`).renderFile);
 // Activate server
 app.listen(port, () => {
-  console.log(`Express server is up and running at port ${port}`);
+  console.log(`Express server is up and running at port ${port}.`);
 });
-
-// Database connection
-// const connection = mysql.createConnection(dbconfig);
-
-// Connect to database
-// connection.connect((err) => {
-//   if (err) {
-//     console.error(`Problem with database connection...`, err);
-//     throw err;
-//   }
-//   console.log(`Database connection established successfully...`);
-// });
 
 // Database connection function
 function databaseConnection() {
@@ -66,21 +60,22 @@ function databaseConnection() {
     // Check for problems
     if (err) {
       // Signal connection problem
-      console.error(`Problem with database connection...`, err);
+      console.error(`Problem with database connection!`, err.message);
       // Try to re-establish connection
       setTimeout(databaseConnection, 2000);
     }
     // Signal if case of success
-    console.log(`Database connection established successfully...`);
+    console.log(`Database connection established successfully.`);
   });
 
   // Error event handler
   connection.on(`error`, (err) => {
     // Signal error
-    console.log(`Database error!`, err);
+    console.log(`Database connectiont error!`, err.message);
     // If connection was lost
     if (err.code === `PROTOCOL_CONNECTION_LOST`) {
       // try to recconect
+      console.log(`Attempting to reconnect...`);
       databaseConnection();
     }
     // in case of other error
@@ -96,6 +91,3 @@ function databaseConnection() {
 
 // Initial database connection
 databaseConnection();
-
-// // Make database available from everywhere
-// global.db = connection;

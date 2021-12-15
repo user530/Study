@@ -8,13 +8,17 @@
   </head>
   <body>
     <h2>List of all items</h2>
-    <% for(const item of devices){%>
-    <div>
-      <% Object.keys(item).forEach(element => {%>
-      <p><%=element %> = <%= item[element] %></p>
-    </div>
 
-    <%});} %>
+    <% try{if(sysMsg){%>
+    <div id="sysMsg" class="<%=sysMsg[0]%>"><%= sysMsg[1] %></div>
+    <%}}catch{}; %>
+
+    <br />
+
+    <% for(const item of devices){%>
+    <div><%= item[`name`] %></div>
+
+    <%} %>
     <ul>
       <li><a href="/"> Main page</a></li>
       <li><a href="/about"> About</a></li>

@@ -1,4 +1,5 @@
 const { query } = require("express");
+const md5 = require("md5");
 const functions = require(`../functions`);
 
 module.exports = (app) => {
@@ -19,27 +20,47 @@ module.exports = (app) => {
       // Handle possible error
       if (err) {
         // Log error and redirect to the main page
-        console.error(err);
+        console.error(`Database querry error - ${queryStr}!`, err.message);
         res.redirect(`/`);
       }
+
+      // Prepare list of all available devices
+      const data = { devices: functions.cleanQuery(dbResult) };
+
+      // If page is queried with service message
+      if (req.query[`msg`]) {
+        // Get the message
+        const msg = req.query[`msg`];
+        // Check for the cookies to confirm
+        if (req.cookies[msg] === md5(true)) {
+          // if true - prepare MSG data: operation success status, msg text
+          data.sysMsg = [`Success`, `New device successfully added`];
+        }
+        console.log(
+          `Cookie content:${req.cookies[msg]}, check hash: ${md5(true)}`
+        );
+      }
       // Render page if there is no error
-      res.render(`list.html`, { devices: functions.cleanQuery(dbResult) });
+      res.render(`list.html`, data);
     });
   });
 
   app.get(`/deviceAdd`, (req, res) => {
-    // When user selects input
+    // When user selects input -> Route1
     if (req.query.show) {
       // Request to get new properties list
       const reqNewProper = `SELECT * FROM properties WHERE type=?`;
       // Sanitized input - type of the device to get properties
       const sanitInp = req.sanitize(req.query.show);
 
-      // DB Request
+      // Request for additional data, based on selected type
       db.query(reqNewProper, sanitInp, (err, resNewProper) => {
         // handle errors
         if (err) {
-          console.error(err);
+          console.error(
+            `Database querry error - ${reqNewProper}!`,
+            err.message
+          );
           res.redirect(`/`);
         }
         // if no errors, send new data back
@@ -47,13 +68,13 @@ module.exports = (app) => {
         res.send(functions.dataToForm(info[0]));
       });
     }
-    // On initial load
+    // On initial load -> Route 2
     else {
       const reqTypes = `SELECT type FROM properties`;
       db.query(reqTypes, (err, resTypes) => {
         // Handle error
         if (err) {
-          console.error(err);
+          console.error(`Database querry error - ${reqTypes}!`, err.message);
           res.redirect(`/`);
         }
 
@@ -62,7 +83,10 @@ module.exports = (app) => {
         db.query(reqInitProper, (err2, resProper) => {
           // Handle error
           if (err2) {
-            console.error(err2);
+            console.error(
+              `Database querry error - ${reqInitProper}!`,
+              err2.message
+            );
             res.redirect(`/`);
           }
 
@@ -76,6 +100,7 @@ module.exports = (app) => {
     }
   });
 
+  // Add new device to the Database based on the
   app.post(`/deviceAdd`, (req, res) => {
     // Keys from data object passed through post request
     const bodyKeys = Object.keys(req.body);
@@ -83,6 +108,7 @@ module.exports = (app) => {
     const template = functions.insertTemplate(bodyKeys.length, bodyKeys);
     // Prepare params
     const sqlParams = [];
+
     // Iterate over all keys
     bodyKeys.forEach((key) => {
       // Sanitize data passed and add to the param array
@@ -93,11 +119,22 @@ module.exports = (app) => {
     db.query(template, sqlParams, (sqlErr, insertRes) => {
       // Handle errors
       if (sqlErr) {
-        console.error(sqlErr);
+        console.error(`Database querry error - ${template}!`, sqlErr.message);
         res.redirect(`/`);
       }
-      // Render page
-      res.render(`index.html`, { message: insertRes });
+
+      // Prepare service message
+      const msg = `deviceAdded`;
+
+      // Set cookie to confirm operation
+      res.cookie(msg, md5(true), {
+        // Secure connection cookie, life time 10 sec
+        maxAge: 1000 * 10,
+        secure: true,
+      });
+
+      // Redirect to the device list
+      res.redirect(`/list?msg=${msg}`);
     });
   });
 
