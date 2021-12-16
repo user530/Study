@@ -83,15 +83,7 @@ module.exports = (app) => {
 
         // If page is queried with service message
         checkForMessage(req, data);
-        // if (req.query[`msg`]) {
-        //   // Get the query param
-        //   const param = req.query[`msg`];
-        //   // Check for the cookies to confirm
-        //   if (req.cookies[`req`] === md5(md5(param))) {
-        //     // if true - prepare MSG data: operation success status, msg text
-        //     data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
-        //   }
-        // }
+
         // Render page if there is no error
         res.render(`list.html`, data);
       }
@@ -99,33 +91,8 @@ module.exports = (app) => {
   });
 
   app.get(`/deviceAdd`, (req, res) => {
-    // When user selects input -> Route1
-    if (req.query.show) {
-      // Request to get new properties list
-      const reqNewProper = `SELECT * FROM properties WHERE type=?`;
-      // Sanitized input - type of the device to get properties
-      const sanitInp = req.sanitize(req.query.show);
-
-      // Request for additional properties data, based on selected type
-      db.query(reqNewProper, sanitInp, (err, resNewProper) => {
-        // handle errors
-        if (err) {
-          // Log error
-          console.error(
-            `Database querry error - ${reqNewProper}!`,
-            err.message
-          );
-          // Redirect with message
-          handleRedirect(`data`, false, res);
-        } else {
-          // if no errors, send new data back
-          const info = functions.cleanQuery(resNewProper);
-          res.send(functions.dataToForm(info[0]));
-        }
-      });
-    }
-    // On initial load -> Route 2
-    else {
+    // On initial load -> Route 1
+    if (!req.query.show) {
       const reqTypes = `SELECT type FROM properties`;
       db.query(reqTypes, (err, resTypes) => {
         // Handle error
@@ -160,6 +127,92 @@ module.exports = (app) => {
         });
       });
     }
+    // When user selects input -> Route2
+    else {
+      // Request to get new properties list
+      const reqNewProper = `SELECT * FROM properties WHERE type=?`;
+      // Sanitized input - type of the device to get properties
+      const sanitInp = req.sanitize(req.query.show);
+
+      // Request for additional properties data, based on selected type
+      db.query(reqNewProper, sanitInp, (err, resNewProper) => {
+        // handle errors
+        if (err) {
+          // Log error
+          console.error(
+            `Database querry error - ${reqNewProper}!`,
+            err.message
+          );
+          // Redirect with message
+          handleRedirect(`data`, false, res);
+        } else {
+          // if no errors, send new data back
+          const info = functions.cleanQuery(resNewProper);
+          res.send(functions.dataToForm(info[0]));
+        }
+      });
+    }
+    // // When user selects input -> Route1
+    // if (req.query.show) {
+    //   // Request to get new properties list
+    //   const reqNewProper = `SELECT * FROM properties WHERE type=?`;
+    //   // Sanitized input - type of the device to get properties
+    //   const sanitInp = req.sanitize(req.query.show);
+
+    //   // Request for additional properties data, based on selected type
+    //   db.query(reqNewProper, sanitInp, (err, resNewProper) => {
+    //     // handle errors
+    //     if (err) {
+    //       // Log error
+    //       console.error(
+    //         `Database querry error - ${reqNewProper}!`,
+    //         err.message
+    //       );
+    //       // Redirect with message
+    //       handleRedirect(`data`, false, res);
+    //     } else {
+    //       // if no errors, send new data back
+    //       const info = functions.cleanQuery(resNewProper);
+    //       res.send(functions.dataToForm(info[0]));
+    //     }
+    //   });
+    // }
+    // // On initial load -> Route 2
+    // else {
+    //   const reqTypes = `SELECT type FROM properties`;
+    //   db.query(reqTypes, (err, resTypes) => {
+    //     // Handle error
+    //     if (err) {
+    //       // Log error
+    //       console.error(`Database querry error - ${reqTypes}!`, err.message);
+    //       // Redirect with message
+    //       handleRedirect(`data`, false, res);
+    //     }
+
+    //     // Get properties of 1st device
+    //     const reqInitProper = `SELECT * FROM properties LIMIT 1`;
+
+    //     // Query information about first device type
+    //     db.query(reqInitProper, (err2, resProper) => {
+    //       // Handle error
+    //       if (err2) {
+    //         // Log error
+    //         console.error(
+    //           `Database querry error - ${reqInitProper}!`,
+    //           err2.message
+    //         );
+    //         // Redirect with message
+    //         handleRedirect(`data`, false, res);
+    //       } else {
+    //         // Render page
+    //         res.render(`deviceAdd.html`, {
+    //           types: resTypes,
+    //           form: functions.dataToForm(functions.cleanQuery(resProper)[0]),
+    //         });
+    //       }
+    //     });
+    //   });
+    // }
   });
 
   // Add new device to the Database based on the
@@ -198,7 +251,8 @@ module.exports = (app) => {
   app.get(`/deviceStatus`, (req, res) => {
     // if request w/o params
     if (Object.keys(req.query).length === 0) {
-      console.log("empty");
+      // Redirect to the device list
+      res.redirect(`/list`);
     }
     // if request 1 item
     else if (req.query.device) {
@@ -220,7 +274,6 @@ module.exports = (app) => {
           // If device found
           if (itemRes.length > 0) {
             const data = functions.cleanQuery(itemRes);
-            console.log(data);
             // Render page with information about the device
             res.render(`deviceStatus.html`, { dbData: data });
           }

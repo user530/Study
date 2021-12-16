@@ -13,7 +13,13 @@
     <title>MySmartHome - Device status</title>
   </head>
   <body>
-    <h1>Device status</h1>
+    <% try{ if(dbData){%>
+    <h1>Device status: <%=dbData[0].name%></h1>
+    <br />
+
+    <%Object.keys(dbData[0]).forEach(key=>{%>
+    <p><%=key%> = <%=dbData[0][key]%></p>
+    <%}) }}catch{} %>
     <p>
       Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusantium
       minima rem veritatis perferendis ratione, doloremque illo dolorum eius!
