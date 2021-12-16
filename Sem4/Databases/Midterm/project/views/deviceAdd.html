@@ -22,8 +22,11 @@
       name="name"
       form="deviceAddForm"
       maxlength="50"
+      pattern="[A-Za-z0-9]{3,}"
+      title="Alphanumeric latin characters, minimum length 3"
       required
     />
+    <br />
     <span>Select your device type:</span>
     <select
       id="device_type"
@@ -35,6 +38,7 @@
       <option value="<%= row.type %>"><%= row.type %></option>
       <%}) %>
     </select>
+    <br />
     <div id="addDevice"><%- form %></div>
 
     <ul>
@@ -48,16 +52,22 @@
   </body>
   <script>
     function ajaxReq(arg) {
+      // Create request
       const xhttp = new XMLHttpRequest();
+      // Handle state change
       xhttp.onreadystatechange = function () {
+        // If request is successfull
         if (this.readyState == 4 && this.status == 200) {
+          // Find content wrapper
           const elem = document.querySelector(`#addDevice`);
+          // If wrapper exist
           if (elem) {
-            // Load new form
+            // Load new content from response
             elem.innerHTML = xhttp.responseText;
           }
         }
       };
+      // Send request with param show equal to the selected device type and send it
       xhttp.open(`GET`, `?show=${arg}`, true);
       xhttp.send();
     }

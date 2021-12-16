@@ -5,7 +5,19 @@ const functions = require(`../functions`);
 module.exports = (app) => {
   // Main page route - if non existing link is given, reroute to main
   app.get(`/`, (req, res) => {
-    res.render(`index.html`);
+    // Setup response data object
+    const data = {};
+    // If page is queried with service message
+    if (req.query[`msg`]) {
+      // Get the query param
+      const param = req.query[`msg`];
+      // Check for the cookies to confirm
+      if (req.cookies[`req`] === md5(md5(param))) {
+        // if true - prepare MSG data: operation success status, msg text
+        data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
+      }
+    }
+    res.render(`index.html`, data);
   });
 
   app.get(`/about`, (req, res) => {
@@ -19,29 +31,40 @@ module.exports = (app) => {
     db.query(queryStr, (err, dbResult) => {
       // Handle possible error
       if (err) {
-        // Log error and redirect to the main page
+        // Log error
         console.error(`Database querry error - ${queryStr}!`, err.message);
-        res.redirect(`/`);
-      }
 
-      // Prepare list of all available devices
-      const data = { devices: functions.cleanQuery(dbResult) };
+        // Prepare service message
+        const bigCookie = functions.prepareMessage(`data`, false);
 
-      // If page is queried with service message
-      if (req.query[`msg`]) {
-        // Get the message
-        const msg = req.query[`msg`];
-        // Check for the cookies to confirm
-        if (req.cookies[msg] === md5(true)) {
-          // if true - prepare MSG data: operation success status, msg text
-          data.sysMsg = [`Success`, `New device successfully added`];
+        // Iterate over object and set cookies
+        Object.keys(bigCookie).forEach((key) => {
+          res.cookie(key, bigCookie[key], {
+            // Secure connection cookie, life time 10 sec
+            maxAge: 1000 * 10,
+            secure: true,
+          });
+        });
+
+        // Redirect to the main page with service message
+        res.redirect(`/?msg=data`);
+      } else {
+        // Setup response data object, add list of all available devices
+        const data = { devices: functions.cleanQuery(dbResult) };
+
+        // If page is queried with service message
+        if (req.query[`msg`]) {
+          // Get the query param
+          const param = req.query[`msg`];
+          // Check for the cookies to confirm
+          if (req.cookies[`req`] === md5(md5(param))) {
+            // if true - prepare MSG data: operation success status, msg text
+            data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
+          }
         }
-        console.log(
-          `Cookie content:${req.cookies[msg]}, check hash: ${md5(true)}`
-        );
+        // Render page if there is no error
+        res.render(`list.html`, data);
       }
-      // Render page if there is no error
-      res.render(`list.html`, data);
     });
   });
 
@@ -61,11 +84,11 @@ module.exports = (app) => {
             `Database querry error - ${reqNewProper}!`,
             err.message
           );
-          res.redirect(`/`);
+        } else {
+          // if no errors, send new data back
+          const info = functions.cleanQuery(resNewProper);
+          res.send(functions.dataToForm(info[0]));
         }
-        // if no errors, send new data back
-        const info = functions.cleanQuery(resNewProper);
-        res.send(functions.dataToForm(info[0]));
       });
     }
     // On initial load -> Route 2
@@ -88,13 +111,13 @@ module.exports = (app) => {
               err2.message
             );
             res.redirect(`/`);
+          } else {
+            // Render page
+            res.render(`deviceAdd.html`, {
+              types: resTypes,
+              form: functions.dataToForm(functions.cleanQuery(resProper)[0]),
+            });
           }
-
-          // Render page
-          res.render(`deviceAdd.html`, {
-            types: resTypes,
-            form: functions.dataToForm(functions.cleanQuery(resProper)[0]),
-          });
         });
       });
     }
@@ -119,22 +142,38 @@ module.exports = (app) => {
     db.query(template, sqlParams, (sqlErr, insertRes) => {
       // Handle errors
       if (sqlErr) {
+        // Send error to the console
         console.error(`Database querry error - ${template}!`, sqlErr.message);
-        res.redirect(`/`);
+
+        // Prepare service message
+        const bigCookie = functions.prepareMessage(`deviceAdd`, false);
+
+        // Iterate over object and set cookies
+        Object.keys(bigCookie).forEach((key) => {
+          res.cookie(key, bigCookie[key], {
+            // Secure connection cookie, life time 10 sec
+            maxAge: 1000 * 10,
+            secure: true,
+          });
+        });
+        // redirect with message
+        res.redirect(`/?msg=deviceAdd`);
+      } else {
+        // Prepare service message
+        const bigCookie = functions.prepareMessage(`deviceAdd`, true);
+
+        // Iterate over object and set cookies
+        Object.keys(bigCookie).forEach((key) => {
+          res.cookie(key, bigCookie[key], {
+            // Secure connection cookie, life time 10 sec
+            maxAge: 1000 * 10,
+            secure: true,
+          });
+        });
+
+        // Redirect to the device list
+        res.redirect(`/list?msg=deviceAdd`);
       }
-
-      // Prepare service message
-      const msg = `deviceAdded`;
-
-      // Set cookie to confirm operation
-      res.cookie(msg, md5(true), {
-        // Secure connection cookie, life time 10 sec
-        maxAge: 1000 * 10,
-        secure: true,
-      });
-
-      // Redirect to the device list
-      res.redirect(`/list?msg=${msg}`);
     });
   });
 

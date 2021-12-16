@@ -15,10 +15,38 @@
 
     <br />
 
-    <% for(const item of devices){%>
-    <div><%= item[`name`] %></div>
-
+    <% if(devices.length > 0){%>
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Check settings</th>
+        <th>Change settings</th>
+        <th>Delete device</th>
+      </tr>
+      <% for(let i = 0; i < devices.length;i++){%>
+      <tr>
+        <td><%=i+1%></td>
+        <td><%=devices[i].name%></td>
+        <td><%=devices[i].type%></td>
+        <td>
+          <a href="/deviceStatus?device=<%=devices[i].id%>"
+            >Check - <%=devices[i].name%></a
+          >
+        </td>
+        <td><a href="">Change settings - <%=devices[i].name%></a></td>
+        <td><a href="">Delete - <%=devices[i].name%></a></td>
+      </tr>
+      <%}%>
+    </table>
+    <%}else{%>
+    <p>
+      There are no devices to display yet. Please add some smart devices and
+      check later!
+    </p>
     <%} %>
+
     <ul>
       <li><a href="/"> Main page</a></li>
       <li><a href="/about"> About</a></li>

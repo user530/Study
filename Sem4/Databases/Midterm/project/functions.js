@@ -1,3 +1,5 @@
+const md5 = require("md5");
+
 /** Function to clean result from null properties
  * @param {Array.<object>} sqlQueryResult array of objects, result of the mysql query
  * @returns {Array.<object>} array of objects, cleared from keys with null values
@@ -203,6 +205,43 @@ function insertTemplate(dataLength, keys) {
   }
 }
 
+/** Function to prepare message object for cookies
+ * @param {string} msg message, that will be stored and used for check
+ * @param {boolean} status message status: true - Success message, false - Error message
+ * @returns {object.<string>} object of strings that store request code, sets up status and message info
+ */
+function prepareMessage(msg, status) {
+  const result = {};
+  switch (msg) {
+    case `deviceAdd`:
+      // Code req
+      result.req = md5(md5(msg));
+      if (status === true) {
+        // Set status
+        result.status = `Success`;
+        // Set msg
+        result.msg = `New device successfully added.`;
+      } else if (status === false) {
+        // Set status
+        result.status = `Error`;
+        // Set msg
+        result.msg = `Failed to add new device, please check your data!`;
+      }
+      break;
+    case `data`:
+      // Code req
+      result.req = md5(md5(msg));
+      if (status === false) {
+        // Set status
+        result.status = `Error`;
+        // Set msg
+        result.msg = `Failed to load data, please check your connection and try again!`;
+      }
+      break;
+  }
+  return result;
+}
+
 module.exports = {
   cleanQuery: cleanQuery,
   dataToForm: dataToForm,
@@ -211,4 +250,5 @@ module.exports = {
   parseValue: parseValue,
   createInput: createInput,
   insertTemplate: insertTemplate,
+  prepareMessage: prepareMessage,
 };

@@ -19,7 +19,9 @@
         width="52"
       />
     </h1>
-    <% try{if(data){ %> <%- data %> <% }} catch{ } %>
+    <% try{if(sysMsg){ %>
+    <div id="sysMsg" class="<%=sysMsg[0]%>"><%= sysMsg[1] %></div>
+    <% }} catch{ } %>
     <p>
       This application allows you to connect and control all your devices to
       this single dashboard. To proceed, please select one of the available
