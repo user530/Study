@@ -1,5 +1,6 @@
 const { query } = require("express");
 const md5 = require("md5");
+const { createInput } = require("../functions");
 const functions = require(`../functions`);
 
 /** Function to handle redirect with service message
@@ -152,67 +153,6 @@ module.exports = (app) => {
         }
       });
     }
-    // // When user selects input -> Route1
-    // if (req.query.show) {
-    //   // Request to get new properties list
-    //   const reqNewProper = `SELECT * FROM properties WHERE type=?`;
-    //   // Sanitized input - type of the device to get properties
-    //   const sanitInp = req.sanitize(req.query.show);
-
-    //   // Request for additional properties data, based on selected type
-    //   db.query(reqNewProper, sanitInp, (err, resNewProper) => {
-    //     // handle errors
-    //     if (err) {
-    //       // Log error
-    //       console.error(
-    //         `Database querry error - ${reqNewProper}!`,
-    //         err.message
-    //       );
-    //       // Redirect with message
-    //       handleRedirect(`data`, false, res);
-    //     } else {
-    //       // if no errors, send new data back
-    //       const info = functions.cleanQuery(resNewProper);
-    //       res.send(functions.dataToForm(info[0]));
-    //     }
-    //   });
-    // }
-    // // On initial load -> Route 2
-    // else {
-    //   const reqTypes = `SELECT type FROM properties`;
-    //   db.query(reqTypes, (err, resTypes) => {
-    //     // Handle error
-    //     if (err) {
-    //       // Log error
-    //       console.error(`Database querry error - ${reqTypes}!`, err.message);
-    //       // Redirect with message
-    //       handleRedirect(`data`, false, res);
-    //     }
-
-    //     // Get properties of 1st device
-    //     const reqInitProper = `SELECT * FROM properties LIMIT 1`;
-
-    //     // Query information about first device type
-    //     db.query(reqInitProper, (err2, resProper) => {
-    //       // Handle error
-    //       if (err2) {
-    //         // Log error
-    //         console.error(
-    //           `Database querry error - ${reqInitProper}!`,
-    //           err2.message
-    //         );
-    //         // Redirect with message
-    //         handleRedirect(`data`, false, res);
-    //       } else {
-    //         // Render page
-    //         res.render(`deviceAdd.html`, {
-    //           types: resTypes,
-    //           form: functions.dataToForm(functions.cleanQuery(resProper)[0]),
-    //         });
-    //       }
-    //     });
-    //   });
-    // }
   });
 
   // Add new device to the Database based on the
@@ -273,9 +213,56 @@ module.exports = (app) => {
         else {
           // If device found
           if (itemRes.length > 0) {
-            const data = functions.cleanQuery(itemRes);
-            // Render page with information about the device
-            res.render(`deviceStatus.html`, { dbData: data });
+            // Collect data about device
+            const data = functions.cleanQuery(itemRes)[0];
+
+            // Prepare statement to query information about required device type
+            const typeQuery = `SELECT * FROM properties WHERE type=?`;
+            // Prepare query param
+            const typeParam = req.sanitize(data[`type`]);
+
+            // Store information about required device type and properties limits
+            db.query(typeQuery, [typeParam], (typeErr, typeRes) => {
+              // Handle error
+              if (typeErr) {
+                // Log error
+                console.error(typeErr);
+                // Redirect with message
+                handleRedirect(`data`, false, res);
+              }
+              // If no errors
+              else {
+                // Prepare html string
+                let html = `<div id="${data[`name`]}" class="deviceCard">
+                <div id="Type">Device type: ${data[`type`]}</div>`;
+                // Object containing required type properties
+                const typeObj = functions.cleanQuery(typeRes)[0];
+                // Iterate over device properties
+                Object.keys(typeObj).forEach((key) => {
+                  if (key !== `type`) {
+                    // Column name w/o input type, to get value from the data table
+                    const colName = functions.splitPropertyStr(key)[0];
+
+                    console.log(data[colName]);
+
+                    // Create information field for device type and load values from DB
+                    html += functions.createInput(
+                      key,
+                      typeObj[key],
+                      data[colName],
+                      true
+                    );
+                  }
+                });
+                // Finish html string
+                html += `</div>`;
+                // Render page with information about the device
+                res.render(`deviceStatus.html`, {
+                  dbData: data,
+                  deviceHtml: html,
+                });
+              }
+            });
           }
           // If there is no such device
           else {

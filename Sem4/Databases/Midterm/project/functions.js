@@ -1,3 +1,4 @@
+const e = require("express");
 const md5 = require("md5");
 
 /** Function to clean result from null properties
@@ -53,18 +54,30 @@ function dataToForm(dataObj) {
   }
 }
 
+/** Function to break property string into two parts
+ * @param {string} propertyString property string containing name and input type
+ * @returns {Array} Element1 String before brakets, element2 string inside brackets
+ */
+function splitPropertyStr(propertyString) {
+  const part1 = propertyString.slice(0, propertyString.indexOf(`[`));
+  const part2 = propertyString.slice(
+    propertyString.indexOf(`[`) + 1,
+    propertyString.indexOf(`]`)
+  );
+  // Slice off input part
+  return [part1, part2];
+}
+
 /** Function to get formated name string from the property string format
  * @param {string} propertyString property string containing name and input type
  * @returns {string} properly formated name string of device property
  */
 function propertyGetName(propertyString) {
   // Slice off input part
-  let propertyName = propertyString.slice(0, propertyString.indexOf(`[`));
+  let propertyName = splitPropertyStr(propertyString)[0];
   // Split words and recconect them with white space
   propertyName = propertyName.split(`_`);
   propertyName = propertyName.join(` `);
-  // Change format to first char upper case and return proper name
-  propertyName = propertyName[0].toUpperCase() + propertyName.slice(1);
   return propertyName;
 }
 
@@ -72,14 +85,14 @@ function propertyGetName(propertyString) {
  * @param {string} propertyString property string containing name and input type
  * @returns {string} input type string for device property input form
  */
-function propertyGetInput(propertyString) {
-  // Get type string from brackets
-  const propertyInputStr = propertyString.slice(
-    propertyString.indexOf(`[`) + 1,
-    propertyString.indexOf(`]`)
-  );
-  return propertyInputStr;
-}
+// function propertyGetInput(propertyString) {
+//   // Get type string from brackets
+//   const propertyInputStr = propertyString.slice(
+//     propertyString.indexOf(`[`) + 1,
+//     propertyString.indexOf(`]`)
+//   );
+//   return propertyInputStr;
+// }
 
 /** Function to get values
  *  @param {string} value string value containing additional information about device
@@ -118,19 +131,52 @@ function getDateTime(addMin = 0) {
   return `${nowDate.toISOString().slice(0, 16)}`;
 }
 
+/** Function to clean adjust database time format
+ * @param {string} timeStr time string in the format HH:MM:SS.MS
+ * @returns timestamp string with trimed seconds and miliseconds
+ */
+function fixTime(timeStr) {
+  // Index of the first separator(minutes)
+  const min = timeStr.indexOf(`:`);
+  // Index of the second separator(sec)
+  const sec = timeStr.indexOf(`:`, min + 1);
+  return timeStr.slice(0, sec);
+}
+
+/** Function to transform date object to input string format
+ * @param {Date} dbDateObj date object storing date in ISOS format
+ * @returns {string} local datetime in ISOS format - YYYY-MM-DDTHH:MM
+ */
+function fixDatetime(dbDateObj) {
+  // Calculate offset
+  const offset = new Date().getTimezoneOffset();
+  // Adjust time to the local timezone
+  dbDateObj = new Date(dbDateObj.getTime() - offset * 60 * 1000);
+  // Transform to the string
+  dbDateObj = dbDateObj.toISOString();
+  // Trim after minutes and return
+  return fixTime(dbDateObj);
+}
+
 /** Function to create input(-s) fields from data pair
  * @param {string} key property string, containing property name and required input type
  * @param {string} value property valid values, limits or ranges
+ * @param {null} presetValue preset value for the input field, default - null
+ * @param {boolean} locked onptional flag to lock input, default - false
  * @returns {string} input fields in html string form
  */
-function createInput(key, value) {
+function createInput(key, value, presetValue = null, locked = false) {
   // Get data from key-value pair
   const name = propertyGetName(key);
   const formName = key.slice(0, key.indexOf(`[`));
-  const input = propertyGetInput(key);
+  const input = splitPropertyStr(key)[1];
   const properties = parseValue(value);
   // Create input form wrapper and fill it with appropriate content
   let html = `<div id="${name}"><span>${name}: </span>`;
+
+  // If lock flag passed, setup disable property for the input, else - empty
+  const lock = locked ? ` disabled` : ``;
+
   switch (input) {
     case `radio`:
       // For each property stored
@@ -138,41 +184,91 @@ function createInput(key, value) {
         // add radio buttons for all options (with labels)
         html += `<label><span>${option}</span>
             <input type="${input}" name="${formName}" value="${option}"`;
-        // set checked for last option
-        if (ind === properties.length - 1) {
+        // If presetValue is passed -> check button with same value
+        if (presetValue && option === presetValue) {
           html += ` checked`;
         }
-        // finish radio input
-        html += `></label>`;
+        // If no presetValue was passed -> check the last option
+        if (!presetValue && ind === properties.length - 1) {
+          html += ` checked`;
+        }
+        // Finish radio input
+        html += `${lock}></label>`;
       });
       break;
     case `time`:
       // Create appropriate input, default - current time
-      html += `<input type="${input}" name="${formName}" value="${getTime()}">`;
+      html += `<input type="${input}" name="${formName}"`;
+      // If setValue passed -> set this value...
+      if (presetValue) {
+        html += `value="${fixTime(presetValue)}"`;
+      }
+      // else - set based on current time
+      else {
+        html += `value="${getTime()}"`;
+      }
+      // Finish time input
+      html += `${lock}>`;
       break;
     case `range`:
       // Create range input, based on the properties
-      html += `<input type="${input}" name="${formName}" min="${
-        properties[0]
-      }" max="${properties[1]}" step="${
-        properties[2]
-      }" oninput="this.nextSibling.innerText=this.value"><span>${Math.floor(
-        (+properties[0] + +properties[1]) / 2
-      )}</span>`;
+      html += `<input type="${input}" name="${formName}" min="${properties[0]}" max="${properties[1]}" step="${properties[2]}" oninput="this.nextSibling.innerText=this.value"`;
+      // If correct preset value passed
+      if (
+        presetValue &&
+        presetValue < properties[1] &&
+        presetValue > properties[0]
+      ) {
+        html += ` value="${presetValue}"${lock}><span>${presetValue}</span>`;
+      }
+      // else -> dont set
+      else {
+        html += `${lock}><span>${Math.floor(
+          (+properties[0] + +properties[1]) / 2
+        )}</span>`;
+      }
       break;
     case `color`:
       // Create color input
-      html += `<input type="${input}" name="${formName}" value="${properties[0]}">`;
+      html += `<input type="${input}" name="${formName}"`;
+      // If presetValue is passed -> set it
+      if (presetValue) {
+        html += ` value="${presetValue}"`;
+      }
+      // else -> set default value
+      else {
+        html += ` value="${properties[0]}"`;
+      }
+      // Finish color input
+      html += `${lock}>`;
       break;
     case `text`:
       // Create text input, based on the properties
-      html += `<input type="${input}" name="${formName}" maxlength="${properties[1]}" value="${properties[0]}">`;
+      html += `<input type="${input}" name="${formName}" maxlength="${properties[1]}"`;
+      // If preset value is passed -> set it
+      if (presetValue) {
+        html += ` value="${presetValue}"`;
+      }
+      // else -> set default value
+      else {
+        html += ` value="${properties[0]}"`;
+      }
+      // Finish color input
+      html += `${lock}>`;
       break;
     case `datetime`:
       // Create date-time input, based on the properties
-      html += `<input type="${input}-local" name="${formName}" min="${getDateTime()}" value="${getDateTime(
-        5
-      )}">`;
+      html += `<input type="${input}-local" name="${formName}" min="${getDateTime()}"`;
+      // If preset value passed
+      if (presetValue) {
+        html += ` value="${fixDatetime(presetValue)}"`;
+      }
+      // else ->default value
+      else {
+        html += ` value="${getDateTime(5)}"`;
+      }
+      // Finish color input
+      html += `${lock}>`;
       break;
   }
   // Finish and return input form wrapper
@@ -245,8 +341,8 @@ function prepareMessage(msg, status) {
 module.exports = {
   cleanQuery: cleanQuery,
   dataToForm: dataToForm,
+  splitPropertyStr: splitPropertyStr,
   propertyGetName: propertyGetName,
-  propertyGetInput: propertyGetInput,
   parseValue: parseValue,
   createInput: createInput,
   insertTemplate: insertTemplate,
