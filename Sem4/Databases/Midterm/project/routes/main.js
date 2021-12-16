@@ -2,21 +2,62 @@ const { query } = require("express");
 const md5 = require("md5");
 const functions = require(`../functions`);
 
+/** Function to handle redirect with service message
+ * @param {string} type type of the error
+ * @param {boolean} status operation status: success - true, problem - false
+ * @param {object} queryResult result object of the HTTP query
+ * @param {string} redirPageStr redirect route, default main page - '/'
+ * @returns {void} prepares cookies and redirect with message param
+ */
+function handleRedirect(type, status, queryResult, redirPageStr = `/`) {
+  try {
+    // Prepare service message
+    const bigCookie = functions.prepareMessage(type, status);
+
+    // Iterate over object and set cookies
+    Object.keys(bigCookie).forEach((key) => {
+      queryResult.cookie(key, bigCookie[key], {
+        // Secure connection cookie, life time 10 sec
+        maxAge: 1000 * 10,
+        secure: true,
+      });
+    });
+
+    // Redirect to the main page with service message
+    queryResult.redirect(`${redirPageStr}?msg=${type}`);
+  } catch {
+    console.log(`Function 'Handle error' unexpected error`);
+  }
+}
+
+/** Function to check for system message, confirm with cookies and add message data
+ *  @param {object} requestObj HTTP request object
+ *  @param {object} dataObj data object that holds data for rendering template
+ *  @returns {void} on legit request - enque system message to the dataObj argument
+ */
+function checkForMessage(requestObj, dataObj) {
+  if (requestObj.query[`msg`]) {
+    // Get the query param
+    const param = requestObj.query[`msg`];
+    // Check for the cookies to confirm
+    if (requestObj.cookies[`req`] === md5(md5(param))) {
+      // if true - prepare MSG data: operation success status, msg text
+      dataObj.sysMsg = [
+        requestObj.cookies[`status`],
+        requestObj.cookies[`msg`],
+      ];
+    }
+  }
+}
+
 module.exports = (app) => {
   // Main page route - if non existing link is given, reroute to main
   app.get(`/`, (req, res) => {
     // Setup response data object
     const data = {};
     // If page is queried with service message
-    if (req.query[`msg`]) {
-      // Get the query param
-      const param = req.query[`msg`];
-      // Check for the cookies to confirm
-      if (req.cookies[`req`] === md5(md5(param))) {
-        // if true - prepare MSG data: operation success status, msg text
-        data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
-      }
-    }
+    checkForMessage(req, data);
+    // Render page with passed data (system message)
     res.render(`index.html`, data);
   });
 
@@ -34,34 +75,23 @@ module.exports = (app) => {
         // Log error
         console.error(`Database querry error - ${queryStr}!`, err.message);
 
-        // Prepare service message
-        const bigCookie = functions.prepareMessage(`data`, false);
-
-        // Iterate over object and set cookies
-        Object.keys(bigCookie).forEach((key) => {
-          res.cookie(key, bigCookie[key], {
-            // Secure connection cookie, life time 10 sec
-            maxAge: 1000 * 10,
-            secure: true,
-          });
-        });
-
-        // Redirect to the main page with service message
-        res.redirect(`/?msg=data`);
+        // Redirect with service message
+        handleRedirect(`data`, false, res);
       } else {
         // Setup response data object, add list of all available devices
         const data = { devices: functions.cleanQuery(dbResult) };
 
         // If page is queried with service message
-        if (req.query[`msg`]) {
-          // Get the query param
-          const param = req.query[`msg`];
-          // Check for the cookies to confirm
-          if (req.cookies[`req`] === md5(md5(param))) {
-            // if true - prepare MSG data: operation success status, msg text
-            data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
-          }
-        }
+        checkForMessage(req, data);
+        // if (req.query[`msg`]) {
+        //   // Get the query param
+        //   const param = req.query[`msg`];
+        //   // Check for the cookies to confirm
+        //   if (req.cookies[`req`] === md5(md5(param))) {
+        //     // if true - prepare MSG data: operation success status, msg text
+        //     data.sysMsg = [req.cookies[`status`], req.cookies[`msg`]];
+        //   }
+        // }
         // Render page if there is no error
         res.render(`list.html`, data);
       }
@@ -76,14 +106,17 @@ module.exports = (app) => {
       // Sanitized input - type of the device to get properties
       const sanitInp = req.sanitize(req.query.show);
 
-      // Request for additional data, based on selected type
+      // Request for additional properties data, based on selected type
       db.query(reqNewProper, sanitInp, (err, resNewProper) => {
         // handle errors
         if (err) {
+          // Log error
           console.error(
             `Database querry error - ${reqNewProper}!`,
             err.message
           );
+          // Redirect with message
+          handleRedirect(`data`, false, res);
         } else {
           // if no errors, send new data back
           const info = functions.cleanQuery(resNewProper);
@@ -97,20 +130,26 @@ module.exports = (app) => {
       db.query(reqTypes, (err, resTypes) => {
         // Handle error
         if (err) {
+          // Log error
           console.error(`Database querry error - ${reqTypes}!`, err.message);
-          res.redirect(`/`);
+          // Redirect with message
+          handleRedirect(`data`, false, res);
         }
 
         // Get properties of 1st device
         const reqInitProper = `SELECT * FROM properties LIMIT 1`;
+
+        // Query information about first device type
         db.query(reqInitProper, (err2, resProper) => {
           // Handle error
           if (err2) {
+            // Log error
             console.error(
               `Database querry error - ${reqInitProper}!`,
               err2.message
             );
-            res.redirect(`/`);
+            // Redirect with message
+            handleRedirect(`data`, false, res);
           } else {
             // Render page
             res.render(`deviceAdd.html`, {
@@ -142,37 +181,13 @@ module.exports = (app) => {
     db.query(template, sqlParams, (sqlErr, insertRes) => {
       // Handle errors
       if (sqlErr) {
-        // Send error to the console
+        // Log error
         console.error(`Database querry error - ${template}!`, sqlErr.message);
-
-        // Prepare service message
-        const bigCookie = functions.prepareMessage(`deviceAdd`, false);
-
-        // Iterate over object and set cookies
-        Object.keys(bigCookie).forEach((key) => {
-          res.cookie(key, bigCookie[key], {
-            // Secure connection cookie, life time 10 sec
-            maxAge: 1000 * 10,
-            secure: true,
-          });
-        });
-        // redirect with message
-        res.redirect(`/?msg=deviceAdd`);
+        // Redirect with message
+        handleRedirect(`deviceAdd`, false, res);
       } else {
-        // Prepare service message
-        const bigCookie = functions.prepareMessage(`deviceAdd`, true);
-
-        // Iterate over object and set cookies
-        Object.keys(bigCookie).forEach((key) => {
-          res.cookie(key, bigCookie[key], {
-            // Secure connection cookie, life time 10 sec
-            maxAge: 1000 * 10,
-            secure: true,
-          });
-        });
-
-        // Redirect to the device list
-        res.redirect(`/list?msg=deviceAdd`);
+        // Redirect to the device list with message
+        handleRedirect(`deviceAdd`, true, res, `/list`);
       }
     });
   });
@@ -181,7 +196,41 @@ module.exports = (app) => {
     res.render(`deviceDelete.html`);
   });
   app.get(`/deviceStatus`, (req, res) => {
-    res.render(`deviceStatus.html`);
+    // if request w/o params
+    if (Object.keys(req.query).length === 0) {
+      console.log("empty");
+    }
+    // if request 1 item
+    else if (req.query.device) {
+      // Store requested item ip
+      const id = req.sanitize(req.query.device);
+      // Prepare query
+      const query = `SELECT * FROM devices WHERE id=?`;
+      // Query the DB to try and find information about queried device
+      db.query(query, [id], (err, itemRes) => {
+        // Handle error
+        if (err) {
+          // Log error
+          console.error(err);
+          // Redirect with message
+          handleRedirect(`data`, false, res);
+        }
+        // No error
+        else {
+          // If device found
+          if (itemRes.length > 0) {
+            const data = functions.cleanQuery(itemRes);
+            console.log(data);
+            // Render page with information about the device
+            res.render(`deviceStatus.html`, { dbData: data });
+          }
+          // If there is no such device
+          else {
+            handleRedirect(`data`, false, res);
+          }
+        }
+      });
+    }
   });
   app.get(`/deviceUpdate`, (req, res) => {
     res.render(`deviceUpdate.html`);

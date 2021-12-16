@@ -235,7 +235,7 @@ function prepareMessage(msg, status) {
         // Set status
         result.status = `Error`;
         // Set msg
-        result.msg = `Failed to load data, please check your connection and try again!`;
+        result.msg = `Failed to load data, please check your request and try again!`;
       }
       break;
   }
