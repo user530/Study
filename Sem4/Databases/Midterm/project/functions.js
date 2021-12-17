@@ -59,11 +59,20 @@ function dataToForm(dataObj) {
  * @returns {Array} Element1 String before brakets, element2 string inside brackets
  */
 function splitPropertyStr(propertyString) {
-  const part1 = propertyString.slice(0, propertyString.indexOf(`[`));
-  const part2 = propertyString.slice(
-    propertyString.indexOf(`[`) + 1,
-    propertyString.indexOf(`]`)
-  );
+  let part1, part2;
+  // If separator exists in string
+  if (propertyString.indexOf(`[`) !== -1) {
+    part1 = propertyString.slice(0, propertyString.indexOf(`[`));
+    part2 = propertyString.slice(
+      propertyString.indexOf(`[`) + 1,
+      propertyString.indexOf(`]`)
+    );
+  }
+  // Else if there is no separator
+  else {
+    part1 = propertyString.trim();
+    part2 = ``;
+  }
   // Slice off input part
   return [part1, part2];
 }
@@ -78,21 +87,11 @@ function propertyGetName(propertyString) {
   // Split words and recconect them with white space
   propertyName = propertyName.split(`_`);
   propertyName = propertyName.join(` `);
+  // Set first character to upper case
+  propertyName =
+    propertyName[0].toUpperCase() + propertyName.slice(1, propertyName.length);
   return propertyName;
 }
-
-/** Function to get input type from the property string format
- * @param {string} propertyString property string containing name and input type
- * @returns {string} input type string for device property input form
- */
-// function propertyGetInput(propertyString) {
-//   // Get type string from brackets
-//   const propertyInputStr = propertyString.slice(
-//     propertyString.indexOf(`[`) + 1,
-//     propertyString.indexOf(`]`)
-//   );
-//   return propertyInputStr;
-// }
 
 /** Function to get values
  *  @param {string} value string value containing additional information about device
@@ -212,12 +211,18 @@ function createInput(key, value, presetValue = null, locked = false) {
       break;
     case `range`:
       // Create range input, based on the properties
-      html += `<input type="${input}" name="${formName}" min="${properties[0]}" max="${properties[1]}" step="${properties[2]}" oninput="this.nextSibling.innerText=this.value"`;
+      html += `<input type="${input}" 
+      name="${formName}"
+      min="${properties[0]}" 
+      max="${properties[1]}" 
+      step="${properties[2]}" 
+      oninput="this.nextSibling.innerText=this.value"`;
+
       // If correct preset value passed
       if (
         presetValue &&
-        presetValue < properties[1] &&
-        presetValue > properties[0]
+        +presetValue <= +properties[1] &&
+        +presetValue >= +properties[0]
       ) {
         html += ` value="${presetValue}"${lock}><span>${presetValue}</span>`;
       }
@@ -301,6 +306,27 @@ function insertTemplate(dataLength, keys) {
   }
 }
 
+/** Function to create insert prepared sql statement template
+ * @param {number} dataLength number of params to be inserted
+ * @param {Array.<string>} keys array of row names (strings)
+ * @returns {string} sql update prepared statement template
+ */
+function updateTemplate(dataLength, keys) {
+  // Check that request is not empty
+  if (dataLength > 0) {
+    // Prepare statement base
+    let sqlUpdate = `UPDATE devices SET `;
+    // Iterate over keys
+    keys.forEach((key) => {
+      // add keys to the statement
+      sqlUpdate += `\`${key}\`=?,`;
+    });
+    // finish insert statement string and return it
+    sqlUpdate = `${sqlUpdate.slice(0, -1)} WHERE \`id\`=?`;
+    return sqlUpdate;
+  }
+}
+
 /** Function to prepare message object for cookies
  * @param {string} msg message, that will be stored and used for check
  * @param {boolean} status message status: true - Success message, false - Error message
@@ -322,6 +348,21 @@ function prepareMessage(msg, status) {
         result.status = `Error`;
         // Set msg
         result.msg = `Failed to add new device, please check your data!`;
+      }
+      break;
+    case `deviceUpdate`:
+      // Code req
+      result.req = md5(md5(msg));
+      if (status === true) {
+        // Set status
+        result.status = `Success`;
+        // Set msg
+        result.msg = `Device settings successfully updated.`;
+      } else if (status === false) {
+        // Set status
+        result.status = `Error`;
+        // Set msg
+        result.msg = `Failed to update settings, please check your data!`;
       }
       break;
     case `data`:
@@ -346,5 +387,6 @@ module.exports = {
   parseValue: parseValue,
   createInput: createInput,
   insertTemplate: insertTemplate,
+  updateTemplate: updateTemplate,
   prepareMessage: prepareMessage,
 };

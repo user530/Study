@@ -35,8 +35,16 @@
             >Check - <%=devices[i].name%></a
           >
         </td>
-        <td><a href="">Change settings - <%=devices[i].name%></a></td>
-        <td><a href="">Delete - <%=devices[i].name%></a></td>
+        <td>
+          <a href="/deviceUpdate?device=<%=devices[i].id%>"
+            >Change settings - <%=devices[i].name%></a
+          >
+        </td>
+        <td>
+          <a href="/deviceUpdate?delete=<%=devices[i].id%>"
+            >Delete - <%=devices[i].name%></a
+          >
+        </td>
       </tr>
       <%}%>
     </table>

@@ -13,8 +13,12 @@
     <title>MySmartHome - Device status</title>
   </head>
   <body>
+    <% try{if(dbData && deviceHtml){ %>
     <h1>Device status: <%= dbData[`name`] %></h1>
-    <%- deviceHtml %>
+    <div id="contentWrapper"><%- deviceHtml %></div>
+    <%}}catch{%>
+    <h1>Something went wrong...</h1>
+    <%} %>
     <ul>
       <li><a href="/"> Main page</a></li>
       <li><a href="/about"> About</a></li>

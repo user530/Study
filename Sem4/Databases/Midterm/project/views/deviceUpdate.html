@@ -13,13 +13,13 @@
     <title>MySmartHome - Update device</title>
   </head>
   <body>
-    <h1>Update device information</h1>
-    <p>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda quo
-      dolore sapiente, laudantium aut facere, quos nihil molestiae iusto quia
-      eligendi ipsum odio totam delectus possimus nobis quibusdam temporibus
-      dicta.
-    </p>
+    <% try{if(dbData && deviceHtml){ %>
+    <h1>Update status: <%= dbData[`name`] %></h1>
+    <div id="contentWrapper"><%- deviceHtml %></div>
+
+    <%}}catch{%>
+    <h1>Something went wrong...</h1>
+    <%} %>
     <ul>
       <li><a href="/"> Main page</a></li>
       <li><a href="/about"> About</a></li>

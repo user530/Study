@@ -155,7 +155,6 @@ module.exports = (app) => {
     }
   });
 
-  // Add new device to the Database based on the
   app.post(`/deviceAdd`, (req, res) => {
     // Keys from data object passed through post request
     const bodyKeys = Object.keys(req.body);
@@ -185,16 +184,13 @@ module.exports = (app) => {
     });
   });
 
-  app.get(`/deviceDelete`, (req, res) => {
-    res.render(`deviceDelete.html`);
-  });
   app.get(`/deviceStatus`, (req, res) => {
     // if request w/o params
     if (Object.keys(req.query).length === 0) {
       // Redirect to the device list
       res.redirect(`/list`);
     }
-    // if request 1 item
+    // if request with correct param
     else if (req.query.device) {
       // Store requested item ip
       const id = req.sanitize(req.query.device);
@@ -243,8 +239,6 @@ module.exports = (app) => {
                     // Column name w/o input type, to get value from the data table
                     const colName = functions.splitPropertyStr(key)[0];
 
-                    console.log(data[colName]);
-
                     // Create information field for device type and load values from DB
                     html += functions.createInput(
                       key,
@@ -254,6 +248,7 @@ module.exports = (app) => {
                     );
                   }
                 });
+
                 // Finish html string
                 html += `</div>`;
                 // Render page with information about the device
@@ -271,9 +266,184 @@ module.exports = (app) => {
         }
       });
     }
+    // if request with incorrect param
+    else {
+      res.redirect(`/404`);
+    }
   });
+
   app.get(`/deviceUpdate`, (req, res) => {
-    res.render(`deviceUpdate.html`);
+    // if request w/o params
+    if (Object.keys(req.query).length === 0) {
+      // Redirect to the device list
+      res.redirect(`/list`);
+    }
+    // if request with correct param
+    else if (req.query.device) {
+      // Store requested item ip
+      const id = req.sanitize(req.query.device);
+      // Prepare query
+      const query = `SELECT * FROM devices WHERE id=?`;
+      // Query the DB to try and find information about queried device
+      db.query(query, [id], (err, itemRes) => {
+        // Handle error
+        if (err) {
+          // Log error
+          console.error(err);
+          // Redirect with message
+          handleRedirect(`data`, false, res);
+        }
+        // No error
+        else {
+          // If device found
+          if (itemRes.length > 0) {
+            // Collect data about device
+            const data = functions.cleanQuery(itemRes)[0];
+
+            // Prepare statement to query information about required device type
+            const typeQuery = `SELECT * FROM properties WHERE type=?`;
+            // Prepare query param
+            const typeParam = req.sanitize(data[`type`]);
+
+            // Store information about required device type and properties limits
+            db.query(typeQuery, [typeParam], (typeErr, typeRes) => {
+              // Handle error
+              if (typeErr) {
+                // Log error
+                console.error(typeErr);
+                // Redirect with message
+                handleRedirect(`data`, false, res);
+              }
+              // If no errors
+              else {
+                // Prepare html string
+                let html = `<div id="${data[`name`]}" class="deviceCard">
+                <div id="Type">Device type: ${data[`type`]}</div>`;
+
+                // Add form wrapper
+                html += `<form action="/deviceUpdate?device=${id}" method="post" id="deviceUpdateForm">`;
+
+                // Object containing required type properties
+                const typeObj = functions.cleanQuery(typeRes)[0];
+                // Iterate over device properties
+                Object.keys(typeObj).forEach((key) => {
+                  if (key !== `type`) {
+                    // Column name w/o input type, to get value from the data table
+                    const colName = functions.splitPropertyStr(key)[0];
+
+                    // Create information field for device type and load values from DB
+                    html += functions.createInput(
+                      key,
+                      typeObj[key],
+                      data[colName]
+                    );
+                  }
+                });
+
+                // Close form
+                html += `</form>`;
+                // Add button to update settings
+                html += `<input type="submit" form="deviceUpdateForm" value="Update settings">`;
+
+                // Finish html string
+                html += `</div>`;
+                // Render page with information about the device
+                res.render(`deviceUpdate.html`, {
+                  dbData: data,
+                  deviceHtml: html,
+                });
+              }
+            });
+          }
+          // If there is no such device
+          else {
+            handleRedirect(`data`, false, res);
+          }
+        }
+      });
+    }
+    // if request with incorrect param
+    else {
+      res.redirect(`/list`);
+    }
+  });
+
+  app.post(`/deviceUpdate`, (req, res) => {
+    // if request w/o params
+    if (Object.keys(req.query).length === 0) {
+      // Redirect to the device list
+      res.redirect(`/list`);
+    }
+    // Check for correct param
+    else if (req.query.device) {
+      // Store requested item ip
+      const id = req.sanitize(req.query.device);
+      // Prepare query
+      const query = `SELECT * FROM devices WHERE id=?`;
+      // Query the DB to try and find information about queried device
+      db.query(query, [id], (err, itemRes) => {
+        // Handle error
+        if (err) {
+          // Log error
+          console.error(err);
+          // Redirect with message
+          handleRedirect(`data`, false, res);
+        }
+        // No error
+        else {
+          // If device found
+          if (itemRes.length > 0) {
+            // Keys from data object passed through post request
+            const bodyKeys = Object.keys(req.body);
+            // Prepare statement template
+            const template = functions.updateTemplate(
+              bodyKeys.length,
+              bodyKeys
+            );
+            // Prepare params
+            const sqlParams = [];
+
+            // Iterate over all keys
+            bodyKeys.forEach((key) => {
+              // Sanitize data passed and add to the param array
+              sqlParams.push(req.sanitize(req.body[key]));
+            });
+
+            // Finish with id param
+            sqlParams.push(req.sanitize(req.query.device));
+
+            // Query devise settings update
+            db.query(template, sqlParams, (sqlErr, updateRes) => {
+              // Handle errors
+              if (sqlErr) {
+                // Log error
+                console.error(
+                  `Database querry error - ${template}!`,
+                  sqlErr.message
+                );
+                // Redirect with message
+                handleRedirect(`deviceUpdate`, false, res);
+              } else {
+                // Redirect to the device list with message
+                handleRedirect(`deviceUpdate`, true, res, `/list`);
+              }
+            });
+          }
+          // If there is no such device
+          else {
+            handleRedirect(`data`, false, res);
+          }
+        }
+      });
+    }
+    // If no device ID passed
+    else {
+      res.redirect(`/list`);
+    }
+  });
+
+  app.get(`/deviceDelete`, (req, res) => {
+    res.render(`deviceDelete.html`);
   });
 
   // Handle 404 requests -> Show
