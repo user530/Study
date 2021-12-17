@@ -443,7 +443,35 @@ module.exports = (app) => {
   });
 
   app.get(`/deviceDelete`, (req, res) => {
-    res.render(`deviceDelete.html`);
+    // if request w/o params
+    if (Object.keys(req.query).length === 0) {
+      // Redirect to the device list
+      res.redirect(`/list`);
+    }
+    // if request with correct param
+    else if (req.query.device) {
+      // Store requested item ip
+      const id = req.sanitize(req.query.device);
+      // Prepare query
+      const query = `DELETE FROM devices WHERE id=?`;
+      // Query to delete device data from the database
+      db.query(query, [id], (err, delRes) => {
+        // Handle errors
+        if (err) {
+          // Log error
+          console.error(`Database querry error - ${template}!`, err.message);
+          // Redirect with message
+          handleRedirect(`deviceDelete`, false, res);
+        } else {
+          // Redirect to the device list with message
+          handleRedirect(`deviceDelete`, true, res, `/list`);
+        }
+      });
+    }
+    // if request with incorrect param
+    else {
+      res.redirect(`/list`);
+    }
   });
 
   // Handle 404 requests -> Show

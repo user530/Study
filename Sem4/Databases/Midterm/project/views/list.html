@@ -41,7 +41,9 @@
           >
         </td>
         <td>
-          <a href="/deviceUpdate?delete=<%=devices[i].id%>"
+          <a
+            href="/deviceDelete?device=<%=devices[i].id%>"
+            onclick="return confirm(`Are you sure you want to delete this item?`)"
             >Delete - <%=devices[i].name%></a
           >
         </td>

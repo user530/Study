@@ -365,6 +365,21 @@ function prepareMessage(msg, status) {
         result.msg = `Failed to update settings, please check your data!`;
       }
       break;
+    case `deviceDelete`:
+      // Code req
+      result.req = md5(md5(msg));
+      if (status === true) {
+        // Set status
+        result.status = `Success`;
+        // Set msg
+        result.msg = `Device successfully deleted.`;
+      } else if (status === false) {
+        // Set status
+        result.status = `Error`;
+        // Set msg
+        result.msg = `Failed to delete device, please check your data!`;
+      }
+      break;
     case `data`:
       // Code req
       result.req = md5(md5(msg));

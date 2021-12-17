@@ -16,6 +16,20 @@
     <% try{if(dbData && deviceHtml){ %>
     <h1>Device status: <%= dbData[`name`] %></h1>
     <div id="contentWrapper"><%- deviceHtml %></div>
+
+    <br /><br /><br />
+
+    <a href="/deviceUpdate?device=<%= dbData[`id`] %>">
+      <input type="button" value="Update device settings" />
+    </a>
+
+    <a
+      href="/deviceDelete?device=<%= dbData[`id`] %>"
+      onclick="return confirm(`Are you sure you want to delete this item?`)"
+    >
+      <input type="button" value="Delete device" />
+    </a>
+
     <%}}catch{%>
     <h1>Something went wrong...</h1>
     <%} %>
