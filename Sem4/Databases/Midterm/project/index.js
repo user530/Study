@@ -26,6 +26,9 @@ app.use(cookieParser(`cookie key`));
 // Setup express sanitizer
 app.use(sanitizer());
 
+// Connect public resources (styles, images,etc)
+app.use(express.static(__dirname + `/public`));
+
 // Port
 const port = 8089;
 
