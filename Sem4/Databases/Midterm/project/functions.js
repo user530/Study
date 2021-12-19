@@ -394,6 +394,68 @@ function prepareMessage(msg, status) {
   return result;
 }
 
+/** Function to handle redirect with service message
+ * @param {string} type type of the error
+ * @param {boolean} status operation status: success - true, problem - false
+ * @param {object} queryResult result object of the HTTP query
+ * @param {string} redirPageStr redirect route, default main page - '/'
+ * @returns {void} prepares cookies and redirect with message param
+ */
+function handleRedirect(type, status, queryResult, redirPageStr = `/`) {
+  try {
+    // Prepare service message
+    const bigCookie = prepareMessage(type, status);
+
+    // Iterate over object and set cookies
+    Object.keys(bigCookie).forEach((key) => {
+      queryResult.cookie(key, bigCookie[key], {
+        // Secure connection cookie, life time 10 sec
+        maxAge: 1000 * 10,
+        secure: true,
+      });
+    });
+
+    // Redirect to the main page with service message
+    queryResult.redirect(`${redirPageStr}?msg=${type}`);
+  } catch {
+    console.log(`Function 'Handle error' unexpected error`);
+  }
+}
+
+/** Function to check for system message, confirm with cookies and add message data
+ *  @param {object} requestObj HTTP request object
+ *  @param {object} dataObj data object that holds data for rendering template
+ *  @returns {void} on legit request - enque system message to the dataObj argument
+ */
+function checkForMessage(requestObj, dataObj) {
+  if (requestObj.query[`msg`]) {
+    // Get the query param
+    const param = requestObj.query[`msg`];
+    // Check for the cookies to confirm
+    if (requestObj.cookies[`req`] === md5(md5(param))) {
+      // if true - prepare MSG data: operation success status, msg text
+      dataObj.sysMsg = [
+        requestObj.cookies[`status`],
+        requestObj.cookies[`msg`],
+      ];
+    }
+  }
+}
+
+/** Function to sanitize and push data sent by the user in the post request
+ * @param {Array<string>} keyArr array of key values from the request body
+ * @param {Array<string, number>} sanitizedArr array that will hold sanitized user data
+ * @param {Object} reqObj http request object
+ * @returns {Array<string, number>} array of sanitized request values
+ */
+function sanitizePush(keyArr, sanitizedArr, reqObj) {
+  // Iterate over all keys
+  keyArr.forEach((key) => {
+    // Sanitize data passed and add to the param array
+    sanitizedArr.push(reqObj.sanitize(reqObj.body[key]));
+  });
+  return sanitizedArr;
+}
 module.exports = {
   cleanQuery: cleanQuery,
   dataToForm: dataToForm,
@@ -404,4 +466,7 @@ module.exports = {
   insertTemplate: insertTemplate,
   updateTemplate: updateTemplate,
   prepareMessage: prepareMessage,
+  handleRedirect: handleRedirect,
+  checkForMessage: checkForMessage,
+  sanitizePush: sanitizePush,
 };

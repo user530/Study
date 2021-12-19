@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 17 2021 г., 22:30
+-- Время создания: Дек 19 2021 г., 11:22
 -- Версия сервера: 10.5.11-MariaDB
 -- Версия PHP: 7.1.33
 
@@ -82,14 +82,13 @@ CREATE TABLE `devices` (
 --
 
 INSERT INTO `devices` (`id`, `name`, `type`, `status`, `schedule_start`, `start_time`, `program`, `silent_mode`, `ionization_mode`, `air_conditioning`, `flow_temperature,_°C`, `brightness,_%`, `lights_color`, `speed,_RPM`, `resolution`, `night_mode`, `password`, `force_lock`, `blinds`, `flow_rate,_%`, `section_1_temperature,_°C`, `section_2_temperature,_°C`, `section_3_temperature,_°C`, `freezer_temperature,_°C`, `ice_maker`, `notes`, `delicate_mode`, `alarm_clock`, `alarm_time`, `wattage,_W`, `steam_preheat`, `processor_setting`, `channel`, `volume,_%`, `schedule_stop`, `stop_time`, `find/play_track`, `auto_play`, `bass_boost`, `activate_camera`, `activate_voice_channel`, `portion_size,_g`, `energy_save_mode`, `section_1_firmness`, `section_2_firmness`, `track_heartbeat`, `activate_security_system`) VALUES
-(98, 'MacPC', 'Personal computer', 'on', 'off', '2021-12-16 12:53:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '84', 'on', '2021-12-17 16:57:00.000000', 'Track name - Author', 'on', 'on', NULL, NULL, NULL, 'off', NULL, NULL, NULL, NULL),
-(99, 'mySmartCar01', 'Car', 'on', 'off', '2021-12-16 13:38:00', NULL, NULL, NULL, 'off', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '35', '20', '36', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'off', '2021-12-16 13:38:00.000000', 'Track name - Author', 'on', 'on', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'on'),
 (100, 'SmartWateringSystem001', 'Sprinkler', 'on', 'off', '2021-12-29 16:44:00', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '30', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'off', '2021-12-16 13:41:00.000000', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (101, 'CleanHouseDisher', 'Dishwater', 'on', 'on', '2021-12-30 18:40:00', '3', 'on', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'on', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (103, 'Cooker007', 'Food processor', 'on', NULL, NULL, '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'high', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (104, 'BabyMonitor3000', 'Baby monitor', 'on', 'on', '2021-12-24 23:06:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1080p', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'off', '2021-12-30 00:07:00.000000', NULL, NULL, NULL, 'on', 'on', NULL, NULL, NULL, NULL, 'on', NULL),
 (105, 'SuperFan', 'Fan', 'on', NULL, NULL, NULL, 'off', NULL, NULL, NULL, NULL, NULL, '600', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(106, 'testTest', 'Baby monitor', 'on', 'off', '2021-12-16 22:57:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '480p', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'on', '2021-12-16 22:57:00.000000', NULL, NULL, NULL, 'off', 'on', NULL, NULL, NULL, NULL, 'off', NULL);
+(106, 'testTest', 'Baby monitor', 'on', 'off', '2021-12-16 22:57:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '480p', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'on', '2021-12-16 22:57:00.000000', NULL, NULL, NULL, 'off', 'on', NULL, NULL, NULL, NULL, 'off', NULL),
+(111, 'testDevice', 'Bed', 'on', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '24', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'soft', 'firm', NULL, NULL);
 
 --
 -- Индексы сохранённых таблиц
@@ -98,8 +97,7 @@ INSERT INTO `devices` (`id`, `name`, `type`, `status`, `schedule_start`, `start_
 --
 -- Индексы таблицы `devices`
 --
-ALTER TABLE `devices`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `devices`ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -108,10 +106,10 @@ ALTER TABLE `devices`
 --
 -- AUTO_INCREMENT для таблицы `devices`
 --
-ALTER TABLE `devices`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+ALTER TABLE `devices` MODIFY `id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
