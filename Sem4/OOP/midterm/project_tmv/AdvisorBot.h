@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class AdvisorBot
 {
@@ -31,8 +32,12 @@ step */
 
     /** Get user input */
     std::string getUserInput();
+
+    /** Parse unit input into vector of the strings */
+    std::vector<std::string> parseUserInput(std::string);
+
     /** Process user input */
-    void processUserInput();
+    void processUserInput(std::vector<std::string>);
 
 public:
     /** Constructor function */
