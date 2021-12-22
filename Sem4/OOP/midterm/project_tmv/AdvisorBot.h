@@ -5,12 +5,15 @@
 class AdvisorBot
 {
 private:
+    /** List of all valid commands */
+    std::vector<std::string> cmds;
+
     /** Print application menu */
     void printMenu();
     /** C1) List all available commands */
     void printHelp();
     /** C2) Output help for the speciﬁed command */
-    void printCmdHelp();
+    void printCmdHelp(std::string);
     /** C3) List available products */
     void printProducts();
     /** C4) Find minimum bid or ask for product in current time step */
