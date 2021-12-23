@@ -33,11 +33,3 @@ void OrderTypeSubsection::listOrders()
         std::cout << order.id << std::endl;
     }
 };
-
-int main()
-{
-    OrderTypeSubsection bids;
-    Order order1(1, 1.0, 2.0, "top", "kek");
-    bids.addOrder(order1);
-    bids.listOrders();
-}
