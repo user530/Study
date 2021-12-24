@@ -50,7 +50,7 @@ private:
 
 public:
     OrdertypeGroup();
-    void addOrder(Order);
+    void addOrder(Order &);
     void updateGroupInfo(double, double);
     void printGroup();
     double getMin();

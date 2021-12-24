@@ -1,12 +1,14 @@
 #pragma once
-#include "TimeStampPage.h"
+#include "TimestampPage.h"
 
 class DayData
 {
 private:
-    /* data */
-    std::map<std::string, TimeStampPage> _dailyOrders;
+    /* Container for different timestamps from the same day */
+    std::map<std::string, TimestampPage> _dailyOrders;
 
 public:
-    DayData(/* args */);
+    DayData();
+    void addTimestampPage(std::string, TimestampPage);
+    void printDayPage();
 };

@@ -7,7 +7,7 @@ ProductPage::ProductPage(){};
  * @param groupType ordertype of the ordergroup (bid,ask,sale)
  * @param ordertypeGroup group object that holds related orders
  * */
-void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup ordertypeGroup)
+void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup &ordertypeGroup)
 {
     //  Insert selected ordertypeGroup associated with the required groupType
     _productOrders.insert({groupType, ordertypeGroup});

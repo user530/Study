@@ -11,7 +11,7 @@ OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
 /** Function to add new order to the order type group and update group information
  * @param order order object that will be added
  * */
-void OrdertypeGroup::addOrder(Order order)
+void OrdertypeGroup::addOrder(Order &order)
 {
     // Add order object to the vector
     _orderList.push_back(order);

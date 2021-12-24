@@ -24,25 +24,3 @@ void TimestampPage::printTimestampPage()
         std::cout << "      }" << std::endl;
     }
 };
-
-int main()
-{
-    Order ord1{10, 1};
-    Order ord2{5, 8};
-    Order ord3{8, 1};
-    OrdertypeGroup bid;
-    OrdertypeGroup bid2;
-    OrdertypeGroup ask;
-    bid.addOrder(ord1);
-    ask.addOrder(ord2);
-    bid2.addOrder(ord3);
-    ProductPage ETH;
-    ProductPage BTC;
-    ETH.addOrdertypeGroup(OrderType::bid, bid);
-    ETH.addOrdertypeGroup(OrderType::ask, ask);
-    BTC.addOrdertypeGroup(OrderType::bid, bid2);
-    TimestampPage time1;
-    time1.addProductPage("ETH", ETH);
-    time1.addProductPage("BTC", BTC);
-    time1.printTimestampPage();
-}

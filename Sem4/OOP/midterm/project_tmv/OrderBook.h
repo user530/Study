@@ -4,14 +4,9 @@
 class Orderbook
 {
 private:
-    /* Container for the day pages */
-    std::map<std::string,
-             std::map<std::string, std::map<std::string,
-                                            std::map<OrderType,
-                                                     OrderTypeSubsection>>>>
-        orders;
+    /* Container for different market day pages */
+    std::map<std::string, DayData> _orderbook;
 
 public:
-    Orderbook(/* args */);
-    ~Orderbook();
+    Orderbook(std::string);
 };
