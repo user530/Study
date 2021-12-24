@@ -30,6 +30,22 @@ void OrderTypeSubsection::listOrders()
 {
     for (const Order order : _orderList)
     {
-        std::cout << order.id << std::endl;
+        std::cout << order.price
+                  << "\n"
+                  << std::endl;
     }
 };
+
+/** Function to transform string to Ordertype object */
+OrderType OrderTypeSubsection::strToOrdertype(std::string str)
+{
+    if (str == "bid")
+    {
+        return OrderType::bid;
+    }
+    if (str == "ask")
+    {
+        return OrderType::ask;
+    }
+    return OrderType::unknown;
+}

@@ -5,10 +5,8 @@ class Order
 {
 public:
     /** Constructor */
-    Order(const unsigned int, double, double, std::string, std::string);
+    Order(double, double, std::string = "none", std::string = "none");
 
-    /** Order ID */
-    const unsigned int id;
     /** Order price */
     double price;
     /** Order amount */

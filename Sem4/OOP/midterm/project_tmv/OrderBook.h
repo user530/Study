@@ -1,11 +1,17 @@
 #pragma once
+#include "DayData.h"
 
-class OrderBook
+class Orderbook
 {
 private:
     /* Container for the day pages */
+    std::map<std::string,
+             std::map<std::string, std::map<std::string,
+                                            std::map<OrderType,
+                                                     OrderTypeSubsection>>>>
+        orders;
 
 public:
-    OrderBook(/* args */);
-    ~OrderBook();
+    Orderbook(/* args */);
+    ~Orderbook();
 };

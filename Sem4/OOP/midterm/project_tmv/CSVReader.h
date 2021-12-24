@@ -1,5 +1,5 @@
 #pragma once
-#include "DayData.h"
+#include "OrderBook.h"
 
 class CSVReader
 {
@@ -10,8 +10,12 @@ public:
     static std::vector<std::string> tokenise(const std::string, const char);
 
     /** Transform CSV file into OrderBook */
-    static std::vector<DayData> transformCSV(const std::string);
+    static std::map<std::string,
+                    std::map<std::string, std::map<std::string,
+                                                   std::map<OrderType,
+                                                            OrderTypeSubsection>>>>
+    transformCSV(const std::string);
 
 private:
-    Order tokensToOrder(std::string, std::string);
+    static Order tokensToOrder(std::string, std::string);
 };

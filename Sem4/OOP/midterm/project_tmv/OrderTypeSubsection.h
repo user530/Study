@@ -32,4 +32,5 @@ public:
     std::vector<Order> getOrders();
     void listOrders();
     void removeOrder(unsigned int);
+    static OrderType strToOrdertype(std::string);
 };
