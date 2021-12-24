@@ -11,8 +11,28 @@ enum class OrderType
     unknown
 };
 
+/** Overload stream extraction operator, to be able to print OrderType */
+inline std::ostream &operator<<(std::ostream &out, const OrderType &ordertype)
+{
+    std::string result;
+    if (ordertype == OrderType::bid)
+    {
+        result = "bid";
+    }
+    if (ordertype == OrderType::ask)
+    {
+        result = "ask";
+    }
+    if (ordertype == OrderType::sale)
+    {
+        result = "sale";
+    }
+    out << result;
+    return out;
+}
+
 /** Class that holds information about the orders of specific ordertype */
-class OrderTypeGroup
+class OrdertypeGroup
 {
 private:
     /** Minimum price for this order type */
@@ -29,7 +49,7 @@ private:
     std::vector<Order> _orderList;
 
 public:
-    OrderTypeGroup();
+    OrdertypeGroup();
     void addOrder(Order);
     void updateGroupInfo(double, double);
     void printGroup();

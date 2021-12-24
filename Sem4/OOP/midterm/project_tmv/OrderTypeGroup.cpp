@@ -1,17 +1,17 @@
-#include "OrderTypeGroup.h"
-#include <iostream>
+#include "OrdertypeGroup.h"
 
-OrderTypeGroup::OrderTypeGroup() : _minPrice(999999999),
+/** Ordertype group constructor, holds list of all orders and group information */
+OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
                                    _maxPrice(0),
                                    _avgPrice(0),
                                    _ttlVolume(0),
                                    _orderCount(0),
                                    _orderList(){};
 
-/** Function to add new order to the order type group, upda
+/** Function to add new order to the order type group and update group information
  * @param order order object that will be added
  * */
-void OrderTypeGroup::addOrder(Order order)
+void OrdertypeGroup::addOrder(Order order)
 {
     // Add order object to the vector
     _orderList.push_back(order);
@@ -24,7 +24,7 @@ void OrderTypeGroup::addOrder(Order order)
  *  @param orderPrice price of the new order
  *  @param orderAmount amount of the new order
  * */
-void OrderTypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
+void OrdertypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
 {
     // Check for the new min
     if (orderPrice < _minPrice)
@@ -51,7 +51,7 @@ void OrderTypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
     _orderCount++;
 }
 
-void OrderTypeGroup::printGroup()
+void OrdertypeGroup::printGroup()
 {
     for (const Order ord : _orderList)
     {
@@ -62,19 +62,19 @@ void OrderTypeGroup::printGroup()
 };
 
 /** Function to get minimum price of the OrderTypeGroup */
-double OrderTypeGroup::getMin()
+double OrdertypeGroup::getMin()
 {
     return _minPrice;
 };
 
 /** Function to get maximum price of the OrderTypeGroup */
-double OrderTypeGroup::getMax()
+double OrdertypeGroup::getMax()
 {
     return _maxPrice;
 };
 
 /** Function to get average price of the OrderTypeGroup */
-double OrderTypeGroup::getAvg()
+double OrdertypeGroup::getAvg()
 {
     return _avgPrice;
 };
