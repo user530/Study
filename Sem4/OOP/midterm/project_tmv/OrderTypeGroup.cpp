@@ -51,12 +51,13 @@ void OrdertypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
     _orderCount++;
 }
 
+/** Print information about all order from the list */
 void OrdertypeGroup::printGroup()
 {
     for (const Order ord : _orderList)
     {
-        std::cout << "Order price: " << ord.price
-                  << ". Order amount: " << ord.amount
+        std::cout << "              Order price: " << ord.price << "; "
+                  << "Order amount: " << ord.amount << "."
                   << std::endl;
     }
 };

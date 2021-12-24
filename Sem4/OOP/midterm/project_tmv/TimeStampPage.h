@@ -1,12 +1,14 @@
 #pragma once
-#include "ProductSection.h"
+#include "ProductPage.h"
 
-class TimeStampPage
+class TimestampPage
 {
 private:
-    /* Container for the product sections */
-    std::map<std::string, ProductSection> _timedOrders;
+    /* Container for different product pages from the same timestamp */
+    std::map<std::string, ProductPage> _timedOrders;
 
 public:
-    TimeStampPage();
+    TimestampPage();
+    void addProductPage(std::string, ProductPage);
+    void printTimestampPage();
 };

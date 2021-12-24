@@ -4,7 +4,8 @@
 ProductPage::ProductPage(){};
 
 /** Function to add new ordertype group to the product page
- * @param ordertypeGroup ordertype group that will be added to the product container
+ * @param groupType ordertype of the ordergroup (bid,ask,sale)
+ * @param ordertypeGroup group object that holds related orders
  * */
 void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup ordertypeGroup)
 {
@@ -12,30 +13,15 @@ void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup ordertyp
     _productOrders.insert({groupType, ordertypeGroup});
 };
 
+/** Print product page and all its content */
 void ProductPage::printProductPage()
 {
     // Iterate over all groups in product page
     for (auto [groupName, ordergroup] : _productOrders)
     {
         // Print ordergroup name
-        std::cout << "Order group: " << groupName << " {\n";
-        // Print all orders from this group
+        std::cout << "          Order group: " << groupName << " {\n";
         ordergroup.printGroup();
-        std::cout << "}" << std::endl;
+        std::cout << "          }" << std::endl;
     }
 };
-
-int main()
-{
-    Order ord1{10, 1};
-    Order ord2{5, 8};
-    Order ord3{8, 1};
-    OrdertypeGroup bid;
-    bid.addOrder(ord1);
-    bid.addOrder(ord2);
-    bid.addOrder(ord3);
-    ProductPage ETH;
-    ETH.addOrdertypeGroup(OrderType::bid, bid);
-
-    ETH.printProductPage();
-}
