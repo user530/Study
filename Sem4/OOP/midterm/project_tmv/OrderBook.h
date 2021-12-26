@@ -8,5 +8,5 @@ private:
     std::map<std::string, DayData> _orderbook;
 
 public:
-    Orderbook(std::string);
+    Orderbook(const std::string);
 };

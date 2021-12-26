@@ -7,7 +7,7 @@ ProductPage::ProductPage(){};
  * @param groupType ordertype of the ordergroup (bid,ask,sale)
  * @param ordertypeGroup group object that holds related orders
  * */
-void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup &ordertypeGroup)
+void ProductPage::addOrdertypeGroup(const OrderType &groupType, const OrdertypeGroup &ordertypeGroup)
 {
     //  Insert selected ordertypeGroup associated with the required groupType
     _productOrders.insert({groupType, ordertypeGroup});
@@ -17,7 +17,7 @@ void ProductPage::addOrdertypeGroup(OrderType groupType, OrdertypeGroup &orderty
 void ProductPage::printProductPage()
 {
     // Iterate over all groups in product page
-    for (auto [groupName, ordergroup] : _productOrders)
+    for (auto &[groupName, ordergroup] : _productOrders)
     {
         // Print ordergroup name
         std::cout << "          Order group: " << groupName << " {\n";

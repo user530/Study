@@ -9,6 +9,6 @@ private:
 
 public:
     TimestampPage();
-    void addProductPage(std::string, ProductPage);
+    void addProductPage(const std::string, const ProductPage &);
     void printTimestampPage();
 };

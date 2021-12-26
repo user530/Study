@@ -1,6 +1,8 @@
 #include "OrderBook.h"
+#include "CSVReader.h"
 
 /** Orderbook */
-Orderbook::Orderbook(std::string fileName){
-
+Orderbook::Orderbook(const std::string fileName)
+{
+    _orderbook = CSVReader::transformCSV(fileName);
 };

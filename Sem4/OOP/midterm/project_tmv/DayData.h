@@ -9,6 +9,6 @@ private:
 
 public:
     DayData();
-    void addTimestampPage(std::string, TimestampPage);
+    void addTimestampPage(const std::string, const TimestampPage &);
     void printDayPage();
 };

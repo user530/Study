@@ -37,7 +37,7 @@ void OrderTypeSubsection::listOrders()
 };
 
 /** Function to transform string to Ordertype object */
-OrderType OrderTypeSubsection::strToOrdertype(std::string str)
+OrderType OrderTypeSubsection::strToOrdertype(const std::string str)
 {
     if (str == "bid")
     {

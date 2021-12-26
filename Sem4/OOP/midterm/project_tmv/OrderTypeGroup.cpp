@@ -11,7 +11,7 @@ OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
 /** Function to add new order to the order type group and update group information
  * @param order order object that will be added
  * */
-void OrdertypeGroup::addOrder(Order &order)
+void OrdertypeGroup::addOrder(const Order &order)
 {
     // Add order object to the vector
     _orderList.push_back(order);
@@ -24,7 +24,7 @@ void OrdertypeGroup::addOrder(Order &order)
  *  @param orderPrice price of the new order
  *  @param orderAmount amount of the new order
  * */
-void OrdertypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
+void OrdertypeGroup::updateGroupInfo(const double orderPrice, const double orderAmount)
 {
     // Check for the new min
     if (orderPrice < _minPrice)
@@ -54,11 +54,10 @@ void OrdertypeGroup::updateGroupInfo(double orderPrice, double orderAmount)
 /** Print information about all order from the list */
 void OrdertypeGroup::printGroup()
 {
-    for (const Order ord : _orderList)
+    for (const Order &ord : _orderList)
     {
         std::cout << "              Order price: " << ord.price << "; "
-                  << "Order amount: " << ord.amount << "."
-                  << std::endl;
+                  << "Order amount: " << ord.amount << ".\n";
     }
 };
 

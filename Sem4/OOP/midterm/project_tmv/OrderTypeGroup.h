@@ -50,11 +50,11 @@ private:
 
 public:
     OrdertypeGroup();
-    void addOrder(Order &);
-    void updateGroupInfo(double, double);
+    void addOrder(const Order &);
+    void updateGroupInfo(const double, const double);
     void printGroup();
     double getMin();
     double getMax();
     double getAvg();
-    static OrderType strToOrdertype(std::string);
+    static OrderType strToOrdertype(const std::string);
 };

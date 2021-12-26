@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.ejs": "html",
         "*.module": "php",
         "cmath": "cpp",
         "cstddef": "cpp",
@@ -53,6 +54,10 @@
         "optional": "cpp",
         "string_view": "cpp",
         "fstream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "bitset": "cpp",
+        "ctime": "cpp",
+        "iterator": "cpp",
+        "regex": "cpp"
     }
 }

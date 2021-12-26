@@ -7,7 +7,7 @@ TimestampPage::TimestampPage(){};
  * @param prodName product name to store associated data
  * @param prodPage group object that holds related orders
  * */
-void TimestampPage::addProductPage(std::string prodName, ProductPage prodPage)
+void TimestampPage::addProductPage(const std::string prodName, const ProductPage &prodPage)
 {
     //  Insert selected productPage associated with the given name
     _timedOrders.insert({prodName, prodPage});
@@ -17,7 +17,7 @@ void TimestampPage::addProductPage(std::string prodName, ProductPage prodPage)
 void TimestampPage::printTimestampPage()
 {
     // Iterate over all products
-    for (auto [prodName, prodPage] : _timedOrders)
+    for (auto &[prodName, prodPage] : _timedOrders)
     {
         std::cout << "      Product page: " << prodName << " {\n";
         prodPage.printProductPage();
