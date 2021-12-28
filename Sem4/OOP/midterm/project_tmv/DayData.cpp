@@ -54,3 +54,22 @@ void DayData::printDayPage()
         std::cout << "  }\n";
     }
 };
+
+/** Get all products from this day page
+ * @return set of all product names (strings)
+ */
+std::set<std::string> DayData::getDayProducts()
+{
+    // All products from inside this day page
+    std::set<std::string> products;
+
+    // Iterate over all timepages
+    for (auto &[timeStr, timeGrp] : _dailyOrders)
+    {
+        // For each timepage, get all products and add them to the resulting set
+        products.merge(timeGrp.getProductKeys());
+    }
+
+    // Return the products list
+    return products;
+};

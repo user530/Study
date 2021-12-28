@@ -13,4 +13,6 @@ public:
     DayData &getDayPage(const std::string);
     /* Prints whole orderbook */
     void printOrderbook();
+    /* Get all products */
+    std::set<std::string> getAllProducts();
 };

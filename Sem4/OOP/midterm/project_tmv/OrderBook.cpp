@@ -43,9 +43,35 @@ void Orderbook::printOrderbook()
     }
 };
 
+/** Function to get all known products in orderbook
+ * @return vector of strings - all existing products from the orderbook
+ * */
+std::set<std::string> Orderbook::getAllProducts()
+{
+    // All products from this orderbook
+    std::set<std::string> products;
+
+    // Iterate over all day pages
+    for (auto &[dayStr, dayGrp] : _orderbook)
+    {
+        // For each day page, get all products and add them to the resulting set
+        products.merge(dayGrp.getDayProducts());
+    }
+
+    // Return the products list
+    return products;
+};
+
 int main()
 {
     // CSVReader::transformCSV("20200601.csv");
     Orderbook book{"testData.csv"};
-    book.printOrderbook();
+    // book.printOrderbook();
+
+    std::set<std::string> keys = book.getAllProducts();
+
+    for (const std::string key : keys)
+    {
+        std::cout << key << "\n";
+    }
 }

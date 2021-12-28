@@ -11,6 +11,9 @@ void TimestampPage::addProductPage(const std::string prodName, const ProductPage
 {
     //  Insert selected productPage associated with the given name
     _timedOrders.insert({prodName, prodPage});
+
+    // Add key to the product key (if needed)
+    _products.insert(prodName);
 };
 
 /** Check if there is a page for this product
@@ -54,4 +57,12 @@ void TimestampPage::printTimestampPage()
         prodPage.printProductPage();
         std::cout << "      }\n";
     }
+};
+
+/** Get list of all product keys stored inside this timepage
+ * @return set of all product names (strings)
+ *  */
+std::set<std::string> &TimestampPage::getProductKeys()
+{
+    return _products;
 };

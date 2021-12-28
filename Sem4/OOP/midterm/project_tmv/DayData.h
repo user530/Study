@@ -13,4 +13,5 @@ public:
     bool checkTimestampPage(const std::string);
     TimestampPage &getTimestampPage(const std::string);
     void printDayPage();
+    std::set<std::string> getDayProducts();
 };
