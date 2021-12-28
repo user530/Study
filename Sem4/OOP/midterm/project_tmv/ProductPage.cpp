@@ -7,7 +7,8 @@ ProductPage::ProductPage(){};
  * @param groupType ordertype of the ordergroup (bid,ask,sale)
  * @param ordertypeGroup group object that holds related orders
  * */
-void ProductPage::addOrdertypeGroup(const std::string groupType, const OrdertypeGroup &ordertypeGroup)
+// void ProductPage::addOrdertypeGroup(const std::string groupType, const OrdertypeGroup &ordertypeGroup)
+void ProductPage::addOrdertypeGroup(const OrderType &groupType, const OrdertypeGroup &ordertypeGroup)
 {
     //  Insert selected ordertypeGroup associated with the required groupType
     _productOrders.insert({groupType, ordertypeGroup});
@@ -17,7 +18,7 @@ void ProductPage::addOrdertypeGroup(const std::string groupType, const Ordertype
  * @param ordType referencr to the ordertype (key) object
  * @return true if value exists, false otherwise
  */
-bool ProductPage::checkOrdertypePage(const std::string ordType)
+bool ProductPage::checkOrdertypePage(const OrderType &ordType)
 {
     return _productOrders.count(ordType);
 };
@@ -26,7 +27,7 @@ bool ProductPage::checkOrdertypePage(const std::string ordType)
  * @param ordType referencr to the ordertype (key) object
  * @return reference to the Ordertype object
  */
-OrdertypeGroup &ProductPage::getOrdertypePage(const std::string ordType)
+OrdertypeGroup &ProductPage::getOrdertypePage(const OrderType &ordType)
 {
     // Try to get requested timestamp page
     try

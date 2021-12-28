@@ -65,13 +65,7 @@ std::set<std::string> Orderbook::getAllProducts()
 int main()
 {
     // CSVReader::transformCSV("20200601.csv");
+    // Orderbook book{"20200601.csv"};
     Orderbook book{"testData.csv"};
-    // book.printOrderbook();
-
-    std::set<std::string> keys = book.getAllProducts();
-
-    for (const std::string key : keys)
-    {
-        std::cout << key << "\n";
-    }
+    book.printOrderbook();
 }
