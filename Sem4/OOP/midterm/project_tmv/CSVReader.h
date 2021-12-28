@@ -13,9 +13,8 @@ public:
     /** Transform CSV file into OrderBook map */
     static std::map<std::string, DayData> transformCSV(const std::string);
 
-    static Order strToOrder(const std::string, const std::string);
-
 private:
+    static Order strToOrder(const std::string, const std::string);
     static std::pair<std::string, std::string> splitDatetime(const std::string);
     static bool checkTokensLength(const int, const unsigned int);
     static bool checkDateTimeToken(const std::string, const unsigned int);

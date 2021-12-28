@@ -33,10 +33,12 @@ TimestampPage &DayData::getTimestampPage(const std::string timeStr)
 /** Print timestamp page and all its content */
 void DayData::printDayPage()
 {
+    // Iterate over all timestamps
     for (auto &[timestamp, timeOrders] : _dailyOrders)
     {
+        // Print timestamp page information
         std::cout << "  Timestamp: " << timestamp << " {\n";
         timeOrders.printTimestampPage();
-        std::cout << "  }" << std::endl;
+        std::cout << "  }\n";
     }
 };

@@ -37,9 +37,9 @@ void ProductPage::printProductPage()
     // Iterate over all groups in product page
     for (auto &[groupName, ordergroup] : _productOrders)
     {
-        // Print ordergroup name
+        // Print ordergroup information
         std::cout << "          Order group: " << groupName << " {\n";
         ordergroup.printGroup();
-        std::cout << "          }" << std::endl;
+        std::cout << "          }\n";
     }
 };

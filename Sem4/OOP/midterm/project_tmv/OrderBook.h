@@ -9,4 +9,8 @@ private:
 
 public:
     Orderbook(const std::string);
+    /* Returns specific day page */
+    DayData &getDayPage(const std::string);
+    /* Prints whole orderbook */
+    void printOrderbook();
 };

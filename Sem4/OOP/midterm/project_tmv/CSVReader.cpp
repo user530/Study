@@ -88,9 +88,6 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             if (!checkCSVLine(tokenLine, curLine))
                 continue;
 
-            // Checks passed -> Line will be added
-            ordAdd++;
-
             // Token data
             std::string date = splitDatetime(tokenLine[0]).first;
             std::string time = splitDatetime(tokenLine[0]).second;
@@ -106,13 +103,11 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             // Prepare Order to be inserted
             Order order = strToOrder(price, amount);
 
-            // Prepare Ordertype object for product page insertion
-            // OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
-
             // If there is no date page inside
             if (!orderbook.count(date))
             {
-                std::cout << curLine << " line: Day page doesnt exist.\n";
+                // std::cout << curLine << " line: Day page doesnt exist.\n";
+
                 // Create group wrapper and add order
                 OrdertypeGroup ordGrp{};
                 ordGrp.addOrder(order);
@@ -131,11 +126,13 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             // Day page already exists
             else
             {
-                std::cout << curLine << " line: Day page exists. ";
+                // std::cout << curLine << " line: Day page exists. ";
+
                 // If there is no time page inside
                 if (!orderbook[date].checkTimestampPage(time))
                 {
-                    std::cout << curLine << "No time page exists.\n";
+                    // std::cout << curLine << "No time page exists.\n";
+
                     // Create group wrapper and add order
                     OrdertypeGroup ordGrp{};
                     ordGrp.addOrder(order);
@@ -152,13 +149,15 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                 // Day page already exists
                 else
                 {
-                    std::cout << "Time page exists. ";
+                    // std::cout << "Time page exists. ";
+
                     // If there is no product page inside
                     if (!orderbook[date]
                              .getTimestampPage(time)
                              .checkProductPage(prod))
                     {
-                        std::cout << curLine << "Prod page doesnt exist.\n";
+                        // std::cout << curLine << "Prod page doesnt exist.\n";
+
                         // Create group wrapper and add order
                         OrdertypeGroup ordGrp{};
                         ordGrp.addOrder(order);
@@ -173,14 +172,16 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                     // Product page already exists
                     else
                     {
-                        std::cout << "Prod page exists. ";
+                        // std::cout << "Prod page exists. ";
+
                         // If there is no ordertype page inside
                         if (!orderbook[date]
                                  .getTimestampPage(time)
                                  .getProductPage(prod)
                                  .checkOrdertypePage(ordType))
                         {
-                            std::cout << "OTP page doesnt exist.\n";
+                            // std::cout << "OTP page doesnt exist.\n";
+
                             // Create group wrapper and add order
                             OrdertypeGroup ordGrp{};
                             ordGrp.addOrder(order);
@@ -193,7 +194,8 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                         // If ordertype group already exists
                         else
                         {
-                            std::cout << "OTP page exists.\n";
+                            // std::cout << "OTP page exists.\n";
+
                             // Ordertype page already exists
                             // Add order to the ordertype page
 
@@ -207,11 +209,8 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                 }
             }
 
-            for (auto &[key, val] : orderbook)
-            {
-                std::cout << key << "\n";
-                val.printDayPage();
-            }
+            // Line added -> increment counter
+            ordAdd++;
         }
         // Report about result
         std::cout << curLine << " lines parsed, "
@@ -483,10 +482,3 @@ bool CSVReader::checkCSVLine(const std::vector<std::string> tokens, const unsign
     // If all checks are OK, return true
     return true;
 };
-
-int main()
-{
-    // std::string line1 = "2020/06/01 12:08:38.938263,DOGE/BTC,bid,0.00000008,1066874.125";
-    // CSVReader::transformCSV("20200601.csv");
-    CSVReader::transformCSV("testData.csv");
-}
