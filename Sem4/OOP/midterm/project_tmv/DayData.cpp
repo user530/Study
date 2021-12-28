@@ -27,7 +27,19 @@ bool DayData::checkTimestampPage(const std::string timeStr)
  */
 TimestampPage &DayData::getTimestampPage(const std::string timeStr)
 {
-    return _dailyOrders.at(timeStr);
+    // Try to get requested timestamp page
+    try
+    {
+        return _dailyOrders.at(timeStr);
+    }
+    // If there is no page available
+    catch (const std::exception &e)
+    {
+        // Report error
+        std::cerr << "DayData::getTimestampPage - Error! Can't find requested page! ("
+                  << e.what() << ").\n";
+        throw;
+    }
 }
 
 /** Print timestamp page and all its content */

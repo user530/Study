@@ -28,7 +28,19 @@ bool ProductPage::checkOrdertypePage(const std::string ordType)
  */
 OrdertypeGroup &ProductPage::getOrdertypePage(const std::string ordType)
 {
-    return _productOrders[ordType];
+    // Try to get requested timestamp page
+    try
+    {
+        return _productOrders.at(ordType);
+    }
+    // If there is no page available
+    catch (const std::exception &e)
+    {
+        // Report error
+        std::cerr << "ProductPage::getOrdertypePage - Error! Can't find requested page! ("
+                  << e.what() << ").\n";
+        throw;
+    }
 };
 
 /** Print product page and all its content */

@@ -47,26 +47,5 @@ int main()
 {
     // CSVReader::transformCSV("20200601.csv");
     Orderbook book{"testData.csv"};
-    // book.printOrderbook();
-    std::cout << "Min: "
-              << book.getDayPage("2020/06/03")
-                     .getTimestampPage("12:57:30.328127")
-                     .getProductPage("ETH/BTC")
-                     .getOrdertypePage("bid")
-                     .getMin()
-              << '\n'
-              << "Max: "
-              << book.getDayPage("2020/06/03")
-                     .getTimestampPage("12:57:30.328127")
-                     .getProductPage("ETH/BTC")
-                     .getOrdertypePage("bid")
-                     .getMax()
-              << '\n'
-              << "Avg: "
-              << book.getDayPage("2020/06/03")
-                     .getTimestampPage("12:57:30.328127")
-                     .getProductPage("ETH/BTC")
-                     .getOrdertypePage("bid")
-                     .getAvg()
-              << '\n';
+    book.printOrderbook();
 }

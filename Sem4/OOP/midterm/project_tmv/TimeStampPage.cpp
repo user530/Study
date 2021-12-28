@@ -28,7 +28,19 @@ bool TimestampPage::checkProductPage(const std::string prodStr)
  */
 ProductPage &TimestampPage::getProductPage(const std::string prodStr)
 {
-    return _timedOrders.at(prodStr);
+    // Try to get requested timestamp page
+    try
+    {
+        return _timedOrders.at(prodStr);
+    }
+    // If there is no page available
+    catch (const std::exception &e)
+    {
+        // Report error
+        std::cerr << "TimestampPage::getProductPage - Error! Can't find requested page! ("
+                  << e.what() << ").\n";
+        throw;
+    }
 }
 
 /** Print timestamp page and all its content */
