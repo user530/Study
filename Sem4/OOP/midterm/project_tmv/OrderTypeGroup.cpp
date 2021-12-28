@@ -13,6 +13,8 @@ OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
  * */
 void OrdertypeGroup::addOrder(const Order &order)
 {
+    // Add order object to the vector
+    _orderList.push_back(order);
     // Update OrderTypeGroup information based on the new order
     updateGroupInfo(order.price, order.amount);
 };

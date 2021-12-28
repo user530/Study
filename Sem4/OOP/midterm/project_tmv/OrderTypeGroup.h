@@ -45,10 +45,10 @@ private:
     double _ttlVolume;
     /** Number of orders for this order type */
     unsigned int _orderCount;
-    /** List of all orders */
-    std::vector<Order> _orderList;
 
 public:
+    /** List of all orders */
+    std::vector<Order> _orderList;
     OrdertypeGroup();
     void addOrder(const Order &);
     void updateGroupInfo(const double, const double);

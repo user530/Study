@@ -26,7 +26,7 @@ bool TimestampPage::checkProductPage(const std::string prodStr)
  * @param prodStr product (key) name
  * @return reference to the product object
  */
-ProductPage TimestampPage::getProductPage(const std::string prodStr)
+ProductPage &TimestampPage::getProductPage(const std::string prodStr)
 {
     return _timedOrders.at(prodStr);
 }

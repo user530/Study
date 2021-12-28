@@ -25,7 +25,7 @@ bool DayData::checkTimestampPage(const std::string timeStr)
  * @param timeStr timestamp (key) name
  * @return reference to the timestamp object
  */
-TimestampPage DayData::getTimestampPage(const std::string timeStr)
+TimestampPage &DayData::getTimestampPage(const std::string timeStr)
 {
     return _dailyOrders.at(timeStr);
 }

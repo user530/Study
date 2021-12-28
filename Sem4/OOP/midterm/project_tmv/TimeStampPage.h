@@ -11,6 +11,6 @@ public:
     TimestampPage();
     void addProductPage(const std::string, const ProductPage &);
     bool checkProductPage(const std::string);
-    ProductPage getProductPage(const std::string);
+    ProductPage &getProductPage(const std::string);
     void printTimestampPage();
 };
