@@ -12,6 +12,24 @@ void DayData::addTimestampPage(const std::string timestamp, const TimestampPage 
     _dailyOrders.insert({timestamp, timeOrders});
 };
 
+/** Check if there is a group page for this timestamp
+ * @param timeStr timestamp (key) name
+ * @return true if key exists, false otherwise
+ */
+bool DayData::checkTimestampPage(const std::string timeStr)
+{
+    return _dailyOrders.count(timeStr);
+};
+
+/** Get container stored at timestamp name
+ * @param timeStr timestamp (key) name
+ * @return reference to the timestamp object
+ */
+TimestampPage DayData::getTimestampPage(const std::string timeStr)
+{
+    return _dailyOrders.at(timeStr);
+}
+
 /** Print timestamp page and all its content */
 void DayData::printDayPage()
 {

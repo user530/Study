@@ -13,9 +13,6 @@ OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
  * */
 void OrdertypeGroup::addOrder(const Order &order)
 {
-    // Add order object to the vector
-    _orderList.push_back(order);
-
     // Update OrderTypeGroup information based on the new order
     updateGroupInfo(order.price, order.amount);
 };
@@ -77,4 +74,21 @@ double OrdertypeGroup::getMax()
 double OrdertypeGroup::getAvg()
 {
     return _avgPrice;
+};
+
+/** Function to convert string into OrderType datatype
+ * @param ordtpStr order type string
+ * @return order type object
+ */
+OrderType OrdertypeGroup::strToOrdertype(const std::string ordtpStr)
+{
+    if (ordtpStr == "bid")
+    {
+        return OrderType::bid;
+    }
+    if (ordtpStr == "ask")
+    {
+        return OrderType::ask;
+    }
+    return OrderType::unknown;
 };

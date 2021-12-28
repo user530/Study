@@ -13,6 +13,24 @@ void TimestampPage::addProductPage(const std::string prodName, const ProductPage
     _timedOrders.insert({prodName, prodPage});
 };
 
+/** Check if there is a page for this product
+ * @param prodStr product (key) name
+ * @return true if value exists, false otherwise
+ */
+bool TimestampPage::checkProductPage(const std::string prodStr)
+{
+    return _timedOrders.count(prodStr);
+};
+
+/** Get container stored at product name
+ * @param prodStr product (key) name
+ * @return reference to the product object
+ */
+ProductPage TimestampPage::getProductPage(const std::string prodStr)
+{
+    return _timedOrders.at(prodStr);
+}
+
 /** Print timestamp page and all its content */
 void TimestampPage::printTimestampPage()
 {

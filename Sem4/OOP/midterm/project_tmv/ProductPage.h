@@ -1,5 +1,5 @@
 #pragma once
-#include "OrderTypeGroup.h"
+#include "OrdertypeGroup.h"
 #include <map>
 
 class ProductPage
@@ -11,5 +11,7 @@ private:
 public:
     ProductPage();
     void addOrdertypeGroup(const OrderType &, const OrdertypeGroup &);
+    bool checkOrdertypePage(const OrderType &);
+    OrdertypeGroup &getOrdertypePage(const OrderType &);
     void printProductPage();
 };

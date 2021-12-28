@@ -58,7 +58,7 @@ std::vector<std::string> CSVReader::tokenise(const std::string line, const char 
 std::map<std::string, DayData> CSVReader::transformCSV(const std::string filename)
 {
     // Prepare result variable to store all data
-    std::map<std::string, DayData &> orderbook;
+    std::map<std::string, DayData> orderbook;
 
     // Open CSV file for reading
     std::ifstream csvFile{filename};
@@ -66,196 +66,162 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
     // Variable to store single line of CSV data
     std::string line;
 
-    // Setup counter
-    int lines = 0;
-
     // Check if file is opened successfully
     if (csvFile.is_open())
     {
+        // Prepare line counter
+        unsigned int curLine = 0;
+
+        // Prepare successfull lines counter
+        unsigned int ordAdd = 0;
 
         // Iterate file line by line
         while (std::getline(csvFile, line))
         {
+            // Increment line counter
+            curLine++;
+
             // Tokenise the line
             std::vector<std::string> tokenLine = tokenise(line, ',');
 
-            if (tokenLine.size() != 5)
+            // If there is a problem with tokens -> skip line
+            if (!checkCSVLine(tokenLine, curLine))
+                continue;
+
+            // Checks passed -> Line will be added
+            ordAdd++;
+
+            // Token data
+            std::string date = splitDatetime(tokenLine[0]).first;
+            std::string time = splitDatetime(tokenLine[0]).second;
+            std::string prod = tokenLine[1];
+            std::string ordType = tokenLine[2];
+            std::string price = tokenLine[3];
+            std::string amount = tokenLine[4];
+
+            // std::cout << "Date: " << date << ", time: " << time
+            //           << ", prod: " << prod << ", ordType: " << ordType
+            //           << ", price: " << price << ", amount: " << amount << '\n';
+
+            // Prepare Order to be inserted
+            Order order = strToOrder(price, amount);
+            // Prepare Ordertype object for product page insertion
+            OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
+
+            // If there is no date page inside
+            if (!orderbook.count(date))
             {
-                // Check tokens for the right format
+                std::cout << curLine << " line: Day page doesnt exist.\n";
+                // Create group wrapper and add order
+                OrdertypeGroup ordGrp{};
+                ordGrp.addOrder(order);
+                // Create product wrapper and add ordertypegroup
+                ProductPage prdGrp{};
+                prdGrp.addOrdertypeGroup(OTP, ordGrp);
+                // Create timestamp wrapper and add prodgrp
+                TimestampPage timeGrp{};
+                timeGrp.addProductPage(prod, prdGrp);
+                // Create day wrapper and add timegrp
+                DayData dayGrp{};
+                dayGrp.addTimestampPage(time, timeGrp);
+                // Add day wrapper to the orderbook
+                orderbook.insert({date, dayGrp});
             }
-            // If line is too long or too short
+            // Day page already exists
             else
             {
-                // Message and skip
-
-                continue;
+                std::cout << curLine << " line: Day page exists. ";
+                // If there is no time page inside
+                if (!orderbook[date].checkTimestampPage(time))
+                {
+                    std::cout << curLine << "No time page exists.\n";
+                    // Create group wrapper and add order
+                    OrdertypeGroup ordGrp{};
+                    ordGrp.addOrder(order);
+                    // Create product wrapper and add ordertypegroup
+                    ProductPage prdGrp{};
+                    prdGrp.addOrdertypeGroup(OTP, ordGrp);
+                    // Create timestamp wrapper and add prodgrp
+                    TimestampPage timeGrp{};
+                    timeGrp.addProductPage(prod, prdGrp);
+                    // Add timestamp page to the day page
+                    orderbook[date]
+                        .addTimestampPage(time, timeGrp);
+                }
+                // Day page already exists
+                else
+                {
+                    std::cout << "Time page exists. ";
+                    // If there is no product page inside
+                    if (!orderbook[date]
+                             .getTimestampPage(time)
+                             .checkProductPage(prod))
+                    {
+                        std::cout << curLine << "Prod page doesnt exist.\n";
+                        // Create group wrapper and add order
+                        OrdertypeGroup ordGrp{};
+                        ordGrp.addOrder(order);
+                        // Create product wrapper and add ordertypegroup
+                        ProductPage prdGrp{};
+                        prdGrp.addOrdertypeGroup(OTP, ordGrp);
+                        // Add product page to the timestamp page
+                        orderbook[date]
+                            .getTimestampPage(time)
+                            .addProductPage(prod, prdGrp);
+                    }
+                    // Product page already exists
+                    else
+                    {
+                        std::cout << "Prod page exists. ";
+                        // If there is no ordertype page inside
+                        if (!orderbook[date]
+                                 .getTimestampPage(time)
+                                 .getProductPage(prod)
+                                 .checkOrdertypePage(OTP))
+                        {
+                            std::cout << "OTP page doesnt exist.\n";
+                            // Create group wrapper and add order
+                            OrdertypeGroup ordGrp{};
+                            ordGrp.addOrder(order);
+                            // Add ordertype page to the product page
+                            orderbook[date]
+                                .getTimestampPage(time)
+                                .getProductPage(prod)
+                                .addOrdertypeGroup(OTP, ordGrp);
+                        }
+                        // If ordertype group already exists
+                        else
+                        {
+                            std::cout << "OTP page exists.\n";
+                            // Ordertype page already exists
+                            // Add order to the ordertype page
+                            orderbook[date]
+                                .getTimestampPage(time)
+                                .getProductPage(prod)
+                                .getOrdertypePage(OTP)
+                                .addOrder(order);
+                        }
+                    }
+                }
             }
 
-            //         /* Try to transform std::string into orderBookEntry */
-            //         std::vector<std::string> tokenLine = tokenise(line, ',');
-            //         std::string day = tokenise(tokenLine[0], ' ')[0];
-            //         std::string timestamp = tokenise(tokenLine[0], ' ')[1];
-            //         std::string product = tokenLine[1];
-            //         std::string ordertype = tokenLine[2];
-            //         OrderType OTP = OrderTypeSubsection::strToOrdertype(ordertype);
-            //         std::string price = tokenLine[3];
-            //         std::string amount = tokenLine[4];
-
-            //         // =========================
-
-            //         // If market day entry doesnt exist
-            //         if (!orderbook.count(day))
-            //         {
-            //             // Prepare order book structure elements
-
-            //             Order order = tokensToOrder(price, amount);
-
-            //             OrderTypeSubsection orderTypePage = OrderTypeSubsection{};
-
-            //             orderTypePage.addOrder(order);
-
-            //             std::map<OrderType,
-            //                      OrderTypeSubsection>
-            //                 productPage;
-
-            //             productPage[OTP] = orderTypePage;
-
-            //             std::map<std::string,
-            //                      std::map<OrderType,
-            //                               OrderTypeSubsection>>
-            //                 timestampPage;
-
-            //             timestampPage[product] = productPage;
-
-            //             std::map<std::string,
-            //                      std::map<std::string,
-            //                               std::map<OrderType,
-            //                                        OrderTypeSubsection>>>
-            //                 dayPage;
-
-            //             dayPage[timestamp] = timestampPage;
-
-            //             // Add new day container
-            //             orderbook[day] = dayPage;
-
-            //             // Counter DELETE!
-            //             lines++;
-            //         }
-            //         // If market day entry already exist
-            //         else
-            //         {
-            //             // If timestamp doesnt exist
-            //             if (!orderbook[day].count(timestamp))
-            //             {
-            //                 // Prepare order book structure elements
-
-            //                 Order order = tokensToOrder(price, amount);
-
-            //                 OrderTypeSubsection orderTypePage = OrderTypeSubsection{};
-
-            //                 orderTypePage.addOrder(order);
-
-            //                 std::map<OrderType,
-            //                          OrderTypeSubsection>
-            //                     productPage;
-
-            //                 productPage[OTP] = orderTypePage;
-
-            //                 std::map<std::string,
-            //                          std::map<OrderType,
-            //                                   OrderTypeSubsection>>
-            //                     timestampPage;
-
-            //                 timestampPage[product] = productPage;
-
-            //                 std::map<std::string,
-            //                          std::map<std::string,
-            //                                   std::map<OrderType,
-            //                                            OrderTypeSubsection>>>
-            //                     dayPage;
-
-            //                 dayPage[timestamp] = timestampPage;
-
-            //                 // Counter DELETE!
-            //                 lines++;
-            //             }
-            //             // If timestamp already there
-            //             else
-            //             {
-            //                 // If product doesnt exist
-            //                 if (!orderbook[day][timestamp].count(product))
-            //                 {
-            //                     // Prepare order book structure elements
-
-            //                     Order order = tokensToOrder(price, amount);
-
-            //                     OrderTypeSubsection orderTypePage = OrderTypeSubsection{};
-
-            //                     orderTypePage.addOrder(order);
-
-            //                     std::map<OrderType,
-            //                              OrderTypeSubsection>
-            //                         productPage;
-
-            //                     productPage[OTP] = orderTypePage;
-
-            //                     std::map<std::string,
-            //                              std::map<OrderType,
-            //                                       OrderTypeSubsection>>
-            //                         timestampPage;
-
-            //                     timestampPage[product] = productPage;
-
-            //                     // Counter DELETE!
-            //                     lines++;
-            //                 }
-            //                 // If product already exists
-            //                 else
-            //                 {
-            //                     // If ordertype page soesn't exist
-            //                     if (!orderbook[day][timestamp][product].count(OTP))
-            //                     {
-            //                         // Prepare order book structure elements
-
-            //                         Order order = tokensToOrder(price, amount);
-
-            //                         OrderTypeSubsection orderTypePage = OrderTypeSubsection{};
-
-            //                         orderTypePage.addOrder(order);
-
-            //                         std::map<OrderType,
-            //                                  OrderTypeSubsection>
-            //                             productPage;
-
-            //                         productPage[OTP] = orderTypePage;
-
-            //                         // Counter DELETE!
-            //                         lines++;
-            //                     }
-            //                     // If order type page already exists
-            //                     else
-            //                     {
-            //                         // Create order and add it to the page
-            //                         Order order = tokensToOrder(price, amount);
-            //                         orderbook[day][timestamp][product][OTP].addOrder(order);
-            //                         // Counter DELETE!
-            //                         lines++;
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            //     // Report about result
-            //     std::cout << "CSVReader::transformCSV transformed " << lines << " lines." << std::endl;
+            for (auto &[key, val] : orderbook)
+            {
+                val.printDayPage();
+            }
         }
-
-        // return orderbook;
+        // Report about result
+        std::cout << curLine << " lines parsed, "
+                  << ordAdd << " lines added to the orderbook.\n";
     }
     // If file wasn't opened
     else
     {
-        std::cout << "Can't open required file!" << std::endl;
+        std::cerr << "CSVReader::transformCSV - Can't find/open required file!\n";
     }
+
+    // Return orderbook;
+    return orderbook;
 }
 
 /** Create order from strings based on "Merkelrex strToOrderBookEntry"
@@ -267,6 +233,7 @@ Order CSVReader::strToOrder(const std::string priceStr, const std::string amount
 {
     // Prepare variables for transformation
     double price, amount;
+
     // Try to transform strings into doubles
     try
     {
@@ -288,6 +255,32 @@ Order CSVReader::strToOrder(const std::string priceStr, const std::string amount
     return Order{price, amount};
 };
 
+/** Date-time token split
+ * @param datetimeStr string containing information about day and time
+ * @return pair of strings where first one is date, and other one is timestamp
+ * */
+std::pair<std::string, std::string> CSVReader::splitDatetime(const std::string datetimeStr)
+{
+    // Prepare variables
+    std::string date, time;
+    // Try to split date-time token
+    try
+    {
+        date = tokenise(datetimeStr, ' ')[0];
+        time = tokenise(datetimeStr, ' ')[1];
+    }
+    // If encountered problem in the process
+    catch (const std::exception &e)
+    {
+        // Print error message and throw error
+        std::cerr << "CSVReader::splitDatetime - Invalid token!" << '\n';
+        std::cerr << "Date-time passed: '" << datetimeStr << "'.\n";
+        throw;
+    }
+    // If everything ok
+    return std::make_pair(date, time);
+};
+
 /** Check the length of the token vector
  * @param vectorLength length of the token vector
  * @param line current CSV line
@@ -307,12 +300,36 @@ bool CSVReader::checkTokensLength(const int vectorLength, const unsigned int lin
     return true;
 };
 
+/** Check that date time can be split
+ * @param datetimeStr string containing information about day and time
+ * @return true if valid, false if not
+ * */
+bool CSVReader::checkDateTimeToken(const std::string datetimeStr, const unsigned int line)
+{
+    // Try to split datetime token into 2 parts: date and time
+    try
+    {
+        std::string date = tokenise(datetimeStr, ' ')[0];
+        std::string time = tokenise(datetimeStr, ' ')[1];
+    }
+    // If there is a problem
+    catch (const std::exception &e)
+    {
+        // Message and return false
+        std::cerr << "Line " << line << " problem with date-time token: " << datetimeStr
+                  << "! Supported date-time format is 'DATE TIME'. Skipping...\n";
+        return false;
+    }
+    // If check is passed
+    return true;
+};
+
 /** Check date token correct format
  * @param dateStr date in the form of string
  * @param line current CSV line
  * @return true if valid, false if not
  */
-bool CSVReader::checkDateToken(const std::string dateStr, const unsigned line)
+bool CSVReader::checkDateToken(const std::string dateStr, const unsigned int line)
 {
     //  Regular expression for the date YYYY/MM/DD, copied from the:
     //  (https://stackoverflow.com/questions/22061723/regex-date-validation-for-yyyy-mm-dd)
@@ -335,7 +352,7 @@ bool CSVReader::checkDateToken(const std::string dateStr, const unsigned line)
  * @param line current CSV line
  * @return true if valid, false if not
  */
-bool CSVReader::checkTimeToken(const std::string timeStr, const unsigned line)
+bool CSVReader::checkTimeToken(const std::string timeStr, const unsigned int line)
 {
     //  Regular expression for the timestamp HH:mm::ss.SSSSSS
     std::regex timeReg("^([0-1]\\d|[2][0-3])\\:([0-5]\\d)\\:([0-5]\\d)\\.(\\d{6})$");
@@ -357,7 +374,7 @@ bool CSVReader::checkTimeToken(const std::string timeStr, const unsigned line)
  * @param line current CSV line
  * @return true if valid, false if not
  */
-bool CSVReader::checkProductToken(const std::string prodStr, const unsigned line)
+bool CSVReader::checkProductToken(const std::string prodStr, const unsigned int line)
 {
     //  Regular expression for the product in the form NAME1/NAME2 (Uppercase, latin, 2-6)
     std::regex prodReg("^([A-Z]{2,6})\\/([A-Z]{2,6})$");
@@ -393,7 +410,32 @@ bool CSVReader::checkOrdertypeToken(const std::string ordtpStr, const unsigned l
     return true;
 };
 
-/** Check CSV line for correctness
+/** Check order value token correct format
+ * @param ordStr order value (price/amount) in the form of string
+ * @param line current CSV line
+ * @return true if valid, false if not
+ */
+bool CSVReader::checkOrderToken(const std::string ordStr, const unsigned int line)
+{
+    // Try to transform string into double
+    try
+    {
+        // Transform string to double
+        double value = std::stod(ordStr);
+    }
+    // If encountered problem in the process
+    catch (const std::exception &e)
+    {
+        // Message and return false
+        std::cerr << "Line " << line << " wrong order value token: " << ordStr
+                  << "! Order value must be a correct number. Skipping...\n";
+        return false;
+    }
+    // If check is passed
+    return true;
+};
+
+/** Check CSV line correctness
  * @param tokens CSV line in the form of vector of strings
  * @param line CSV line index
  * @return if all tokens have correct format -> true, else -> false
@@ -404,28 +446,19 @@ bool CSVReader::checkCSVLine(const std::vector<std::string> tokens, const unsign
     if (!checkTokensLength(tokens.size(), line))
         return false;
 
-    // Prepare variables for date and time
-    std::string date, time;
-
-    // Try to split first token into 2 parts: date and time
-    try
-    {
-        date = tokenise(tokens[0], ' ')[0];
-        time = tokenise(tokens[0], ' ')[1];
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "Line " << line << " problem with date-time token: " << tokens[0]
-                  << "! Supported date-time format is 'DATE TIME'. Skipping...\n";
+    // Check for the problem with the datetime
+    if (!checkDateTimeToken(tokens[0], line))
         return false;
-    }
+
+    // Pair of date and time tokens
+    std::pair<std::string, std::string> dateTime = splitDatetime(tokens[0]);
 
     // Check for the problem with the date
-    if (!checkDateToken(date, line))
+    if (!checkDateToken(dateTime.first, line))
         return false;
 
     // Check for the problem with the time
-    if (!checkTimeToken(time, line))
+    if (!checkTimeToken(dateTime.second, line))
         return false;
 
     // Check for the problem with the product
@@ -436,13 +469,39 @@ bool CSVReader::checkCSVLine(const std::vector<std::string> tokens, const unsign
     if (!checkOrdertypeToken(tokens[2], line))
         return false;
 
+    // Check for the problem with the price
+    if (!checkOrderToken(tokens[3], line))
+        return false;
+
+    // Check for the problem with the amount
+    if (!checkOrderToken(tokens[4], line))
+        return false;
+
     // If all checks are OK, return true
     return true;
 };
 
 int main()
 {
-    std::string line1 = "2020/06/01 12:08:38.938263,DOGE/BTC,bid,0.00000008,1066874.125";
-
-    std::cout << CSVReader::checkCSVLine(CSVReader::tokenise(line1, ','), 1);
+    // std::string line1 = "2020/06/01 12:08:38.938263,DOGE/BTC,bid,0.00000008,1066874.125";
+    // CSVReader::transformCSV("20200601.csv");
+    // CSVReader::transformCSV("testData.csv");
+    // Order ord1 = CSVReader::strToOrder("10", "5");
+    // Order ord2 = CSVReader::strToOrder("20", "10");
+    // Order ord3 = CSVReader::strToOrder("30", "20");
+    // OrdertypeGroup grp1{};
+    // ProductPage pr1{};
+    // OrderType BID = OrderType::bid;
+    // pr1.addOrdertypeGroup(BID, grp1);
+    // std::cout << "Print 1 - Grp1 print group\n";
+    // grp1.printGroup();
+    // grp1.addOrder(ord1);
+    // std::cout << "Print 2 - Grp1 print after add\n";
+    // grp1.printGroup();
+    // std::cout << "Print 3 - Grp1 print through GET\n";
+    // pr1.getOrdertypePage(BID).printGroup();
+    // pr1.getOrdertypePage(BID).addOrder(ord2);
+    // pr1.getOrdertypePage(BID).addOrder(ord3);
+    // std::cout << "Print 4 - Grp1 print normal\n";
+    // grp1.printGroup();
 }

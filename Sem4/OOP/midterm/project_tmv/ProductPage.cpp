@@ -13,6 +13,24 @@ void ProductPage::addOrdertypeGroup(const OrderType &groupType, const OrdertypeG
     _productOrders.insert({groupType, ordertypeGroup});
 };
 
+/** Check if there is a page for this ordertype
+ * @param ordType referencr to the ordertype (key) object
+ * @return true if value exists, false otherwise
+ */
+bool ProductPage::checkOrdertypePage(const OrderType &ordType)
+{
+    return _productOrders.count(ordType);
+};
+
+/** Get container stored at requested ordertype
+ * @param ordType referencr to the ordertype (key) object
+ * @return reference to the Ordertype object
+ */
+OrdertypeGroup &ProductPage::getOrdertypePage(const OrderType &ordType)
+{
+    return _productOrders[ordType];
+};
+
 /** Print product page and all its content */
 void ProductPage::printProductPage()
 {
