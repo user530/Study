@@ -62,10 +62,53 @@ std::set<std::string> Orderbook::getAllProducts()
     return products;
 };
 
-int main()
+/** Get minimum order price for the requested product in the current day-time
+ * @param day string representation of the day
+ * @param time string representation of the timestamp
+ * @param product string representation of the product
+ * @param ordertype reference to the ordertype object
+ * @return Minimal price of the order with specified params
+ * */
+double Orderbook::getMin(std::string day, std::string time, std::string product, const OrderType &ordertype)
 {
-    // CSVReader::transformCSV("20200601.csv");
-    // Orderbook book{"20200601.csv"};
-    Orderbook book{"testData.csv"};
-    book.printOrderbook();
-}
+    // Try to get requested info
+    return _orderbook[day]
+        .getTimestampPage(time)
+        .getProductPage(product)
+        .getOrdertypePage(ordertype)
+        .getMin();
+};
+
+/** Get maximum order price for the requested product in the current day-time
+ * @param day string representation of the day
+ * @param time string representation of the timestamp
+ * @param product string representation of the product
+ * @param ordertype reference to the ordertype object
+ * @return Maximum price of the order with specified params
+ * */
+double Orderbook::getMax(std::string day, std::string time, std::string product, const OrderType &ordertype)
+{
+    // Try to get requested info
+    return _orderbook[day]
+        .getTimestampPage(time)
+        .getProductPage(product)
+        .getOrdertypePage(ordertype)
+        .getMax();
+};
+
+/** Get average order price for the requested product in the current day-time
+ * @param day string representation of the day
+ * @param time string representation of the timestamp
+ * @param product string representation of the product
+ * @param ordertype reference to the ordertype object
+ * @return Average price of the order with specified params
+ * */
+double Orderbook::getAvg(std::string day, std::string time, std::string product, const OrderType &ordertype)
+{
+    // Try to get requested info
+    return _orderbook[day]
+        .getTimestampPage(time)
+        .getProductPage(product)
+        .getOrdertypePage(ordertype)
+        .getAvg();
+};

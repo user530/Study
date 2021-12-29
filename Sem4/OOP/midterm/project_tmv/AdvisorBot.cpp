@@ -32,7 +32,7 @@ void AdvisorBot::printMenu()
               << "           AdvisorBot responds to the set of commands.\n"
               << "    You can type 'help' command to list all available commands.\n"
               << "*=================================================================*\n"
-              << std::endl;
+              << '\n';
 };
 
 /** C1) List all available commands */
@@ -50,8 +50,7 @@ void AdvisorBot::printHelp()
               << "8) time\n"
               << "9) step\n"
               << "10) plot <product> <timesteps_number>\n"
-              << "To get additional information type 'help <command_name>'.\n"
-              << std::endl;
+              << "To get additional information type 'help <command_name>'.\n\n";
 };
 
 /** C2) Output help for the speciﬁed command */
@@ -63,15 +62,13 @@ void AdvisorBot::printCmdHelp(std::string cmd)
         std::cout << "This command lists all available commands or gives information about specified command.\n"
                   << "Command form - help OR help <cmd> - where:\n"
                   << "<cmd> - help, prod, min, etc.\n"
-                  << "Information about all available commands can be found using 'help' command.\n"
-                  << std::endl;
+                  << "Information about all available commands can be found using 'help' command.\n\n";
     }
     // If user request information about prod command
     else if (cmd == "prod")
     {
         std::cout << "This command lists all products available on the market.\n"
-                  << "Command form - prod.\n"
-                  << std::endl;
+                  << "Command form - prod.\n\n";
     }
     // If user request information about min command
     else if (cmd == "min")
@@ -81,8 +78,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
                   << "<price_type> - bid or ask.\n"
-                  << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n"
-                  << std::endl;
+                  << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n\n";
     }
     // If user request information about max command
     else if (cmd == "max")
@@ -92,8 +88,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
                   << "<price_type> - price type: bid or ask.\n"
-                  << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n"
-                  << std::endl;
+                  << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n\n";
     }
     // If user request information about avg command
     else if (cmd == "avg")
@@ -105,8 +100,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
                   << "<price_type> - price type: bid or ask.\n"
                   << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n"
                   << "<timesteps_number> - 1, 2, 3, etc.\n"
-                  << "How many timesteps, starting from the current one, use for the calculation.\n"
-                  << std::endl;
+                  << "How many timesteps, starting from the current one, use for the calculation.\n\n";
     }
     // If user request information about predict command
     else if (cmd == "predict")
@@ -116,22 +110,19 @@ void AdvisorBot::printCmdHelp(std::string cmd)
                   << "<min/max> - min or max.\n"
                   << "Min is for the smallest price and Max is for the largest.\n"
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
-                  << "Information about all available products can be found using 'prod' command.\n"
-                  << std::endl;
+                  << "Information about all available products can be found using 'prod' command.\n\n";
     }
     // If user request information about time command
     else if (cmd == "time")
     {
         std::cout << "This command prints current time in dataset.\n"
-                  << "Command form - time.\n"
-                  << std::endl;
+                  << "Command form - time.\n\n";
     }
     // If user request information about step command
     else if (cmd == "step")
     {
         std::cout << "This command moves program to the next timestep.\n"
-                  << "Command form - step.\n"
-                  << std::endl;
+                  << "Command form - step.\n\n";
     }
     // If user request information about plot command
     else if (cmd == "plot")
@@ -141,33 +132,47 @@ void AdvisorBot::printCmdHelp(std::string cmd)
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
                   << "<timesteps_number> - 1, 2, 3, etc.\n"
-                  << "How many timesteps, starting from the current one, use for the vizualization.\n"
-                  << std::endl;
+                  << "How many timesteps, starting from the current one, use for the vizualization.\n\n";
     }
     // If user passes undefined command argument
     else
     {
         std::cout << "Input error - Wrong argument!\n"
-                  << "Please enter valid command name argument OR another command.\n"
-                  << std::endl;
+                  << "Please enter valid command name argument OR another command.\n\n";
     }
 };
 
 /** C3) List available products */
 void AdvisorBot::printProducts()
 {
-    std::cout << "PRINT PRODUCTS fired!" << std::endl;
+    // Prepare result varibale
+    std::string result = "This data contains orders for the following products: ";
+
+    // Add products to the result string
+    for (std::string product : orderbook.getAllProducts())
+    {
+        result += product + ", ";
+    }
+
+    // Print result, slicing last coma
+    std::cout << result.substr(0, result.size() - 2) << "\n\n";
 };
 
 /** C4) Find minimum bid or ask for product in current time step */
 void AdvisorBot::findMin()
 {
+    // Command should check it's argument
+    // If arguments are correct -> print min
+    // Else -> print wrong arguments
     std::cout << "FIND MIN fired!" << std::endl;
 };
 
 /** C5) Find maximum bid or ask for product in current time step */
 void AdvisorBot::findMax()
 {
+    // Command should check it's argument
+    // If arguments are correct -> print max
+    // Else -> print wrong arguments
     std::cout << "FIND MAX fired!" << std::endl;
 };
 
@@ -175,6 +180,9 @@ void AdvisorBot::findMax()
 of time steps */
 void AdvisorBot::findAvg()
 {
+    // Command should check it's argument
+    // If arguments are correct -> print avg
+    // Else -> print wrong arguments
     std::cout << "FIND AVG fired!" << std::endl;
 };
 
@@ -223,6 +231,7 @@ std::string AdvisorBot::getUserInput()
  */
 void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
 {
+    // Check cmd string size and route to appropriate response
     switch (cmdVector.size())
     {
     // Empty input
@@ -230,53 +239,15 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     {
         // Respond with error msg
         std::cout << "Input error - Empty line!\n"
-                  << "Please enter valid command.\n"
-                  << std::endl;
+                  << "Please enter valid command.\n\n";
         break;
     }
 
     // Command w/o additional argument
     case 1:
     {
-        // Command string variable to check
-        std::string cmd = cmdVector[0];
-
-        // General help command
-        if (cmd == "help")
-        {
-            // Print help
-            printHelp();
-        }
-
-        // Prod command
-        else if (cmd == "prod")
-        {
-            // List all products
-            printProducts();
-        }
-
-        // Time command
-        else if (cmd == "time")
-        {
-            // Print current timestamp
-            printTimestamp();
-        }
-
-        // Step command
-        else if (cmd == "step")
-        {
-            // Move to the next timestamp
-            nextTurn();
-        }
-
-        // Invalid 1 token string
-        else
-        {
-            // Respond with error msg
-            std::cout << "Input error - Undefined command!\n"
-                      << "Please enter valid command.\n"
-                      << std::endl;
-        }
+        // Handle command string
+        hadleSingleCmd(cmdVector[0]);
 
         break;
     }
@@ -284,31 +255,17 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     // Command with a single argument
     case 2:
     {
-        // Command string variable to check
-        std::string cmd = cmdVector[0];
+        // Handle command string with 1 argument
+        hadle1ArgCmd(cmdVector[0], cmdVector[1]);
 
-        // Check command
-        if (cmd == "help")
-        {
-            // Argument string variable to check
-            std::string arg1 = cmdVector[1];
-            // Check argument passed
-            printCmdHelp(arg1);
-        }
-        // Invalid command string
-        else
-        {
-            // Respond with error msg
-            std::cout << "Input error - Undefined command!\n"
-                      << "Please enter valid command.\n"
-                      << std::endl;
-        }
         break;
     }
 
     // Command with two arguments
     case 3:
     {
+        // Handle command string with 2 arguments
+
         // Check what command was sent
         std::cout << "Three arguments" << std::endl;
         break;
@@ -327,9 +284,112 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     {
         // Respond with error msg
         std::cout << "Input error - Too many arguments passed!\n"
-                  << "Please enter valid command.\n"
-                  << std::endl;
+                  << "Please enter valid command.\n\n";
         break;
     }
     }
 }
+
+/** Handle single line command
+ * @param cmd command line from the user input
+ */
+void AdvisorBot::hadleSingleCmd(std::string cmd)
+{
+    // General help command
+    if (cmd == "help")
+    {
+        // Print help
+        printHelp();
+    }
+
+    // Prod command
+    else if (cmd == "prod")
+    {
+        // List all products
+        printProducts();
+    }
+
+    // Time command
+    else if (cmd == "time")
+    {
+        // Print current timestamp
+        printTimestamp();
+    }
+
+    // Step command
+    else if (cmd == "step")
+    {
+        // Move to the next timestamp
+        nextTurn();
+    }
+
+    // Invalid 1 token string
+    else
+    {
+        // Respond with error msg
+        std::cout << "Input error - Undefined command!\n"
+                  << "Please enter valid command.\n\n";
+    }
+};
+
+/** Handle single arg commands
+ * @param cmd command line from the user input
+ * @param arg1 1st command line argument from the user input
+ */
+void AdvisorBot::hadle1ArgCmd(std::string cmd, std::string arg1)
+{
+    // Check command
+    if (cmd == "help")
+    {
+        // Execute command with argument
+        printCmdHelp(arg1);
+    }
+    // Invalid command string
+    else
+    {
+        // Respond with error msg
+        std::cout << "Input error - Undefined command!\n"
+                  << "Please enter valid command.\n\n";
+    }
+};
+
+/** Handle two arg commands
+ * @param cmd command line from the user input
+ * @param arg1 1st command line argument from the user input
+ * @param arg2 2nd command line argument from the user input
+ */
+void AdvisorBot::hadle2ArgCmd(std::string cmd, std::string arg1, std::string arg2)
+{
+    // Min command passed
+    if (cmd == "min")
+    {
+        // Execute MIN command with arguments
+    }
+    // Max command passed
+    else if (cmd == "max")
+    {
+        // Execute MAX command with arguments
+    }
+    // Avg command passed
+    else if (cmd == "avg")
+    {
+        // Execute AVG command with arguments
+    }
+    // Invalid command string
+    else
+    {
+        // Respond with error msg
+        std::cout << "Input error - Undefined command!\n"
+                  << "Please enter valid command.\n\n";
+    }
+};
+
+/** Handle three arg commands
+ * @param cmd command line from the user input
+ * @param arg1 1st command line argument from the user input
+ * @param arg2 2nd command line argument from the user input
+ * @param arg3 3rd command line argument from the user input
+ */
+void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg2, std::string arg3){
+
+};

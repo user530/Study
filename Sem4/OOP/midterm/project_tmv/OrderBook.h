@@ -15,4 +15,10 @@ public:
     void printOrderbook();
     /* Get all products */
     std::set<std::string> getAllProducts();
+    /** Get minimum price for specified product */
+    double getMin(std::string, std::string, std::string, const OrderType &);
+    /** Get maximum price for specified product */
+    double getMax(std::string, std::string, std::string, const OrderType &);
+    /** Get average price for specified product */
+    double getAvg(std::string, std::string, std::string, const OrderType &);
 };

@@ -1,10 +1,17 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "OrderBook.h"
 
 class AdvisorBot
 {
 private:
+    /** Current time period */
+    std::pair<std::string, std::string> dateTime;
+
+    /** Orderbook */
+    Orderbook orderbook{"testdata.csv"};
+
     /** List of all valid commands */
     std::vector<std::string> cmds;
 
@@ -41,6 +48,18 @@ step */
 
     /** Process user input */
     void processUserInput(std::vector<std::string>);
+
+    /** Handle single line commands */
+    void hadleSingleCmd(std::string);
+
+    /** Handle 1 arg commands */
+    void hadle1ArgCmd(std::string, std::string);
+
+    /** Handle 2 arg commands */
+    void hadle2ArgCmd(std::string, std::string, std::string);
+
+    /** Handle 3 arg commands */
+    void hadle3ArgCmd(std::string, std::string, std::string, std::string);
 
 public:
     /** Constructor function */
