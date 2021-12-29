@@ -112,3 +112,42 @@ double Orderbook::getAvg(std::string day, std::string time, std::string product,
         .getOrdertypePage(ordertype)
         .getAvg();
 };
+
+/** Get all date-time information
+ * @return Collection of pairs: date string -> set of associated timestamps(strings)
+ */
+std::map<std::string,
+         std::vector<std::string>>
+Orderbook::getAllDatetime()
+{
+    // Collection container
+    std::map<std::string,
+             std::vector<std::string>>
+        dateTimes;
+
+    // Iterate over all dates in the orderbook
+    for (auto iterator = _orderbook.begin(); iterator != _orderbook.end(); ++iterator)
+    {
+        // Get timestamps vector for the date
+        std::vector<std::string> timestamps = (iterator->second).getTimestamps();
+
+        // Add day - timestamps pair to the collections
+        dateTimes.insert({iterator->first, timestamps});
+    }
+
+    return dateTimes;
+};
+
+/** Get earliest date and timestamp from the orderbook
+ * @return pair of values: date -> first, timestamp -> second
+ */
+std::pair<std::string, std::string> Orderbook::getInitialDatetime()
+{
+    // Get first day - timestamps pair using iterator to select first pair
+    auto date1 = getAllDatetime().begin();
+
+    // Prepare pair
+    std::pair<std::string, std::string> dateTime(date1->first,
+                                                 (date1->second)[0]);
+    return dateTime;
+};

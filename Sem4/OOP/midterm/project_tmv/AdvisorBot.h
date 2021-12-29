@@ -15,6 +15,8 @@ private:
     /** List of all valid commands */
     std::vector<std::string> cmds;
 
+    /** Print initial greeting */
+    void printGreeting();
     /** Print application menu */
     void printMenu();
     /** C1) List all available commands */

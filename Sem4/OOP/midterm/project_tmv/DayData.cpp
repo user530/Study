@@ -73,3 +73,22 @@ std::set<std::string> DayData::getDayProducts()
     // Return the products list
     return products;
 };
+
+/** Get all timestamps from this day page
+ * @return set of all timestamp names (strings)
+ */
+std::vector<std::string> DayData::getTimestamps()
+{
+    // All timestamps from inside this day page
+    std::vector<std::string> timestamps;
+
+    // Iterate over all day entries
+    for (auto iterator = _dailyOrders.begin(); iterator != _dailyOrders.end(); ++iterator)
+    {
+        // Add every timestamp to the collecion
+        timestamps.push_back(iterator->first);
+    }
+
+    // Return timestamp list
+    return timestamps;
+};

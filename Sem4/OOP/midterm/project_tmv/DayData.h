@@ -14,4 +14,5 @@ public:
     TimestampPage &getTimestampPage(const std::string);
     void printDayPage();
     std::set<std::string> getDayProducts();
+    std::vector<std::string> getTimestamps();
 };

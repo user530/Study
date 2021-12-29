@@ -8,21 +8,36 @@ AdvisorBot::AdvisorBot(){};
 /** Initialize application */
 void AdvisorBot::init()
 {
-    std::cout << "\n*====================================================*\n"
-              << "||   Welcome to the AdvisorBot trader assistance!   ||\n"
-              << "||   Use this app to analyse cryptocurrency trade.  ||"
-              << "\n*====================================================*\n"
-              << std::endl;
+    // Greet user
+    printGreeting();
 
+    //  Setup current dateTime
+    std::pair<std::string, std::string> dateTime = orderbook.getInitialDatetime();
+
+    // Input variable
+    std::string input;
+
+    // Loop the application cycle
     while (true)
     {
         // Print menu
         printMenu();
+
         // Get user input
-        std::string input = getUserInput();
+        input = getUserInput();
+
         // Process user input
         processUserInput(CSVReader::tokenise(input, ' '));
     }
+};
+
+/** Print initial greeting */
+void AdvisorBot::printGreeting()
+{
+    std::cout << "\n*====================================================*\n"
+              << "||   Welcome to the AdvisorBot trader assistance!   ||\n"
+              << "||   Use this app to analyse cryptocurrency trade.  ||"
+              << "\n*====================================================*\n\n";
 };
 
 /** Print application menu */
@@ -208,6 +223,7 @@ void AdvisorBot::nextTurn()
 /** C10) Plot Market Depth Chart */
 void AdvisorBot::plotGraph()
 {
+    orderbook.printOrderbook(); // DELETE
     std::cout << "PLOT GRAPH fired!" << std::endl;
 };
 
@@ -265,7 +281,7 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     case 3:
     {
         // Handle command string with 2 arguments
-
+        hadle2ArgCmd(cmdVector[0], cmdVector[1], cmdVector[2]); // FUNCTION NEED FIX
         // Check what command was sent
         std::cout << "Three arguments" << std::endl;
         break;
@@ -364,6 +380,7 @@ void AdvisorBot::hadle2ArgCmd(std::string cmd, std::string arg1, std::string arg
     if (cmd == "min")
     {
         // Execute MIN command with arguments
+        findMin();
     }
     // Max command passed
     else if (cmd == "max")
