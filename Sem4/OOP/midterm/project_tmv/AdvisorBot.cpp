@@ -176,59 +176,110 @@ void AdvisorBot::printProducts()
 /** C4) Find minimum bid or ask for product in current time step */
 void AdvisorBot::findMin(const std::string prod, const std::string ordType)
 {
+    // If product argument is incorrect
+    if (!orderbook.checkProdArg(prod))
+    {
+        // Print error and stop execution
+        undefArgErr("product");
+        return;
+    }
+
     // Transform argument data type
     OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
 
-    // Try to get requested minimum
-    try
+    // If ordertype argument is incorrect
+    if (!orderbook.checkOTPArg(OTP))
     {
-        // Try to find requested product
-        double min = orderbook.getMin(curDateTime.first, curDateTime.second, prod, OTP);
+        // Print error and stop execution
+        undefArgErr("ordtype");
+        return;
+    }
 
-        // Print it to the user
-        std::cout << "The min " << ordType << " for " << prod << " is " << min << "\n\n";
-    }
-    // If there is problem with arguments -> print error
-    catch (const std::exception &e)
+    // Try to find requested product
+    if (orderbook
+            .getDayPage(curDateTime.first)
+            .getTimestampPage(curDateTime.second)
+            .checkProductPage(prod))
     {
-        std::cerr << "Can't find requested product, please check your arguments!\n\n";
+        // Product exists, check for the ordertype
+        if (orderbook
+                .getDayPage(curDateTime.first)
+                .getTimestampPage(curDateTime.second)
+                .getProductPage(prod)
+                .checkOrdertypePage(OTP))
+        {
+            // Get requested data
+            double min = orderbook
+                             .getMin(curDateTime.first, curDateTime.second, prod, OTP);
+
+            // Print it to the user
+            std::cout << "The min " << ordType << " for " << prod << " is " << min << "\n\n";
+
+            // Finish function execution
+            return;
+        }
     }
+
+    // Function didn't ended -> so product wasn't found
+    prod404Err();
 };
 
 /** C5) Find maximum bid or ask for product in current time step */
 void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 {
+    // If product argument is incorrect
+    if (!orderbook.checkProdArg(prod))
+    {
+        // Print error and stop execution
+        undefArgErr("product");
+        return;
+    }
+
     // Transform argument data type
     OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
 
-    // Try to get requested maximum
-    try
+    // If ordertype argument is incorrect
+    if (!orderbook.checkOTPArg(OTP))
     {
-        // Try to find requested product
-        double max = orderbook.getMax(curDateTime.first, curDateTime.second, prod, OTP);
+        // Print error and stop execution
+        undefArgErr("ordtype");
+        return;
+    }
 
-        // Print it to the user
-        std::cout << "The max " << ordType << " for " << prod << " is " << max << "\n\n";
-    }
-    // If there is problem with arguments -> print error
-    catch (const std::exception &e)
+    // Try to find requested product
+    if (orderbook
+            .getDayPage(curDateTime.first)
+            .getTimestampPage(curDateTime.second)
+            .checkProductPage(prod))
     {
-        std::cerr << "Can't find requested product, please check your arguments!\n\n";
+        // Product exists, check for the ordertype
+        if (orderbook
+                .getDayPage(curDateTime.first)
+                .getTimestampPage(curDateTime.second)
+                .getProductPage(prod)
+                .checkOrdertypePage(OTP))
+        {
+            // Get requested data
+            double max = orderbook
+                             .getMax(curDateTime.first, curDateTime.second, prod, OTP);
+
+            // Print it to the user
+            std::cout << "The max " << ordType << " for " << prod << " is " << max << "\n\n";
+
+            // Finish function execution
+            return;
+        }
     }
+
+    // Function didn't ended -> so product wasn't found
+    prod404Err();
 };
 
 /** C6) Compute average ask or bid for the sent product over the sent number
 of time steps */
-void AdvisorBot::findAvg(const std::string, const std::string, const std::string)
-{
-    // Variable to get total number of timestamps across all dates
-    unsigned int periods = orderbook.getTimestepsNum();
-    std::cout
-        << "FIND AVG fired!"
-        << "\n";
-    std::cout
-        << "Total number of timestamps: " << periods
-        << "\n\n";
+void AdvisorBot::findAvg(const std::string prod, const std::string ordType, const std::string stepsNum){
+    // Check timesteps arg
+    // if (orderbook.checkTimestampArg())
 };
 
 /** C7) Predict max or min ask or bid for the sent product for the next time
@@ -454,6 +505,32 @@ void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg
 /** Print undefined command error */
 void AdvisorBot::undefCmdErr()
 {
-    std::cout << "Input error - Undefined command!\n"
+    std::cerr << "Input error - Undefined command!\n"
               << "Please enter valid command.\n\n";
+};
+
+/** Print 'product not found' error */
+void AdvisorBot::prod404Err()
+{
+    std::cout << "Can't find requested product.\n"
+              << "Please try another one.\n\n";
+};
+
+/** Print appropriate incorrect argument error depending on the flag passed
+ * @param argFlag argument flag: "product", "ordtype"
+ */
+void AdvisorBot::undefArgErr(std::string argFlag)
+{
+    // If product flag passed
+    if (argFlag == "product")
+    {
+        // Print message
+        std::cerr << "Incorrect product argument passed! Please check list of all valid products using 'prod' command.\n\n";
+    }
+    // If ordertype flag passed
+    else if (argFlag == "ordtype")
+    {
+        // Print message
+        std::cerr << "Incorrect order type argument passed! Valid values are 'bid' and 'ask'.\n\n";
+    }
 };

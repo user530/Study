@@ -74,8 +74,14 @@ step */
     /** Handle 3 arg commands */
     void hadle3ArgCmd(const std::string, const std::string, const std::string, const std::string);
 
-    /** Print undefined command error */
+    /** Print 'undefined command' error */
     void undefCmdErr();
+
+    /** Print 'product not found' error */
+    void prod404Err();
+
+    /** Print incorrect argument error */
+    void undefArgErr(std::string);
 
 public:
     /** Constructor function */
