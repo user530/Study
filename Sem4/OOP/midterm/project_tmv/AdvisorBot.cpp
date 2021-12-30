@@ -11,10 +11,6 @@ void AdvisorBot::init()
     // Greet user
     printGreeting();
 
-    std::cout << orderbook.checkProdArg("ETH/BTC") << "\n";
-    std::cout << orderbook.checkProdArg("TOP/KEK") << "\n";
-    std::cout << orderbook.checkProdArg("LOL/BRUH") << "\n";
-
     //  Setup current dateTime
     curDateTime = orderbook.getInitialDatetime();
 

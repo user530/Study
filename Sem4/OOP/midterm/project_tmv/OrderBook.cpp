@@ -170,9 +170,39 @@ std::pair<std::string, std::string> Orderbook::getInitialDatetime()
     return dateTime;
 };
 
-/** Check that argument passed is exists in the book */
+/** Check that argument passed is exists in the book
+ * @param prodArg product name string
+ * @return true if product exists in the orderbook, false otherwise
+ */
 bool Orderbook::checkProdArg(std::string prodArg)
 {
     // If product exists return 1 (true), else return 0 (false)
     return getAllProducts().count(prodArg);
+};
+
+/** Check that ordertype argument is correct
+ * @param ordtypeArg ordertype to check
+ * @return true if correct argument value is passed, false otherwise
+ */
+bool Orderbook::checkOTPArg(OrderType ordtypeArg)
+{
+    return (ordtypeArg != OrderType::unknown);
+};
+
+/** Check that timestamp argument is correct
+ * @param timestepsArg number of timesteps for the command to handle
+ * @return true if orderbook holds  requested number of periods and arg > 0, false otherwise
+ */
+bool Orderbook::checkTimestampArg(unsigned int timestepsArg)
+{
+    return (timestepsArg <= getTimestepsNum() && timestepsArg > 0);
+};
+
+/** Check that order extrema argument is correct
+ * @param extremArg requested order extrema
+ * @return true if corrected value is passed, false otherwise
+ */
+bool Orderbook::checkExtremaArg(std::string extremArg)
+{
+    return (extremArg == "min" || extremArg == "max");
 };
