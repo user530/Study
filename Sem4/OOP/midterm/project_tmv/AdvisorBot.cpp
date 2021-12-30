@@ -277,9 +277,51 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 
 /** C6) Compute average ask or bid for the sent product over the sent number
 of time steps */
-void AdvisorBot::findAvg(const std::string prod, const std::string ordType, const std::string stepsNum){
-    // Check timesteps arg
-    // if (orderbook.checkTimestampArg())
+void AdvisorBot::findAvg(const std::string prod, const std::string ordType, const std::string stepsNum)
+{
+
+    // If product argument is incorrect
+    if (!orderbook.checkProdArg(prod))
+    {
+        // Print error and stop execution
+        undefArgErr("product");
+        return;
+    }
+
+    // Transform argument data type
+    OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
+
+    // If ordertype argument is incorrect
+    if (!orderbook.checkOTPArg(OTP))
+    {
+        // Print error and stop execution
+        undefArgErr("ordtype");
+        return;
+    }
+
+    // Try to convert string to int
+    try
+    {
+        // Argument in form of int
+        unsigned int stepsInt = std::stoul(stepsNum, nullptr);
+
+        // Check that int is in range
+        if (orderbook.checkTimestampArg(stepsInt))
+        {
+            std::cout << "Calculate and print avg\n\n";
+        }
+        // Number is to big
+        else
+        {
+            std::cout << "Timesteps number is out of range."
+                      << "There is only " << orderbook.getTimestepsNum() << "period(s) in the orderbook.\n\n";
+        }
+    }
+    // Conversion failed, wrong argument
+    catch (const std::exception &e)
+    {
+        std::cerr << "Timesteps argument is incorrect! Please pass valid number.\n\n";
+    }
 };
 
 /** C7) Predict max or min ask or bid for the sent product for the next time
