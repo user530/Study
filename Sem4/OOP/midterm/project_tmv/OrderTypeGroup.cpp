@@ -47,7 +47,7 @@ void OrdertypeGroup::updateGroupInfo(const double orderPrice, const double order
     _ttlVolume += orderAmount;
 
     // Update order count
-    _orderCount++;
+    ++_orderCount;
 }
 
 /** Print information about all order from the list */

@@ -138,6 +138,24 @@ Orderbook::getAllDatetime()
     return dateTimes;
 };
 
+/** Get the number of timestamps across all the dates
+ * @return number of timestamps across all days
+ */
+unsigned int Orderbook::getTimestepsNum()
+{
+    // Result variable
+    unsigned int res = 0;
+
+    // Iterate over all dates and count timestamps
+    for (auto &[day, timestamps] : getAllDatetime())
+    {
+        res += timestamps.size();
+    }
+
+    // Return result
+    return res;
+};
+
 /** Get earliest date and timestamp from the orderbook
  * @return pair of values: date -> first, timestamp -> second
  */
@@ -150,4 +168,11 @@ std::pair<std::string, std::string> Orderbook::getInitialDatetime()
     std::pair<std::string, std::string> dateTime(date1->first,
                                                  (date1->second)[0]);
     return dateTime;
+};
+
+/** Check that argument passed is exists in the book */
+bool Orderbook::checkProdArg(std::string prodArg)
+{
+    // If product exists return 1 (true), else return 0 (false)
+    return getAllProducts().count(prodArg);
 };

@@ -34,6 +34,12 @@ public:
              std::vector<std::string>>
     getAllDatetime();
 
+    /** Get number of time periods */
+    unsigned int getTimestepsNum();
+
+    /** Check that product argument exits in the book */
+    bool checkProdArg(std::string);
+
     /** Get initial datetime */
     std::pair<std::string, std::string> getInitialDatetime();
 };

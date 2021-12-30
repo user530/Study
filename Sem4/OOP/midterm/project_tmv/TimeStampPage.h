@@ -16,5 +16,5 @@ public:
     bool checkProductPage(const std::string);
     ProductPage &getProductPage(const std::string);
     void printTimestampPage();
-    std::set<std::string> &getProductKeys();
+    std::set<std::string> getProductKeys();
 };

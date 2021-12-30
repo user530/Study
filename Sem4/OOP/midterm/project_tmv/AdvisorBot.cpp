@@ -11,8 +11,12 @@ void AdvisorBot::init()
     // Greet user
     printGreeting();
 
+    std::cout << orderbook.checkProdArg("ETH/BTC") << "\n";
+    std::cout << orderbook.checkProdArg("TOP/KEK") << "\n";
+    std::cout << orderbook.checkProdArg("LOL/BRUH") << "\n";
+
     //  Setup current dateTime
-    std::pair<std::string, std::string> dateTime = orderbook.getInitialDatetime();
+    curDateTime = orderbook.getInitialDatetime();
 
     // Input variable
     std::string input;
@@ -43,7 +47,7 @@ void AdvisorBot::printGreeting()
 /** Print application menu */
 void AdvisorBot::printMenu()
 {
-    std::cout << "*=================================================================*\n"
+    std::cout << "\n*=================================================================*\n"
               << "           AdvisorBot responds to the set of commands.\n"
               << "    You can type 'help' command to list all available commands.\n"
               << "*=================================================================*\n"
@@ -161,7 +165,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
 void AdvisorBot::printProducts()
 {
     // Prepare result varibale
-    std::string result = "This data contains orders for the following products: ";
+    std::string result = "This application contains orders for the following products: ";
 
     // Add products to the result string
     for (std::string product : orderbook.getAllProducts())
@@ -174,36 +178,66 @@ void AdvisorBot::printProducts()
 };
 
 /** C4) Find minimum bid or ask for product in current time step */
-void AdvisorBot::findMin()
+void AdvisorBot::findMin(const std::string prod, const std::string ordType)
 {
-    // Command should check it's argument
-    // If arguments are correct -> print min
-    // Else -> print wrong arguments
-    std::cout << "FIND MIN fired!" << std::endl;
+    // Transform argument data type
+    OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
+
+    // Try to get requested minimum
+    try
+    {
+        // Try to find requested product
+        double min = orderbook.getMin(curDateTime.first, curDateTime.second, prod, OTP);
+
+        // Print it to the user
+        std::cout << "The min " << ordType << " for " << prod << " is " << min << "\n\n";
+    }
+    // If there is problem with arguments -> print error
+    catch (const std::exception &e)
+    {
+        std::cerr << "Can't find requested product, please check your arguments!\n\n";
+    }
 };
 
 /** C5) Find maximum bid or ask for product in current time step */
-void AdvisorBot::findMax()
+void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 {
-    // Command should check it's argument
-    // If arguments are correct -> print max
-    // Else -> print wrong arguments
-    std::cout << "FIND MAX fired!" << std::endl;
+    // Transform argument data type
+    OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
+
+    // Try to get requested maximum
+    try
+    {
+        // Try to find requested product
+        double max = orderbook.getMax(curDateTime.first, curDateTime.second, prod, OTP);
+
+        // Print it to the user
+        std::cout << "The max " << ordType << " for " << prod << " is " << max << "\n\n";
+    }
+    // If there is problem with arguments -> print error
+    catch (const std::exception &e)
+    {
+        std::cerr << "Can't find requested product, please check your arguments!\n\n";
+    }
 };
 
 /** C6) Compute average ask or bid for the sent product over the sent number
 of time steps */
-void AdvisorBot::findAvg()
+void AdvisorBot::findAvg(const std::string, const std::string, const std::string)
 {
-    // Command should check it's argument
-    // If arguments are correct -> print avg
-    // Else -> print wrong arguments
-    std::cout << "FIND AVG fired!" << std::endl;
+    // Variable to get total number of timestamps across all dates
+    unsigned int periods = orderbook.getTimestepsNum();
+    std::cout
+        << "FIND AVG fired!"
+        << "\n";
+    std::cout
+        << "Total number of timestamps: " << periods
+        << "\n\n";
 };
 
 /** C7) Predict max or min ask or bid for the sent product for the next time
 step */
-void AdvisorBot::predictPrice()
+void AdvisorBot::predictPrice(const std::string, const std::string, const std::string)
 {
     std::cout << "PREDICT PRICE fired!" << std::endl;
 };
@@ -281,17 +315,17 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     case 3:
     {
         // Handle command string with 2 arguments
-        hadle2ArgCmd(cmdVector[0], cmdVector[1], cmdVector[2]); // FUNCTION NEED FIX
-        // Check what command was sent
-        std::cout << "Three arguments" << std::endl;
+        hadle2ArgCmd(cmdVector[0], cmdVector[1], cmdVector[2]);
+
         break;
     }
 
     // Command with three arguments
     case 4:
     {
-        // Check what command was sent
-        std::cout << "Four arguments" << std::endl;
+        // Handle command string with 3 arguments
+        hadle3ArgCmd(cmdVector[0], cmdVector[1], cmdVector[2], cmdVector[3]);
+
         break;
     }
 
@@ -343,8 +377,7 @@ void AdvisorBot::hadleSingleCmd(std::string cmd)
     else
     {
         // Respond with error msg
-        std::cout << "Input error - Undefined command!\n"
-                  << "Please enter valid command.\n\n";
+        undefCmdErr();
     }
 };
 
@@ -364,8 +397,7 @@ void AdvisorBot::hadle1ArgCmd(std::string cmd, std::string arg1)
     else
     {
         // Respond with error msg
-        std::cout << "Input error - Undefined command!\n"
-                  << "Please enter valid command.\n\n";
+        undefCmdErr();
     }
 };
 
@@ -374,30 +406,25 @@ void AdvisorBot::hadle1ArgCmd(std::string cmd, std::string arg1)
  * @param arg1 1st command line argument from the user input
  * @param arg2 2nd command line argument from the user input
  */
-void AdvisorBot::hadle2ArgCmd(std::string cmd, std::string arg1, std::string arg2)
+void AdvisorBot::hadle2ArgCmd(std::string cmd, const std::string arg1, const std::string arg2)
 {
     // Min command passed
     if (cmd == "min")
     {
         // Execute MIN command with arguments
-        findMin();
+        findMin(arg1, arg2);
     }
     // Max command passed
     else if (cmd == "max")
     {
         // Execute MAX command with arguments
-    }
-    // Avg command passed
-    else if (cmd == "avg")
-    {
-        // Execute AVG command with arguments
+        findMax(arg1, arg2);
     }
     // Invalid command string
     else
     {
         // Respond with error msg
-        std::cout << "Input error - Undefined command!\n"
-                  << "Please enter valid command.\n\n";
+        undefCmdErr();
     }
 };
 
@@ -407,6 +434,30 @@ void AdvisorBot::hadle2ArgCmd(std::string cmd, std::string arg1, std::string arg
  * @param arg2 2nd command line argument from the user input
  * @param arg3 3rd command line argument from the user input
  */
-void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg2, std::string arg3){
+void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg2, std::string arg3)
+{
+    // Avg command passed
+    if (cmd == "avg")
+    {
+        // Execute AVG command with arguments
+        findAvg(arg1, arg2, arg3);
+    }
+    // Predict command passed
+    else if (cmd == "predict")
+    {
+        // Execute AVG command with arguments
+        predictPrice(arg1, arg2, arg3);
+    }
+    else
+    {
+        // Respond with error msg
+        undefCmdErr();
+    }
+};
 
+/** Print undefined command error */
+void AdvisorBot::undefCmdErr()
+{
+    std::cout << "Input error - Undefined command!\n"
+              << "Please enter valid command.\n\n";
 };

@@ -79,7 +79,7 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
         while (std::getline(csvFile, line))
         {
             // Increment line counter
-            curLine++;
+            ++curLine;
 
             // Tokenise the line
             std::vector<std::string> tokenLine = tokenise(line, ',');
@@ -95,10 +95,6 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             std::string ordType = tokenLine[2];
             std::string price = tokenLine[3];
             std::string amount = tokenLine[4];
-
-            // std::cout << "Date: " << date << ", time: " << time
-            //           << ", prod: " << prod << ", ordType: " << ordType
-            //           << ", price: " << price << ", amount: " << amount << '\n';
 
             // Prepare Order to be inserted
             Order order = strToOrder(price, amount);
@@ -211,7 +207,7 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             }
 
             // Line added -> increment counter
-            ordAdd++;
+            ++ordAdd;
         }
         // Report about result
         std::cout << curLine << " lines parsed, "

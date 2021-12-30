@@ -62,7 +62,7 @@ void TimestampPage::printTimestampPage()
 /** Get list of all product keys stored inside this timepage
  * @return set of all product names (strings)
  *  */
-std::set<std::string> &TimestampPage::getProductKeys()
+std::set<std::string> TimestampPage::getProductKeys()
 {
     return _products;
 };
