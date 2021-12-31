@@ -21,16 +21,20 @@ public:
     std::set<std::string> getAllProducts();
 
     /** Get minimum price for specified product */
-    double getMin(std::string, std::string, std::string, const OrderType &);
+    double getCurMin(const std::string, const std::string, const std::string, const OrderType &);
 
     /** Get maximum price for specified product */
-    double getMax(std::string, std::string, std::string, const OrderType &);
+    double getCurMax(const std::string, const std::string, const std::string, const OrderType &);
 
     // /** Get average price for specified product */
     // double getAvg(std::string, std::string, std::string, const OrderType &);
 
     /** Get average price for specified product across several timestamps */
-    double getAvg(std::string, const OrderType &, const unsigned int);
+    double getRangeAvg(const std::string, const OrderType &, const unsigned int);
+
+    /** Predict requested order price for the next period */
+    double getPrediction(const std::string, const std::string, const OrderType &,
+                         const std::pair<std::string, std::string>);
 
     /** Get all date-time information */
     std::map<std::string,

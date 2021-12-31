@@ -210,7 +210,7 @@ void AdvisorBot::findMin(const std::string prod, const std::string ordType)
         {
             // Get requested data
             double min = orderbook
-                             .getMin(curDateTime.first, curDateTime.second, prod, OTP);
+                             .getCurMin(curDateTime.first, curDateTime.second, prod, OTP);
 
             // Print it to the user
             std::cout << "The min " << ordType << " for " << prod << " is " << min << "\n\n";
@@ -261,7 +261,7 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
         {
             // Get requested data
             double max = orderbook
-                             .getMax(curDateTime.first, curDateTime.second, prod, OTP);
+                             .getCurMax(curDateTime.first, curDateTime.second, prod, OTP);
 
             // Print it to the user
             std::cout << "The max " << ordType << " for " << prod << " is " << max << "\n\n";
@@ -312,7 +312,7 @@ void AdvisorBot::findAvg(const std::string prod,
             // If range is valid -> calculate and print average
             std::cout << "The average " << prod << " "
                       << ordType << " price over the first " << stepsNum << " timesteps was "
-                      << orderbook.getAvg(prod, OTP, stepsInt) << ".\n\n";
+                      << orderbook.getRangeAvg(prod, OTP, stepsInt) << ".\n\n";
         }
         // Number is out of range
         else
@@ -331,18 +331,49 @@ void AdvisorBot::findAvg(const std::string prod,
 };
 
 /** C7) Predict max or min ask or bid for the sent product for the next time
-step */
-void AdvisorBot::predictPrice(const std::string,
-                              const std::string,
-                              const std::string)
+step (Weighted moving average, based on https://www.investopedia.com/articles/technical/060401.asp)
+*/
+void AdvisorBot::predictPrice(const std::string extrema,
+                              const std::string prod,
+                              const std::string ordType)
 {
-    std::cout << "PREDICT PRICE fired!" << std::endl;
+    // If extrema argument is incorrect
+    if (!orderbook.checkExtremaArg(extrema))
+    {
+        // Print error and stop execution
+        undefArgErr("extrema");
+        return;
+    }
+
+    // If product argument is incorrect
+    if (!orderbook.checkProdArg(prod))
+    {
+        // Print error and stop execution
+        undefArgErr("product");
+        return;
+    }
+
+    // Transform argument data type
+    OrderType OTP = OrdertypeGroup::strToOrdertype(ordType);
+
+    // If ordertype argument is incorrect
+    if (!orderbook.checkOTPArg(OTP))
+    {
+        // Print error and stop execution
+        undefArgErr("ordtype");
+        return;
+    }
+
+    // Calculate and print predicted price
+    std::cout << "Predicted " << extrema << " price for " << prod << " " << ordType << " is "
+              << orderbook.getPrediction(extrema, prod, OTP, curDateTime) << ".\n\n";
 };
 
 /** C8) State current time in dataset, i.e. which timeframe are we looking at */
 void AdvisorBot::printTimestamp()
 {
-    std::cout << "PRINT TIMESTAMP fired!" << std::endl;
+    std::cout << "Current date is: " << curDateTime.first
+              << ", current timestamp is: " << curDateTime.second << ".\n\n";
 };
 
 /** C9) Move to next time step */
@@ -582,5 +613,11 @@ void AdvisorBot::undefArgErr(std::string argFlag)
     {
         // Print message
         std::cerr << "Incorrect order type argument passed! Valid values are 'bid' and 'ask'.\n\n";
+    }
+    // If ordertype flag passed
+    else if (argFlag == "extrema")
+    {
+        // Print message
+        std::cerr << "Incorrect extrema argument passed! Valid values are 'min' and 'max'.\n\n";
     }
 };

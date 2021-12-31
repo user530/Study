@@ -69,7 +69,10 @@ std::set<std::string> Orderbook::getAllProducts()
  * @param ordertype reference to the ordertype object
  * @return Minimal price of the order with specified params
  * */
-double Orderbook::getMin(std::string day, std::string time, std::string product, const OrderType &ordertype)
+double Orderbook::getCurMin(const std::string day,
+                            const std::string time,
+                            const std::string product,
+                            const OrderType &ordertype)
 {
     // Try to get requested info
     return _orderbook[day]
@@ -86,7 +89,10 @@ double Orderbook::getMin(std::string day, std::string time, std::string product,
  * @param ordertype reference to the ordertype object
  * @return Maximum price of the order with specified params
  * */
-double Orderbook::getMax(std::string day, std::string time, std::string product, const OrderType &ordertype)
+double Orderbook::getCurMax(const std::string day,
+                            const std::string time,
+                            const std::string product,
+                            const OrderType &ordertype)
 {
     // Try to get requested info
     return _orderbook[day]
@@ -114,9 +120,9 @@ double Orderbook::getMax(std::string day, std::string time, std::string product,
 // };
 
 /** Get average price for specified product across several timestamps */
-double Orderbook::getAvg(std::string prod,
-                         const OrderType &OTP,
-                         const unsigned int steps)
+double Orderbook::getRangeAvg(const std::string prod,
+                              const OrderType &OTP,
+                              const unsigned int steps)
 {
     // Counter variable
     unsigned int i = 1;
@@ -161,6 +167,67 @@ double Orderbook::getAvg(std::string prod,
             ++i;
         }
     }
+    return 0;
+};
+
+/** Predict requested order price for the next period
+ * @param extrema requested price extrema to predict - min or max
+ * @param prod string representation of the product
+ * @param OTP reference to the ordertype object
+ * @param extrema current time pair: date - first, timestamp - second
+ * @return prediction for the requested price
+ */
+double Orderbook::getPrediction(const std::string extrema,
+                                const std::string prod,
+                                const OrderType &OTP,
+                                const std::pair<std::string, std::string> curDateTime)
+{
+    /* To be honest I'm didn't find how moving weighted average should work
+    if there is empty period inside, so I decided to add weight based not on the time lag
+    but increase weight for each non-empty period. It's also works fine if there is no
+    gaps in data */
+
+    // Result variable
+    double predict = 0;
+
+    // Period weight
+    unsigned int perWeight = 0;
+
+    // Iterate over all days
+    for (auto &[dayStr, dayPage] : _orderbook)
+    {
+        // Iterate over all timestamps
+        for (auto &[timeStr, timePage] : dayPage.getDailyOrders())
+        {
+            // Check that requested product exists in this timestamp
+            if (timePage.checkProductPage(prod))
+            {
+                // For this timestamp check requested order type
+                if (timePage.getProductPage(prod).checkOrdertypePage(OTP))
+                {
+                    // Orders container
+                    OrdertypeGroup orders = timePage.getProductPage(prod).getOrdertypePage(OTP);
+
+                    // Adjust weight variable for the next period
+                    ++perWeight;
+
+                    // Add requested period price multiplied by the weight to the result
+                    predict +=
+                        extrema == "min" ? orders.getMin() : orders.getMax() * perWeight;
+                }
+            }
+
+            // If reached current (last) timestep
+            if (curDateTime.first == dayStr && curDateTime.second == timeStr)
+            {
+                // Return weighted moving average
+                return (predict * 2) /
+                       (perWeight * (perWeight + 1));
+            }
+        }
+    }
+
+    // If for some reason arg timestamp is out of range (and to make compiler happy)
     return 0;
 };
 
