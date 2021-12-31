@@ -80,6 +80,12 @@ double OrdertypeGroup::getAvg()
     return _avgPrice;
 };
 
+/** Function to get total volume of the OrderTypeGroup */
+double OrdertypeGroup::getTtlVol()
+{
+    return _ttlVolume;
+};
+
 /** Function to convert string into OrderType datatype
  * @param ordtpStr order type string
  * @return order type object

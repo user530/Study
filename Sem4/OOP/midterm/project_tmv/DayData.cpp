@@ -42,6 +42,12 @@ TimestampPage &DayData::getTimestampPage(const std::string timeStr)
     }
 }
 
+/** Get daily orders for this day */
+std::map<std::string, TimestampPage> &DayData::getDailyOrders()
+{
+    return _dailyOrders;
+};
+
 /** Print timestamp page and all its content */
 void DayData::printDayPage()
 {

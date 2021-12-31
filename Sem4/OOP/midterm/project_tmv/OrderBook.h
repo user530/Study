@@ -26,8 +26,11 @@ public:
     /** Get maximum price for specified product */
     double getMax(std::string, std::string, std::string, const OrderType &);
 
-    /** Get average price for specified product */
-    double getAvg(std::string, std::string, std::string, const OrderType &);
+    // /** Get average price for specified product */
+    // double getAvg(std::string, std::string, std::string, const OrderType &);
+
+    /** Get average price for specified product across several timestamps */
+    double getAvg(std::string, const OrderType &, const unsigned int);
 
     /** Get all date-time information */
     std::map<std::string,

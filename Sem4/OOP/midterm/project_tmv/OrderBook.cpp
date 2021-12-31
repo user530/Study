@@ -96,21 +96,72 @@ double Orderbook::getMax(std::string day, std::string time, std::string product,
         .getMax();
 };
 
-/** Get average order price for the requested product in the current day-time
- * @param day string representation of the day
- * @param time string representation of the timestamp
- * @param product string representation of the product
- * @param ordertype reference to the ordertype object
- * @return Average price of the order with specified params
- * */
-double Orderbook::getAvg(std::string day, std::string time, std::string product, const OrderType &ordertype)
+// /** Get average order price for the requested product in the current day-time
+//  * @param day string representation of the day
+//  * @param time string representation of the timestamp
+//  * @param product string representation of the product
+//  * @param ordertype reference to the ordertype object
+//  * @return Average price of the order with specified params
+//  * */
+// double Orderbook::getAvg(std::string day, std::string time, std::string product, const OrderType &ordertype)
+// {
+//     // Try to get requested info
+//     return _orderbook[day]
+//         .getTimestampPage(time)
+//         .getProductPage(product)
+//         .getOrdertypePage(ordertype)
+//         .getAvg();
+// };
+
+/** Get average price for specified product across several timestamps */
+double Orderbook::getAvg(std::string prod,
+                         const OrderType &OTP,
+                         const unsigned int steps)
 {
-    // Try to get requested info
-    return _orderbook[day]
-        .getTimestampPage(time)
-        .getProductPage(product)
-        .getOrdertypePage(ordertype)
-        .getAvg();
+    // Counter variable
+    unsigned int i = 1;
+
+    // Result variable
+    double result = 0;
+
+    // Variable to collect total orders amount
+    double totalAmount = 0;
+
+    // Iterate over orderbook
+    for (auto &[dayStr, dayPage] : _orderbook)
+    {
+        // Iterate over all timestams from the date
+        for (auto &[timeStr, timePage] : dayPage.getDailyOrders())
+        {
+            // Check that requested product exists in this timestamp
+            if (timePage.checkProductPage(prod))
+            {
+                // For this timestamp check requested order type
+                if (timePage.getProductPage(prod).checkOrdertypePage(OTP))
+                {
+                    // Orders container
+                    OrdertypeGroup orders = timePage.getProductPage(prod).getOrdertypePage(OTP);
+
+                    // Sum up total value
+                    result += orders.getAvg() * orders.getTtlVol();
+
+                    // Sum up total number of order
+                    totalAmount += orders.getTtlVol();
+                }
+            }
+
+            // Stop if counter reach the timestamp limit
+            if (i == steps)
+            {
+                // If there are were at least one order -> return average, else return 0
+                return totalAmount != 0 ? result / totalAmount : 0;
+            }
+
+            // Increment counter for each passed stamp
+            ++i;
+        }
+    }
+    return 0;
 };
 
 /** Get all date-time information

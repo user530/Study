@@ -56,5 +56,6 @@ public:
     double getMin();
     double getMax();
     double getAvg();
+    double getTtlVol();
     static OrderType strToOrdertype(const std::string);
 };

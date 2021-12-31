@@ -277,9 +277,10 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 
 /** C6) Compute average ask or bid for the sent product over the sent number
 of time steps */
-void AdvisorBot::findAvg(const std::string prod, const std::string ordType, const std::string stepsNum)
+void AdvisorBot::findAvg(const std::string prod,
+                         const std::string ordType,
+                         const std::string stepsNum)
 {
-
     // If product argument is incorrect
     if (!orderbook.checkProdArg(prod))
     {
@@ -308,15 +309,20 @@ void AdvisorBot::findAvg(const std::string prod, const std::string ordType, cons
         // Check that int is in range
         if (orderbook.checkTimestampArg(stepsInt))
         {
-            std::cout << "Calculate and print avg\n\n";
+            // If range is valid -> calculate and print average
+            std::cout << "The average " << prod << " "
+                      << ordType << " price over the first " << stepsNum << " timesteps was "
+                      << orderbook.getAvg(prod, OTP, stepsInt) << ".\n\n";
         }
-        // Number is to big
+        // Number is out of range
         else
         {
-            std::cout << "Timesteps number is out of range."
-                      << "There is only " << orderbook.getTimestepsNum() << "period(s) in the orderbook.\n\n";
+            std::cout << "Timesteps argument is out of range."
+                      << "There are total " << orderbook.getTimestepsNum()
+                      << " period(s) in the orderbook.\n\n";
         }
     }
+
     // Conversion failed, wrong argument
     catch (const std::exception &e)
     {
@@ -326,7 +332,9 @@ void AdvisorBot::findAvg(const std::string prod, const std::string ordType, cons
 
 /** C7) Predict max or min ask or bid for the sent product for the next time
 step */
-void AdvisorBot::predictPrice(const std::string, const std::string, const std::string)
+void AdvisorBot::predictPrice(const std::string,
+                              const std::string,
+                              const std::string)
 {
     std::cout << "PREDICT PRICE fired!" << std::endl;
 };

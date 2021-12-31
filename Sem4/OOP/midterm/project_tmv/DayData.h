@@ -12,6 +12,7 @@ public:
     void addTimestampPage(const std::string, const TimestampPage &);
     bool checkTimestampPage(const std::string);
     TimestampPage &getTimestampPage(const std::string);
+    std::map<std::string, TimestampPage> &getDailyOrders();
     void printDayPage();
     std::set<std::string> getDayProducts();
     std::vector<std::string> getTimestamps();
