@@ -1,5 +1,6 @@
 #include "OrderBook.h"
 #include "CSVReader.h"
+#include <algorithm>
 
 /** Create orderbook from the contents of the CSV file
  * @param fileName filename of the CSV file
@@ -323,4 +324,57 @@ bool Orderbook::checkTimestampArg(unsigned int timestepsArg)
 bool Orderbook::checkExtremaArg(std::string extremArg)
 {
     return (extremArg == "min" || extremArg == "max");
+};
+
+/** Move to the next time stamp (OR day)
+ * @param date current date string
+ * @param time current timestamp string
+ * @return pair of values: date and timestamp
+ */
+std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date, std::string time)
+{
+    // Get all known date-times
+    std::map<std::string, std::vector<std::string>> datetimes = getAllDatetime();
+
+    // Prepare variables to be returned
+    std::string newDate, newTime;
+
+    // Check if the timestamp is the last in the day
+    if (time == datetimes[date].back())
+    {
+        // If day is also last one
+        if (date == datetimes.rbegin()->first)
+        {
+            // New date is the initial one
+            newDate = datetimes.begin()->first;
+        }
+        // There are other dates
+        else
+        {
+            // Because maps are sorted by default -> point to the next day
+            newDate = datetimes.upper_bound(date)->first;
+        }
+
+        // New timestamp is the first one
+        newTime = datetimes[newDate][0];
+    }
+    // There are other timestamps left in this date
+    else
+    {
+        // Date is the same
+        newDate = date;
+        // Iterate over timestamps
+        for (unsigned int i = 0; i < datetimes[date].size(); ++i)
+        {
+            // Find index of the current timestamp
+            if (datetimes[date][i] == time)
+            {
+                // New time is the next stamp
+                newTime = datetimes[date][i + 1];
+            }
+        }
+    }
+
+    // Return new period
+    return std::make_pair(newDate, newTime);
 };

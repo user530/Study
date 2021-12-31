@@ -58,4 +58,7 @@ public:
 
     /** Get initial datetime */
     std::pair<std::string, std::string> getInitialDatetime();
+
+    /** Move to the next time stamp (OR day) */
+    std::pair<std::string, std::string> nextPeriod(std::string, std::string);
 };

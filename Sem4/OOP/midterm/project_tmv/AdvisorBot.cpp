@@ -379,7 +379,7 @@ void AdvisorBot::printTimestamp()
 /** C9) Move to next time step */
 void AdvisorBot::nextTurn()
 {
-    std::cout << "NEXT TURN fired!" << std::endl;
+    curDateTime = orderbook.nextPeriod(curDateTime.first, curDateTime.second);
 };
 
 /** C10) Plot Market Depth Chart */
