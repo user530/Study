@@ -45,10 +45,10 @@ private:
     double _ttlVolume;
     /** Number of orders for this order type */
     unsigned int _orderCount;
-
-public:
     /** List of all orders */
     std::vector<Order> _orderList;
+
+public:
     OrdertypeGroup();
     void addOrder(const Order &);
     void updateGroupInfo(const double, const double);
@@ -58,4 +58,10 @@ public:
     double getAvg();
     double getTtlVol();
     static OrderType strToOrdertype(const std::string);
+    static bool priceComparAsc(Order &, Order &);
+    static bool priceComparDes(Order &, Order &);
+    void sortOrdersAsc();
+    void sortOrdersDes();
+    void eraseFirstOrd();
+    void eraseLastOrd();
 };

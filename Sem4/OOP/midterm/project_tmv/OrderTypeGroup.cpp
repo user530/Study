@@ -1,4 +1,5 @@
 #include "OrdertypeGroup.h"
+#include <algorithm>
 
 /** Ordertype group constructor, holds list of all orders and group information */
 OrdertypeGroup::OrdertypeGroup() : _minPrice(999999999),
@@ -102,3 +103,41 @@ OrderType OrdertypeGroup::strToOrdertype(const std::string ordtpStr)
     }
     return OrderType::unknown;
 };
+
+/** Compare two orders by price - ascending order
+ * @param ord1 first order object
+ * @param ord2 second order object
+ * @param true true if price of the first order is lower, false otherwise
+ */
+bool OrdertypeGroup::priceComparAsc(Order &ord1, Order &ord2)
+{
+    return ord1.price < ord2.price;
+};
+
+/** Compare two orders by price - descending order
+ * @param ord1 first order object
+ * @param ord2 first order object
+ * @param true true if price of the first order is higher, false otherwise
+ */
+bool OrdertypeGroup::priceComparDes(Order &ord1, Order &ord2)
+{
+    return ord1.price > ord2.price;
+};
+
+/** Sort order list in ascending order (based on price) */
+void OrdertypeGroup::sortOrdersAsc()
+{
+    std::sort(_orderList.begin(), _orderList.end(), priceComparAsc);
+};
+
+/** Sort order list in descending order (based on price) */
+void OrdertypeGroup::sortOrdersDes()
+{
+    std::sort(_orderList.begin(), _orderList.end(), priceComparDes);
+};
+
+void OrdertypeGroup::eraseFirstOrd()
+{
+    _orderList.erase(_orderList.begin());
+};
+void OrdertypeGroup::eraseLastOrd(){};

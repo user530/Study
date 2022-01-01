@@ -1,6 +1,5 @@
 #include "OrderBook.h"
 #include "CSVReader.h"
-#include <algorithm>
 
 /** Create orderbook from the contents of the CSV file
  * @param fileName filename of the CSV file
