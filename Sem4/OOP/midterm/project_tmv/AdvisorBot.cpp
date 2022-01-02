@@ -23,6 +23,8 @@ void AdvisorBot::init()
         // Print menu
         printMenu();
 
+        orderbook.matchOrders(curDateTime.first, curDateTime.second); // DELETE
+
         // Get user input
         input = getUserInput();
 

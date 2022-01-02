@@ -60,9 +60,12 @@ public:
     std::pair<std::string, std::string> nextPeriod(std::string, std::string);
 
     /* Collect addresses of order type groups that meet the criteria */
-    std::vector<OrdertypeGroup *> collectOrdTypPages(std::string,
-                                                     std::string,
-                                                     std::string,
-                                                     OrderType &,
-                                                     bool = false);
+    std::vector<OrdertypeGroup *> collectOrdTypPages(const std::string,
+                                                     const std::string,
+                                                     const std::string,
+                                                     const OrderType &,
+                                                     const bool = false);
+
+    /* Match orders */
+    void matchOrders(const std::string, const std::string);
 };

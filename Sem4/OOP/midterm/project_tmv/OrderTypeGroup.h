@@ -46,11 +46,14 @@ private:
     double _ttlVolume;
     /** Number of orders for this order type */
     unsigned int _orderCount;
-    /** List of all orders */
-    std::list<Order> _orderList;
+    
 
 public:
     OrdertypeGroup();
+    
+    /** List of all orders */
+    std::list<Order> _orderList;
+
     void addOrder(const Order &);
     void updateGroupInfo(const double, const double);
     void printGroup();

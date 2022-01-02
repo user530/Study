@@ -375,11 +375,11 @@ std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date, std:
  *  @param exclusive flag, to exclude the current timestamp from the result, default false
  *  @return vector of pointers to order type group pages, that satisfy required conditions
  */
-std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(std::string curDate,
-                                                            std::string curTime,
-                                                            std::string prod,
-                                                            OrderType &OTP,
-                                                            bool exclusive)
+std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(const std::string curDate,
+                                                            const std::string curTime,
+                                                            const std::string prod,
+                                                            const OrderType &OTP,
+                                                            const bool exclusive)
 {
     // Prepare vector of pointers
     std::vector<OrdertypeGroup *> result;
@@ -421,3 +421,135 @@ std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(std::string curDate,
     // Return resulting vector
     return result;
 }
+
+/** Match all orders from the current date-time */
+void Orderbook::matchOrders(const std::string date, const std::string timestamp)
+{
+    // Get all products for the current date-time
+    std::set<std::string> products = _orderbook
+                                         .at(date)
+                                         .getTimestampPage(timestamp)
+                                         .getProductKeys();
+
+    // Iterate over every product
+    for (const std::string product : products)
+    {
+        // Prepare variables for bids and asks
+        // OrdertypeGroup bids, asks;
+        OrdertypeGroup *bids = nullptr;
+        OrdertypeGroup *asks = nullptr;
+
+        // Product page object
+        ProductPage &prodPage = _orderbook
+                                    .at(date)
+                                    .getTimestampPage(timestamp)
+                                    .getProductPage(product);
+
+        // Check that bids exist
+        if (prodPage.checkOrdertypePage(OrderType::bid))
+        {
+            // Bid page object
+            OrdertypeGroup &bidPage = _orderbook
+                                          .at(date)
+                                          .getTimestampPage(timestamp)
+                                          .getProductPage(product)
+                                          .getOrdertypePage(OrderType::bid);
+
+            // Check that ordertype page is not empty
+            if (bidPage._orderList.size() != 0)
+            {
+                // Get current period bids
+                bids = &bidPage;
+
+                // Sort bids in descending order
+                (*bids).sortOrdPrDes();
+            }
+        }
+
+        // Check that asks exist
+        if (prodPage.checkOrdertypePage(OrderType::ask))
+        {
+            // Ask page object
+            OrdertypeGroup &askPage = _orderbook
+                                          .at(date)
+                                          .getTimestampPage(timestamp)
+                                          .getProductPage(product)
+                                          .getOrdertypePage(OrderType::ask);
+
+            // Check that ordertype page is not empty
+            if (askPage._orderList.size() != 0)
+            {
+                // Get current period bids
+                asks = &_orderbook
+                            .at(date)
+                            .getTimestampPage(timestamp)
+                            .getProductPage(product)
+                            .getOrdertypePage(OrderType::ask);
+
+                // Sort bids in ascending order
+                (*asks).sortOrdPrAsc();
+            }
+            else
+            {
+                std::cout << "ASKS IS EMPTY VECTOR!!!\n";
+            }
+        }
+
+        std::cout << "Date: " << date << ", time: " << timestamp << ", product: " << product << "\n";
+
+        std::cout << "Asks: " << asks << "\n";
+
+        // If therea are asks -> match them
+        if (asks != NULL)
+        {
+            // We try to match asks vs all bids from all periods preceding current one (including)
+            auto iter1 = std::begin((*asks)._orderList);
+
+            // Variable to help iterate while deleting
+            bool ordDeleted;
+
+            // Iterate over all asks
+            while (iter1 != std::end((*asks)._orderList))
+            {
+                // When ask order erased -> change flag to prevent iterator move
+                ordDeleted = false;
+
+                std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
+
+                // Prepare collection of addresses to bid ordergroup pages
+                auto bidsToMatch = collectOrdTypPages(date, timestamp, product, OrderType::bid);
+
+                // Group containing biggest bid
+                OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
+
+                // Prepare elements to compare: lowest ask and highest bid
+                Order &lowAsk = (*asks)._orderList.front();
+                Order &higBid = (*maxBidGrp)._orderList.front();
+
+                std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
+                          << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
+
+                if (lowAsk.price <= higBid.price)
+                {
+                    std::cout << "Ask matches bid! Erasing...\n";
+                    // maxBidGrp->eraseFirstOrd();
+                }
+                else
+                {
+                    std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
+                    break;
+                }
+
+                // If outer element not been deleted -> iterate next
+                if (!ordDeleted)
+                    ++iter1;
+            }
+        }
+        else
+        {
+            std::cout << "No Asks given! =P";
+        }
+
+        // We try to match bids vs all asks from all periods preceding current one (excluding)
+    }
+};
