@@ -1,6 +1,7 @@
 #pragma once
 #include "Order.h"
 #include <vector>
+#include <list>
 
 /** All supported OrderTypes: bid, ask, sale, unknown */
 enum class OrderType
@@ -46,7 +47,7 @@ private:
     /** Number of orders for this order type */
     unsigned int _orderCount;
     /** List of all orders */
-    std::vector<Order> _orderList;
+    std::list<Order> _orderList;
 
 public:
     OrdertypeGroup();
@@ -58,10 +59,11 @@ public:
     double getAvg();
     double getTtlVol();
     static OrderType strToOrdertype(const std::string);
-    static bool priceComparAsc(Order &, Order &);
-    static bool priceComparDes(Order &, Order &);
-    void sortOrdersAsc();
-    void sortOrdersDes();
+    static bool priceCompAsc(Order &, Order &);
+    static bool priceCompDes(Order &, Order &);
+    void sortOrdPrAsc();
+    void sortOrdPrDes();
     void eraseFirstOrd();
     void eraseLastOrd();
+    static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
 };

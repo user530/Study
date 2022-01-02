@@ -102,23 +102,6 @@ double Orderbook::getCurMax(const std::string day,
         .getMax();
 };
 
-// /** Get average order price for the requested product in the current day-time
-//  * @param day string representation of the day
-//  * @param time string representation of the timestamp
-//  * @param product string representation of the product
-//  * @param ordertype reference to the ordertype object
-//  * @return Average price of the order with specified params
-//  * */
-// double Orderbook::getAvg(std::string day, std::string time, std::string product, const OrderType &ordertype)
-// {
-//     // Try to get requested info
-//     return _orderbook[day]
-//         .getTimestampPage(time)
-//         .getProductPage(product)
-//         .getOrdertypePage(ordertype)
-//         .getAvg();
-// };
-
 /** Get average price for specified product across several timestamps */
 double Orderbook::getRangeAvg(const std::string prod,
                               const OrderType &OTP,
@@ -280,12 +263,16 @@ unsigned int Orderbook::getTimestepsNum()
 std::pair<std::string, std::string> Orderbook::getInitialDatetime()
 {
     // Get first day - timestamps pair using iterator to select first pair
-    auto date1 = getAllDatetime().begin();
+    auto date1 = getAllDatetime();
 
-    // Prepare pair
-    std::pair<std::string, std::string> dateTime(date1->first,
-                                                 (date1->second)[0]);
-    return dateTime;
+    // Prepare result
+    std::pair<std::string, std::string> res;
+    // Setup values
+    res.first = (date1.begin())->first;
+    res.second = ((date1.begin())->second)[0];
+
+    // Return dateTime;
+    return res;
 };
 
 /** Check that argument passed is exists in the book
@@ -377,3 +364,60 @@ std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date, std:
     // Return new period
     return std::make_pair(newDate, newTime);
 };
+
+/** Collect adresses of the order type pages for requested product for passed date,
+ * from first timestamp to current one (inclusive)
+ *
+ *  @param curDate current date string, will be used as search base
+ *  @param curTime current timestamp string, will be used as end point
+ *  @param prod required product
+ *  @param OTP required ordertype
+ *  @param exclusive flag, to exclude the current timestamp from the result, default false
+ *  @return vector of pointers to order type group pages, that satisfy required conditions
+ */
+std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(std::string curDate,
+                                                            std::string curTime,
+                                                            std::string prod,
+                                                            OrderType &OTP,
+                                                            bool exclusive)
+{
+    // Prepare vector of pointers
+    std::vector<OrdertypeGroup *> result;
+
+    // Get all timestamps for the current date
+    std::vector<std::string> timestamps = _orderbook.at(curDate).getTimestamps();
+
+    // Iterate over all timestamps
+    for (const std::string timestamp : timestamps)
+    {
+        // If exclusive flag is passed AND current time reached -> stop the loop
+        if (exclusive && timestamp == curTime)
+            break;
+
+        // If there are no orders for requested product -> skip to the next timestamp
+        if (!_orderbook.at(curDate).getTimestampPage(timestamp).checkProductPage(prod))
+            continue;
+
+        // If product page exists, but no ordertype page -> skip timestamp
+        if (!_orderbook
+                 .at(curDate)
+                 .getTimestampPage(timestamp)
+                 .getProductPage(prod)
+                 .checkOrdertypePage(OTP))
+            continue;
+
+        // If requested ordertype page exists -> add page address to the vector
+        result.push_back(&_orderbook
+                              .at(curDate)
+                              .getTimestampPage(timestamp)
+                              .getProductPage(prod)
+                              .getOrdertypePage(OTP));
+
+        // If passed timestamp reached -> stop the loop
+        if (timestamp == curTime)
+            break;
+    }
+
+    // Return resulting vector
+    return result;
+}

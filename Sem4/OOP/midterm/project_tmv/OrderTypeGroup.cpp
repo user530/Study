@@ -109,7 +109,7 @@ OrderType OrdertypeGroup::strToOrdertype(const std::string ordtpStr)
  * @param ord2 second order object
  * @param true true if price of the first order is lower, false otherwise
  */
-bool OrdertypeGroup::priceComparAsc(Order &ord1, Order &ord2)
+bool OrdertypeGroup::priceCompAsc(Order &ord1, Order &ord2)
 {
     return ord1.price < ord2.price;
 };
@@ -119,25 +119,61 @@ bool OrdertypeGroup::priceComparAsc(Order &ord1, Order &ord2)
  * @param ord2 first order object
  * @param true true if price of the first order is higher, false otherwise
  */
-bool OrdertypeGroup::priceComparDes(Order &ord1, Order &ord2)
+bool OrdertypeGroup::priceCompDes(Order &ord1, Order &ord2)
 {
     return ord1.price > ord2.price;
 };
 
 /** Sort order list in ascending order (based on price) */
-void OrdertypeGroup::sortOrdersAsc()
+void OrdertypeGroup::sortOrdPrAsc()
 {
-    std::sort(_orderList.begin(), _orderList.end(), priceComparAsc);
+    _orderList.sort(priceCompAsc);
 };
 
 /** Sort order list in descending order (based on price) */
-void OrdertypeGroup::sortOrdersDes()
+void OrdertypeGroup::sortOrdPrDes()
 {
-    std::sort(_orderList.begin(), _orderList.end(), priceComparDes);
+    _orderList.sort(priceCompDes);
 };
 
+/** Erase first order from the order list */
 void OrdertypeGroup::eraseFirstOrd()
 {
-    _orderList.erase(_orderList.begin());
+    // Update OrdGrp data: max, min, avg, etc!
+    _orderList.pop_front();
 };
-void OrdertypeGroup::eraseLastOrd(){};
+
+/** Erase last order from the order list */
+void OrdertypeGroup::eraseLastOrd()
+{
+    // Update OrdGrp data: max, min, avg, etc!
+    _orderList.pop_back();
+};
+
+OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup *> ordTypePages)
+{
+    // Declare first page as maximum page, set address to the maxPage
+    OrdertypeGroup *maxPage = ordTypePages[0];
+
+    std::cout << "First max page price - " << (*maxPage)._maxPrice << "\n";
+
+    // Iterate over all pages, starting from the second
+    for (int i = 1; i < ordTypePages.size(); ++i)
+    {
+
+        std::cout << "Comparing max to order with price - " << (*ordTypePages[i])._maxPrice << "...\n";
+
+        // If selected page has price value bigger than current maximum page
+        if ((*ordTypePages[i])._maxPrice > (*maxPage)._maxPrice)
+        {
+            // Max page address set to the selected page
+            maxPage = ordTypePages[i];
+
+            std::cout << "New max page is set!\n";
+        }
+    }
+
+    std::cout << "Final max page price is " << (*maxPage)._maxPrice << ", amount " << (*maxPage)._ttlVolume << "\n";
+
+    return maxPage;
+};

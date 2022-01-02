@@ -548,6 +548,12 @@ void AdvisorBot::hadle2ArgCmd(std::string cmd, const std::string arg1, const std
         // Execute MAX command with arguments
         findMax(arg1, arg2);
     }
+    // Plot command passed
+    else if (cmd == "plot")
+    {
+        // Execute Plot command with arguments
+        plotGraph();
+    }
     // Invalid command string
     else
     {

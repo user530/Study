@@ -26,9 +26,6 @@ public:
     /** Get maximum price for specified product */
     double getCurMax(const std::string, const std::string, const std::string, const OrderType &);
 
-    // /** Get average price for specified product */
-    // double getAvg(std::string, std::string, std::string, const OrderType &);
-
     /** Get average price for specified product across several timestamps */
     double getRangeAvg(const std::string, const OrderType &, const unsigned int);
 
@@ -61,4 +58,11 @@ public:
 
     /** Move to the next time stamp (OR day) */
     std::pair<std::string, std::string> nextPeriod(std::string, std::string);
+
+    /* Collect addresses of order type groups that meet the criteria */
+    std::vector<OrdertypeGroup *> collectOrdTypPages(std::string,
+                                                     std::string,
+                                                     std::string,
+                                                     OrderType &,
+                                                     bool = false);
 };
