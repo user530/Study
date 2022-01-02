@@ -46,12 +46,11 @@ private:
     double _ttlVolume;
     /** Number of orders for this order type */
     unsigned int _orderCount;
+    /** List of all orders */
+    std::list<Order> _orderList;
 
 public:
     OrdertypeGroup();
-
-    /** List of all orders */
-    std::list<Order> _orderList;
 
     void addOrder(const Order &);
     void updateMetaAdd(const double, const double);
@@ -60,6 +59,7 @@ public:
     double getMax();
     double getAvg();
     double getTtlVol();
+    bool isEmpty();
     static OrderType strToOrdertype(const std::string);
     static bool priceCompAsc(Order &, Order &);
     static bool priceCompDes(Order &, Order &);
@@ -71,4 +71,5 @@ public:
     void updateMetaErase(const double, const double, const OrderType &);
     static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
     static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *>);
+    void matchAsks(const std::string, const std::string, const std::string, std::vector<OrdertypeGroup *> &);
 };

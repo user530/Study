@@ -456,7 +456,7 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
                                           .getOrdertypePage(OrderType::bid);
 
             // Check that ordertype page is not empty
-            if (bidPage._orderList.size() != 0)
+            if (!bidPage.isEmpty())
             {
                 // Get current period bids
                 bids = &bidPage;
@@ -477,7 +477,7 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
                                           .getOrdertypePage(OrderType::ask);
 
             // Check that ordertype page is not empty
-            if (askPage._orderList.size() != 0)
+            if (!askPage.isEmpty())
             {
                 // Get current period bids
                 asks = &_orderbook
@@ -499,53 +499,54 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
         // If therea are asks -> match them
         if (asks != nullptr)
         {
-            // We try to match asks vs all bids from all periods preceding current one (including)
-            auto iter1 = std::begin((*asks)._orderList);
+            auto bids = collectOrdTypPages(date, timestamp, product, OrderType::bid);
+            asks->matchAsks(date,
+                            timestamp,
+                            product,
+                            bids);
+            // // We try to match asks vs all bids from all periods preceding current one (including)
+            // auto iter1 = std::begin((*asks)._orderList);
 
-            // Variable to help iterate while deleting
-            bool ordDeleted;
+            // // Variable to help iterate while deleting
+            // bool ordDeleted;
 
-            // Iterate over all asks
-            while (iter1 != std::end((*asks)._orderList))
-            {
-                // When ask order erased -> change flag to prevent iterator move
-                ordDeleted = false;
+            // // Iterate over all asks
+            // while (iter1 != std::end((*asks)._orderList))
+            // {
+            //     // When ask order erased -> change flag to prevent iterator move
+            //     ordDeleted = false;
 
-                std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
+            //     std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
 
-                // Prepare collection of addresses to bid ordergroup pages
-                auto bidsToMatch = collectOrdTypPages(date, timestamp, product, OrderType::bid);
+            //     // Prepare collection of addresses to bid ordergroup pages
+            //     auto bidsToMatch = collectOrdTypPages(date, timestamp, product, OrderType::bid);
 
-                // Group containing biggest bid
-                OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
+            //     // Group containing biggest bid
+            //     OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
 
-                // Prepare elements to compare: lowest ask and highest bid
-                Order &lowAsk = (*asks)._orderList.front();
-                Order &higBid = (*maxBidGrp)._orderList.front();
+            //     // Prepare elements to compare: lowest ask and highest bid
+            //     Order &lowAsk = (*asks)._orderList.front();
+            //     Order &higBid = (*maxBidGrp)._orderList.front();
 
-                std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
-                          << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
+            //     std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
+            //               << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
 
-                if (lowAsk.price <= higBid.price)
-                {
-                    std::cout << "Ask matches bid! Erasing...\n";
-                    maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
-                    maxBidGrp->eraseFirstOrd();
-                }
-                else
-                {
-                    std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
-                    break;
-                }
+            //     if (lowAsk.price <= higBid.price)
+            //     {
+            //         std::cout << "Ask matches bid! Erasing...\n";
+            //         maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
+            //         maxBidGrp->eraseFirstOrd();
+            //     }
+            //     else
+            //     {
+            //         std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
+            //         break;
+            //     }
 
-                // If outer element not been deleted -> iterate next
-                if (!ordDeleted)
-                    ++iter1;
-            }
-        }
-        else
-        {
-            std::cout << "No Asks given! =P";
+            //     // If outer element not been deleted -> iterate next
+            //     if (!ordDeleted)
+            //         ++iter1;
+            // }
         }
 
         // We try to match bids vs all asks from all periods preceding current one (excluding)

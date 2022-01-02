@@ -87,6 +87,14 @@ double OrdertypeGroup::getTtlVol()
     return _ttlVolume;
 };
 
+/** Function to check if the ordertype group is empty
+ * @return true if orderlist is empty, false otherwise
+ */
+bool OrdertypeGroup::isEmpty()
+{
+    return _orderList.empty();
+};
+
 /** Function to convert string into OrderType datatype
  * @param ordtpStr order type string
  * @return order type object
@@ -248,4 +256,55 @@ OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup 
 
     // Return the address to the Ordertype group that holds minimum value
     return minPage;
+};
+
+/** Match bid group to it's opposite */
+void OrdertypeGroup::matchAsks(const std::string date,
+                               const std::string timestamp,
+                               const std::string product,
+                               std::vector<OrdertypeGroup *> &bidsVec)
+{
+    // We try to match asks vs all bids from all periods preceding current one (including)
+    auto iter1 = std::begin(_orderList);
+
+    // Variable to help iterate while deleting
+    bool ordDeleted;
+
+    // Iterate over all asks
+    while (iter1 != std::end(_orderList))
+    {
+        // When ask order erased -> change flag to prevent iterator move
+        ordDeleted = false;
+
+        std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
+
+        // Prepare collection of addresses to bid ordergroup pages
+        auto bidsToMatch = bidsVec;
+
+        // Group containing biggest bid
+        OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
+
+        // Prepare elements to compare: lowest ask and highest bid
+        Order &lowAsk = _orderList.front();
+        Order &higBid = (*maxBidGrp)._orderList.front();
+
+        std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
+                  << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
+
+        if (lowAsk.price <= higBid.price)
+        {
+            std::cout << "Ask matches bid! Erasing...\n";
+            maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
+            maxBidGrp->eraseFirstOrd();
+        }
+        else
+        {
+            std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
+            break;
+        }
+
+        // If outer element not been deleted -> iterate next
+        if (!ordDeleted)
+            ++iter1;
+    }
 };
