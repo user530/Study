@@ -46,16 +46,15 @@ private:
     double _ttlVolume;
     /** Number of orders for this order type */
     unsigned int _orderCount;
-    
 
 public:
     OrdertypeGroup();
-    
+
     /** List of all orders */
     std::list<Order> _orderList;
 
     void addOrder(const Order &);
-    void updateGroupInfo(const double, const double);
+    void updateMetaAdd(const double, const double);
     void printGroup();
     double getMin();
     double getMax();
@@ -68,6 +67,8 @@ public:
     void sortOrdPrDes();
     void eraseFirstOrd();
     void eraseLastOrd();
+    void updateMetaReduce(const double, const double);
+    void updateMetaErase(const double, const double, const OrderType &);
     static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
     static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *>);
 };

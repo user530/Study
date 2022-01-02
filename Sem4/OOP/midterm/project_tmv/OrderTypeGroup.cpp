@@ -17,14 +17,14 @@ void OrdertypeGroup::addOrder(const Order &order)
     // Add order object to the vector
     _orderList.push_back(order);
     // Update OrderTypeGroup information based on the new order
-    updateGroupInfo(order.price, order.amount);
+    updateMetaAdd(order.price, order.amount);
 };
 
 /** Updates OrderTypeGroup information(min,max,avg,etc) based on the new order
  *  @param orderPrice price of the new order
  *  @param orderAmount amount of the new order
  * */
-void OrdertypeGroup::updateGroupInfo(const double orderPrice, const double orderAmount)
+void OrdertypeGroup::updateMetaAdd(const double orderPrice, const double orderAmount)
 {
     // Check for the new min
     if (orderPrice < _minPrice)
@@ -148,6 +148,58 @@ void OrdertypeGroup::eraseLastOrd()
 {
     // Update OrdGrp data: max, min, avg, etc!
     _orderList.pop_back();
+};
+
+/** Update meta info when order is reduced
+ * @param grpPage container that holds order
+ * @param price price of the order
+ * @param amount amount of the order
+ */
+void OrdertypeGroup::updateMetaReduce(const double price,
+                                      const double amount)
+{
+    // Update average price
+    _avgPrice = ((_avgPrice * _ttlVolume) - (price * amount)) /
+                (_ttlVolume - amount);
+    // Update total volume
+    _ttlVolume -= amount;
+};
+
+/** Update meta info when order is erased
+ * @param grpPage container that holds order
+ * @param price price of the order
+ * @param amount amount of the order
+ * @param ordType order type of the group that holds order
+ */
+void OrdertypeGroup::updateMetaErase(const double price,
+                                     const double amount,
+                                     const OrderType &ordType)
+{
+    // Index of the first element
+    auto ind = _orderList.begin();
+
+    // If element completly erased we need to set new min or max
+    // Because when we match them, they are already sorted we can set new min or max
+    // Bids are sorted in descending order, and asks in ascending
+    if (ordType == OrderType::bid)
+    {
+        // Next max price -> price of the next element
+        _maxPrice = std::next(ind)->price;
+    }
+    else if (ordType == OrderType::ask)
+    {
+        // Next min price -> price of the next element
+        _minPrice = std::next(ind)->price;
+    }
+    else
+    {
+        std::cerr << "OrdertypeGroup::updateMetaErase - Error! Wrong ordType argument!\n";
+        throw;
+    }
+    // Update avg price and total amount
+    updateMetaReduce(price, amount);
+    // Update order count
+    --_orderCount;
 };
 
 /** Get the address of the object that holds order with maximum price

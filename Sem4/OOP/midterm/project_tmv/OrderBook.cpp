@@ -489,18 +489,15 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
                 // Sort bids in ascending order
                 (*asks).sortOrdPrAsc();
             }
-            else
-            {
-                std::cout << "ASKS IS EMPTY VECTOR!!!\n";
-            }
         }
 
         std::cout << "Date: " << date << ", time: " << timestamp << ", product: " << product << "\n";
 
         std::cout << "Asks: " << asks << "\n";
+        std::cout << "Bids: " << bids << "\n";
 
         // If therea are asks -> match them
-        if (asks != NULL)
+        if (asks != nullptr)
         {
             // We try to match asks vs all bids from all periods preceding current one (including)
             auto iter1 = std::begin((*asks)._orderList);
@@ -532,7 +529,8 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
                 if (lowAsk.price <= higBid.price)
                 {
                     std::cout << "Ask matches bid! Erasing...\n";
-                    // maxBidGrp->eraseFirstOrd();
+                    maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
+                    maxBidGrp->eraseFirstOrd();
                 }
                 else
                 {
