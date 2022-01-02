@@ -150,30 +150,50 @@ void OrdertypeGroup::eraseLastOrd()
     _orderList.pop_back();
 };
 
+/** Get the address of the object that holds order with maximum price
+ * @param ordTypePages vector of addresses to ordertype groups
+ * @return address to the ordertype group with highest price order
+ */
 OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup *> ordTypePages)
 {
     // Declare first page as maximum page, set address to the maxPage
     OrdertypeGroup *maxPage = ordTypePages[0];
 
-    std::cout << "First max page price - " << (*maxPage)._maxPrice << "\n";
-
     // Iterate over all pages, starting from the second
     for (int i = 1; i < ordTypePages.size(); ++i)
     {
-
-        std::cout << "Comparing max to order with price - " << (*ordTypePages[i])._maxPrice << "...\n";
-
         // If selected page has price value bigger than current maximum page
         if ((*ordTypePages[i])._maxPrice > (*maxPage)._maxPrice)
         {
             // Max page address set to the selected page
             maxPage = ordTypePages[i];
-
-            std::cout << "New max page is set!\n";
         }
     }
 
-    std::cout << "Final max page price is " << (*maxPage)._maxPrice << ", amount " << (*maxPage)._ttlVolume << "\n";
-
+    // Return the address to the Ordertype group that holds maximum value
     return maxPage;
+};
+
+/** Get the address of the object that holds order with minimum price
+ * @param ordTypePages vector of addresses to ordertype groups
+ * @return address to the ordertype group with lowest price order
+ */
+OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup *> ordTypePages)
+{
+    // Declare first page as minimum page page, set address to the minPage
+    OrdertypeGroup *minPage = ordTypePages[0];
+
+    // Iterate over all pages, starting from the second
+    for (int i = 1; i < ordTypePages.size(); ++i)
+    {
+        // If selected page has price value smaller than current minimum page
+        if ((*ordTypePages[i])._minPrice < (*minPage)._minPrice)
+        {
+            // Min page address set to the selected page
+            minPage = ordTypePages[i];
+        }
+    }
+
+    // Return the address to the Ordertype group that holds minimum value
+    return minPage;
 };

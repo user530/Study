@@ -66,4 +66,5 @@ public:
     void eraseFirstOrd();
     void eraseLastOrd();
     static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
+    static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *>);
 };
