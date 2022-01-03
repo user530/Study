@@ -63,9 +63,11 @@ public:
     std::vector<OrdertypeGroup *> collectOrdTypPages(const std::string,
                                                      const std::string,
                                                      const std::string,
-                                                     const OrderType &,
-                                                     const bool = false);
+                                                     const OrderType &);
 
-    /* Match orders */
+    /* Match orders in specified date-time */
     void matchOrders(const std::string, const std::string);
+
+    /* Print all sales in the requested period */
+    void printSales(const std::string, const std::string);
 };

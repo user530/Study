@@ -55,9 +55,9 @@ void DayData::printDayPage()
     for (auto &[timestamp, timeOrders] : _dailyOrders)
     {
         // Print timestamp page information
-        std::cout << "  Timestamp: " << timestamp << " {\n";
+        std::cout << "||    Timestamp: " << timestamp << " {\n";
         timeOrders.printTimestampPage();
-        std::cout << "  }\n";
+        std::cout << "||     }\n";
     }
 };
 

@@ -58,8 +58,8 @@ void OrdertypeGroup::printGroup()
     for (const Order &ord : _orderList)
     {
         // Print order information
-        std::cout << "              Order price: " << ord.price << "; "
-                  << "Order amount: " << ord.amount << ".\n";
+        std::cout << "||    |    *    +    Order price: " << ord.price << "; "
+                  << "Order amount: " << ord.amount << "\n";
     }
 };
 
@@ -79,6 +79,12 @@ double OrdertypeGroup::getMax()
 double OrdertypeGroup::getAvg()
 {
     return _avgPrice;
+};
+
+/** Function to get total number of orders in OrderTypeGroup */
+unsigned int OrdertypeGroup::getOrdCnt()
+{
+    return _orderCount;
 };
 
 /** Function to get total volume of the OrderTypeGroup */
@@ -183,29 +189,44 @@ void OrdertypeGroup::updateMetaErase(const double price,
                                      const double amount,
                                      const OrderType &ordType)
 {
-    // Index of the first element
-    auto ind = _orderList.begin();
-
     // If element completly erased we need to set new min or max
     // Because when we match them, they are already sorted we can set new min or max
     // Bids are sorted in descending order, and asks in ascending
-    if (ordType == OrderType::bid)
+
+    // If this is the last element -> set all to zero
+    if (_orderList.size() == 1)
     {
-        // Next max price -> price of the next element
-        _maxPrice = std::next(ind)->price;
+        _maxPrice = 0;
+        _minPrice = 0;
+        _avgPrice = 0;
+        _ttlVolume = 0;
     }
-    else if (ordType == OrderType::ask)
-    {
-        // Next min price -> price of the next element
-        _minPrice = std::next(ind)->price;
-    }
+    // There are element left in the orderlist
     else
     {
-        std::cerr << "OrdertypeGroup::updateMetaErase - Error! Wrong ordType argument!\n";
-        throw;
+        // Index of the first element
+        auto ind = _orderList.begin();
+
+        // Check the type of the group
+        if (ordType == OrderType::bid)
+        {
+            // Next max price -> price of the next element
+            _maxPrice = std::next(ind)->price;
+        }
+        else if (ordType == OrderType::ask)
+        {
+            // Next min price -> price of the next element
+            _minPrice = std::next(ind)->price;
+        }
+        else
+        {
+            std::cerr << "OrdertypeGroup::updateMetaErase - Error! Wrong ordType argument!\n";
+            throw;
+        }
+
+        // Update avg price and total amount
+        updateMetaReduce(price, amount);
     }
-    // Update avg price and total amount
-    updateMetaReduce(price, amount);
     // Update order count
     --_orderCount;
 };
@@ -223,12 +244,16 @@ OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup 
     for (int i = 1; i < ordTypePages.size(); ++i)
     {
         // If selected page has price value bigger than current maximum page
-        if ((*ordTypePages[i])._maxPrice > (*maxPage)._maxPrice)
+        if (ordTypePages[i]->_maxPrice > maxPage->_maxPrice)
         {
             // Max page address set to the selected page
             maxPage = ordTypePages[i];
         }
     }
+
+    // If after all iterations all ord type pages are empty -> signal with null
+    if (maxPage->_ttlVolume == 0)
+        maxPage = nullptr;
 
     // Return the address to the Ordertype group that holds maximum value
     return maxPage;
@@ -247,64 +272,142 @@ OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup 
     for (int i = 1; i < ordTypePages.size(); ++i)
     {
         // If selected page has price value smaller than current minimum page
-        if ((*ordTypePages[i])._minPrice < (*minPage)._minPrice)
+        if (ordTypePages[i]->_minPrice < minPage->_minPrice)
         {
             // Min page address set to the selected page
             minPage = ordTypePages[i];
         }
     }
 
+    // If after all iterations all ord type pages are empty -> signal with null
+    if (minPage->_ttlVolume == 0)
+        minPage = nullptr;
+
     // Return the address to the Ordertype group that holds minimum value
     return minPage;
 };
 
-/** Match bid group to it's opposite */
-void OrdertypeGroup::matchAsks(const std::string date,
-                               const std::string timestamp,
-                               const std::string product,
-                               std::vector<OrdertypeGroup *> &bidsVec)
+/** Match bids and ask vectors and get the sales object with resulting deals
+ *  @param asks vector of pointers to all suitable ask pages
+ *  @param bids vector of pointers to all suitable bid pages
+ *  @return 'sales' group page, containing all deals from this period
+ */
+OrdertypeGroup OrdertypeGroup::matchVectors(std::vector<OrdertypeGroup *> &asks,
+                                            std::vector<OrdertypeGroup *> &bids)
 {
-    // We try to match asks vs all bids from all periods preceding current one (including)
-    auto iter1 = std::begin(_orderList);
+    // Prepare result variable
+    OrdertypeGroup sales{};
 
-    // Variable to help iterate while deleting
-    bool ordDeleted;
+    // Get minimum ask, else null pointer
+    OrdertypeGroup *minAskAddr = getMinPriceContainer(asks);
 
-    // Iterate over all asks
-    while (iter1 != std::end(_orderList))
+    // Get maximum bid, else null pointer
+    OrdertypeGroup *maxBidAddr = getMaxPriceContainer(bids);
+
+    // Iterate over minAsks
+    while (minAskAddr != nullptr)
     {
-        // When ask order erased -> change flag to prevent iterator move
-        ordDeleted = false;
-
-        std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
-
-        // Prepare collection of addresses to bid ordergroup pages
-        auto bidsToMatch = bidsVec;
-
-        // Group containing biggest bid
-        OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
-
-        // Prepare elements to compare: lowest ask and highest bid
-        Order &lowAsk = _orderList.front();
-        Order &higBid = (*maxBidGrp)._orderList.front();
-
-        std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
-                  << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
-
-        if (lowAsk.price <= higBid.price)
+        // Iterate over maxBids
+        while (maxBidAddr != nullptr)
         {
-            std::cout << "Ask matches bid! Erasing...\n";
-            maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
-            maxBidGrp->eraseFirstOrd();
+            // Minimum ask price and amount
+            double minAskPr = minAskAddr->_orderList.begin()->price;
+            double minAskAm = minAskAddr->_orderList.begin()->amount;
+
+            // Maximum bid price and amount
+            double maxBidPr = maxBidAddr->_orderList.begin()->price;
+            double maxBidAm = maxBidAddr->_orderList.begin()->amount;
+
+            // Check for the match
+            if (minAskPr <= maxBidPr)
+            {
+                // If bid didn't cover ask
+                if (minAskAm > maxBidAm)
+                {
+                    // Prepare partial sale
+                    Order sale{minAskPr, maxBidAm};
+
+                    // Add it to the result
+                    sales.addOrder(sale);
+
+                    // Update ask group info
+                    minAskAddr->updateMetaReduce(minAskPr, maxBidAm);
+
+                    // Modify ask order
+                    minAskAddr->_orderList.begin()->amount -= maxBidAm;
+
+                    // Update bid group info
+                    maxBidAddr->updateMetaErase(maxBidPr, maxBidAm, OrderType::bid);
+
+                    // Erase bid order
+                    maxBidAddr->eraseFirstOrd();
+
+                    // Because we erased bid -> repoint maxBidAddr
+                    maxBidAddr = getMaxPriceContainer(bids);
+                }
+                // If orders are equal in terms of amount
+                else if (minAskAm == maxBidAm)
+                {
+                    // Prepare sale
+                    Order sale{minAskPr, minAskAm};
+
+                    // Add it to the result
+                    sales.addOrder(sale);
+
+                    // Update ask group info
+                    minAskAddr->updateMetaErase(minAskPr, minAskAm, OrderType::ask);
+
+                    // Erase ask order
+                    minAskAddr->eraseFirstOrd();
+
+                    // Update bid group info
+                    maxBidAddr->updateMetaErase(maxBidPr, maxBidAm, OrderType::bid);
+
+                    // Erase bid order
+                    maxBidAddr->eraseFirstOrd();
+
+                    // Because we erased both -> repoint maxBidAddr and minAskAddr
+                    minAskAddr = getMinPriceContainer(asks);
+                    maxBidAddr = getMaxPriceContainer(bids);
+                }
+                // If bid clears out the ask
+                else if (minAskAm < maxBidAm)
+                {
+                    // Prepare partial sale
+                    Order sale{minAskPr, minAskAm};
+
+                    // Add it to the result
+                    sales.addOrder(sale);
+
+                    // Update ask group info
+                    minAskAddr->updateMetaErase(minAskPr, minAskAm, OrderType::ask);
+
+                    // Erase ask order
+                    minAskAddr->eraseFirstOrd();
+
+                    // Update bid group info
+                    maxBidAddr->updateMetaReduce(maxBidPr, minAskAm);
+
+                    // Modify bid order
+                    maxBidAddr->_orderList.begin()->amount -= minAskAm;
+
+                    // Because we erased ask -> repoint minAskAddr
+                    minAskAddr = getMinPriceContainer(asks);
+
+                    // And break out of inner (bid) loop
+                    break;
+                }
+            }
+            // If highest bid didn't match lowest ask -> no more matches, end execution
+            else
+                return sales;
         }
-        else
-        {
-            std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
+
+        // If asks cleared all the bids -> stop iterating
+        if (maxBidAddr == nullptr)
             break;
-        }
-
-        // If outer element not been deleted -> iterate next
-        if (!ordDeleted)
-            ++iter1;
     }
-};
+
+    // Return all sales for this product
+    return sales;
+}

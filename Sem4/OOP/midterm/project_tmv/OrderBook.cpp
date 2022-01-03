@@ -37,9 +37,9 @@ void Orderbook::printOrderbook()
     for (auto &[dayStr, dayData] : _orderbook)
     {
         // Print day page information
-        std::cout << "Day: " << dayStr << " {\n";
+        std::cout << "Date: " << dayStr << " {\n";
         dayData.printDayPage();
-        std::cout << "}\n";
+        std::cout << "  }\n";
     }
 };
 
@@ -378,8 +378,7 @@ std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date, std:
 std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(const std::string curDate,
                                                             const std::string curTime,
                                                             const std::string prod,
-                                                            const OrderType &OTP,
-                                                            const bool exclusive)
+                                                            const OrderType &OTP)
 {
     // Prepare vector of pointers
     std::vector<OrdertypeGroup *> result;
@@ -390,8 +389,8 @@ std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(const std::string cu
     // Iterate over all timestamps
     for (const std::string timestamp : timestamps)
     {
-        // If exclusive flag is passed AND current time reached -> stop the loop
-        if (exclusive && timestamp == curTime)
+        // This loop continues a lot of 'continue' cmds, so we stop when we past cur time(not when we reach)
+        if (timestamp > curTime)
             break;
 
         // If there are no orders for requested product -> skip to the next timestamp
@@ -406,23 +405,26 @@ std::vector<OrdertypeGroup *> Orderbook::collectOrdTypPages(const std::string cu
                  .checkOrdertypePage(OTP))
             continue;
 
-        // If requested ordertype page exists -> add page address to the vector
-        result.push_back(&_orderbook
-                              .at(curDate)
-                              .getTimestampPage(timestamp)
-                              .getProductPage(prod)
-                              .getOrdertypePage(OTP));
+        // If requested ordertype page exists
+        OrdertypeGroup &container = _orderbook
+                                        .at(curDate)
+                                        .getTimestampPage(timestamp)
+                                        .getProductPage(prod)
+                                        .getOrdertypePage(OTP);
 
-        // If passed timestamp reached -> stop the loop
-        if (timestamp == curTime)
-            break;
+        //  If it is not empty -> add address to the vector
+        if (!container.isEmpty())
+            result.push_back(&container);
     }
 
     // Return resulting vector
     return result;
 }
 
-/** Match all orders from the current date-time */
+/** Match all orders within required date and between initial timestamp and required one (inclusive)
+ * @param date date to match orders
+ * @param timestamp right limit point of the matching interval
+ */
 void Orderbook::matchOrders(const std::string date, const std::string timestamp)
 {
     // Get all products for the current date-time
@@ -434,8 +436,7 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
     // Iterate over every product
     for (const std::string product : products)
     {
-        // Prepare variables for bids and asks
-        // OrdertypeGroup bids, asks;
+        // Prepare pointers for bids and asks
         OrdertypeGroup *bids = nullptr;
         OrdertypeGroup *asks = nullptr;
 
@@ -458,7 +459,7 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
             // Check that ordertype page is not empty
             if (!bidPage.isEmpty())
             {
-                // Get current period bids
+                // Set pointer to the ordertype page
                 bids = &bidPage;
 
                 // Sort bids in descending order
@@ -491,64 +492,70 @@ void Orderbook::matchOrders(const std::string date, const std::string timestamp)
             }
         }
 
-        std::cout << "Date: " << date << ", time: " << timestamp << ", product: " << product << "\n";
+        // Prepare vector of bids to match
+        auto bidsToMatch = collectOrdTypPages(date, timestamp, product, OrderType::bid);
+        auto asksToMatch = collectOrdTypPages(date, timestamp, product, OrderType::ask);
 
-        std::cout << "Asks: " << asks << "\n";
-        std::cout << "Bids: " << bids << "\n";
-
-        // If therea are asks -> match them
-        if (asks != nullptr)
+        // Match if there are something to match
+        if (bidsToMatch.size() != 0 && asksToMatch.size() != 0)
         {
-            auto bids = collectOrdTypPages(date, timestamp, product, OrderType::bid);
-            asks->matchAsks(date,
-                            timestamp,
-                            product,
-                            bids);
-            // // We try to match asks vs all bids from all periods preceding current one (including)
-            // auto iter1 = std::begin((*asks)._orderList);
+            // Add sale orderTypeGroup to this product page if orderTypeGroup count != 0
+            OrdertypeGroup sales = OrdertypeGroup::matchVectors(asksToMatch, bidsToMatch);
 
-            // // Variable to help iterate while deleting
-            // bool ordDeleted;
+            // If sales have orders ->
+            if (!sales.isEmpty())
+            {
+                // Add them to the product list
+                prodPage.addOrdertypeGroup(OrderType::sale, sales);
+            }
+        }
+    }
+};
 
-            // // Iterate over all asks
-            // while (iter1 != std::end((*asks)._orderList))
-            // {
-            //     // When ask order erased -> change flag to prevent iterator move
-            //     ordDeleted = false;
+/** Print all sales from the requested period
+ * @param date date of the period to check sales
+ * @param timestamp timestamp of the period to check sales
+ */
+void Orderbook::printSales(const std::string date, const std::string timestamp)
+{
+    try
+    {
+        // Get date-time container
+        TimestampPage container = _orderbook.at(date).getTimestampPage(timestamp);
 
-            //     std::cout << "Order price: " << (*iter1).price << ", amount: " << (*iter1).amount << "\n";
+        unsigned int total = 0;
 
-            //     // Prepare collection of addresses to bid ordergroup pages
-            //     auto bidsToMatch = collectOrdTypPages(date, timestamp, product, OrderType::bid);
+        // Iterate over all product names (from this container)
+        for (std::string prodName : container.getProductKeys())
+        {
+            // If there is sales page
+            if (container.getProductPage(prodName).checkOrdertypePage(OrderType::sale))
+            {
+                // Get the number of product sales
+                unsigned int prodSales = container
+                                             .getProductPage(prodName)
+                                             .getOrdertypePage(OrderType::sale)
+                                             .getOrdCnt();
 
-            //     // Group containing biggest bid
-            //     OrdertypeGroup *maxBidGrp = OrdertypeGroup::getMaxPriceContainer(bidsToMatch);
+                // Increase total sales number
+                total += prodSales;
 
-            //     // Prepare elements to compare: lowest ask and highest bid
-            //     Order &lowAsk = (*asks)._orderList.front();
-            //     Order &higBid = (*maxBidGrp)._orderList.front();
-
-            //     std::cout << "Lowest ask price: " << lowAsk.price << ", amount: " << lowAsk.amount
-            //               << ". Highest bid price: " << higBid.price << ", amount: " << higBid.amount << ". Comparing...\n";
-
-            //     if (lowAsk.price <= higBid.price)
-            //     {
-            //         std::cout << "Ask matches bid! Erasing...\n";
-            //         maxBidGrp->updateMetaErase(higBid.price, higBid.amount, OrderType::bid);
-            //         maxBidGrp->eraseFirstOrd();
-            //     }
-            //     else
-            //     {
-            //         std::cout << "Lowest Ask doesn't match Highest Bid! No more matches...\n";
-            //         break;
-            //     }
-
-            //     // If outer element not been deleted -> iterate next
-            //     if (!ordDeleted)
-            //         ++iter1;
-            // }
+                // Print product sales
+                std::cout
+                    << "Number of sales for " << prodName
+                    << " is " << prodSales << ".\n";
+            }
         }
 
-        // We try to match bids vs all asks from all periods preceding current one (excluding)
+        // Print total sales
+        std::cout
+            << "Total number of sales for the " << date << " - " << timestamp
+            << " is " << total << ".\n\n";
+    }
+    // Can't get requested container
+    catch (const std::exception &e)
+    {
+        // Error msg
+        std::cerr << "Can't find requested period! Please try another one.\n\n";
     }
 };

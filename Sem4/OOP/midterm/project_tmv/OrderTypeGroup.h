@@ -58,6 +58,7 @@ public:
     double getMin();
     double getMax();
     double getAvg();
+    unsigned int getOrdCnt();
     double getTtlVol();
     bool isEmpty();
     static OrderType strToOrdertype(const std::string);
@@ -71,5 +72,6 @@ public:
     void updateMetaErase(const double, const double, const OrderType &);
     static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
     static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *>);
-    void matchAsks(const std::string, const std::string, const std::string, std::vector<OrdertypeGroup *> &);
+    static OrdertypeGroup matchVectors(std::vector<OrdertypeGroup *> &,
+                                       std::vector<OrdertypeGroup *> &);
 };

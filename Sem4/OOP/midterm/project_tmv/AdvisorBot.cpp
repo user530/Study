@@ -23,8 +23,6 @@ void AdvisorBot::init()
         // Print menu
         printMenu();
 
-        orderbook.matchOrders(curDateTime.first, curDateTime.second); // DELETE
-
         // Get user input
         input = getUserInput();
 
@@ -175,7 +173,7 @@ void AdvisorBot::printProducts()
     std::cout << result.substr(0, result.size() - 2) << "\n\n";
 };
 
-/** C4) Find minimum bid or ask for product in current time step */
+/** C4) Find minimum active bid or ask for product in current time step */
 void AdvisorBot::findMin(const std::string prod, const std::string ordType)
 {
     // If product argument is incorrect
@@ -215,7 +213,8 @@ void AdvisorBot::findMin(const std::string prod, const std::string ordType)
                              .getCurMin(curDateTime.first, curDateTime.second, prod, OTP);
 
             // Print it to the user
-            std::cout << "The min " << ordType << " for " << prod << " is " << min << "\n\n";
+            std::cout << "The min active " << ordType << " for " << prod
+                      << " in current timestamp is " << min << ".\n\n";
 
             // Finish function execution
             return;
@@ -226,7 +225,7 @@ void AdvisorBot::findMin(const std::string prod, const std::string ordType)
     prod404Err();
 };
 
-/** C5) Find maximum bid or ask for product in current time step */
+/** C5) Find maximum active bid or ask for product in current time step */
 void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 {
     // If product argument is incorrect
@@ -266,7 +265,8 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
                              .getCurMax(curDateTime.first, curDateTime.second, prod, OTP);
 
             // Print it to the user
-            std::cout << "The max " << ordType << " for " << prod << " is " << max << "\n\n";
+            std::cout << "The max " << ordType << " for " << prod
+                      << " in current timestamp is " << max << ".\n\n";
 
             // Finish function execution
             return;
@@ -311,10 +311,20 @@ void AdvisorBot::findAvg(const std::string prod,
         // Check that int is in range
         if (orderbook.checkTimestampArg(stepsInt))
         {
-            // If range is valid -> calculate and print average
-            std::cout << "The average " << prod << " "
-                      << ordType << " price over the first " << stepsNum << " timesteps was "
-                      << orderbook.getRangeAvg(prod, OTP, stepsInt) << ".\n\n";
+            // If range is valid -> calculate and print average for active orders
+            std::cout << "The price of the average active " << ordType << " for " << prod
+                      << " over the first " << stepsNum << " timesteps is "
+                      << orderbook.getRangeAvg(prod, OTP, stepsInt) << ".\n";
+
+            // Check if there were any sales for this product in requeste period
+            double saleWA = orderbook.getRangeAvg(prod, OrderType::sale, stepsInt);
+
+            // If product has sales data
+            if (saleWA != 0)
+                // Print average for successful sale orders
+                std::cout << "The price of the average sale for " << prod
+                          << " over the first " << stepsNum << " timesteps is "
+                          << saleWA << ".\n\n";
         }
         // Number is out of range
         else
@@ -381,6 +391,13 @@ void AdvisorBot::printTimestamp()
 /** C9) Move to next time step */
 void AdvisorBot::nextTurn()
 {
+    // Match orders from the current period with (from first period of the day until current one)
+    orderbook.matchOrders(curDateTime.first, curDateTime.second);
+
+    // Print information about sales from the current period
+    orderbook.printSales(curDateTime.first, curDateTime.second);
+
+    // Move to the next period
     curDateTime = orderbook.nextPeriod(curDateTime.first, curDateTime.second);
 };
 

@@ -53,9 +53,9 @@ void TimestampPage::printTimestampPage()
     for (auto &[prodName, prodPage] : _timedOrders)
     {
         // Print product page information
-        std::cout << "      Product page: " << prodName << " {\n";
+        std::cout << "||    |    Product page: " << prodName << " {\n";
         prodPage.printProductPage();
-        std::cout << "      }\n";
+        std::cout << "||    |     }\n";
     }
 };
 
