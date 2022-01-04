@@ -413,11 +413,9 @@ void AdvisorBot::plotGraph()
     }
     catch (const std::exception &e)
     {
-        // Print error msg
-        std::cerr << "Can't find requested data to plot! Please try another period. \n";
+        // Print error msg and prevent crash
+        std::cerr << e.what() << "\n";
     }
-
-    std::cout << "PLOT GRAPH fired!" << std::endl;
 };
 
 /** Prompt user for input, read his input into the string and return it

@@ -566,9 +566,6 @@ std::vector<double> Orderbook::marketDepthChart(const std::string date,
                                                 const std::string product,
                                                 const unsigned int steps)
 {
-
-    std::cout << "MarketDepthChart fired!\n";
-
     // Get all timestamps for the time range
     std::vector<std::string> timestamps = _orderbook.at(date).getTimestamps();
 
@@ -580,13 +577,14 @@ std::vector<double> Orderbook::marketDepthChart(const std::string date,
 
     // If there are no data at all -> throw an error to a caller to handle
     if (allAsks.empty() && allBids.empty())
-        throw;
+        throw(std::invalid_argument("Plot function error - Empty period, nothing to plot!"));
 
-    std::cout << "Calling xInfo\n";
+    // Get data about X - axis
     std::map<std::string, double> xInfo = getXinfo(allAsks, allBids);
-    std::cout << "Min price: " << xInfo.at("min")
-              << ", max price: " << xInfo.at("max")
-              << ", single column value: " << xInfo.at("col") << "\n";
+
+    // If there are single order -> throw an error to a caller to handle
+    if (xInfo.at("col") == 0)
+        throw(std::invalid_argument("Plot function error - Single order, nothing to plot!"));
 
     // Calculate and return basic information about X-axis
     // std::map<double> xInfo = getXValue(date, finalStamp, product);
