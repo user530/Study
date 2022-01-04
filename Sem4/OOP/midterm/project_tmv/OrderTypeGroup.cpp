@@ -235,8 +235,15 @@ void OrdertypeGroup::updateMetaErase(const double price,
  * @param ordTypePages vector of addresses to ordertype groups
  * @return address to the ordertype group with highest price order
  */
-OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup *> ordTypePages)
+OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup *> &ordTypePages)
 {
+    // Check argument before start -> print error msg and return nullptr if empty
+    if (ordTypePages.empty())
+    {
+        std::cerr << "OrdertypeGroup::getMaxPriceContainer - argument error! Empty vector passed. \n";
+        return nullptr;
+    }
+
     // Declare first page as maximum page, set address to the maxPage
     OrdertypeGroup *maxPage = ordTypePages[0];
 
@@ -263,8 +270,15 @@ OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup 
  * @param ordTypePages vector of addresses to ordertype groups
  * @return address to the ordertype group with lowest price order
  */
-OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup *> ordTypePages)
+OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup *> &ordTypePages)
 {
+    // Check argument before start -> print error msg and return nullptr if empty
+    if (ordTypePages.empty())
+    {
+        std::cerr << "OrdertypeGroup::getMinPriceContainer - argument error! Empty vector passed. \n";
+        return nullptr;
+    }
+
     // Declare first page as minimum page page, set address to the minPage
     OrdertypeGroup *minPage = ordTypePages[0];
 
@@ -411,3 +425,23 @@ OrdertypeGroup OrdertypeGroup::matchVectors(std::vector<OrdertypeGroup *> &asks,
     // Return all sales for this product
     return sales;
 }
+
+/** Function to get min and max values from the range of the order type pages
+ * @param ordTypePages vector of addresses to ordertype groups
+ * @return pair of values: max and min prices for the requested ordertype group
+ */
+std::pair<double, double> OrdertypeGroup::getPriceSpread(std::vector<OrdertypeGroup *> &ordTypePages)
+{
+    // Initialize price range variables
+    double min = 0, max = 0;
+
+    // If order type vector is not empty
+    if (!ordTypePages.empty())
+    {
+        // Set max and min values
+        max = OrdertypeGroup::getMaxPriceContainer(ordTypePages)->getMax();
+        min = OrdertypeGroup::getMinPriceContainer(ordTypePages)->getMin();
+    }
+
+    return std::make_pair(max, min);
+};

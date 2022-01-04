@@ -70,4 +70,14 @@ public:
 
     /* Print all sales in the requested period */
     void printSales(const std::string, const std::string);
+
+    /* Prepare market depth data vector as a base for a chart */
+    std::vector<double> marketDepthChart(const std::string,
+                                         const std::string,
+                                         const unsigned int);
+
+    /* Calculate information about the X axis for the chart */
+    std::map<std::string, double> getXinfo(std::vector<OrdertypeGroup *> &asks,
+                                           std::vector<OrdertypeGroup *> &bids,
+                                           unsigned int columns = 120);
 };

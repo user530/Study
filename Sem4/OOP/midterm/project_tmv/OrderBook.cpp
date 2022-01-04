@@ -317,7 +317,8 @@ bool Orderbook::checkExtremaArg(std::string extremArg)
  * @param time current timestamp string
  * @return pair of values: date and timestamp
  */
-std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date, std::string time)
+std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date,
+                                                          std::string time)
 {
     // Get all known date-times
     std::map<std::string, std::vector<std::string>> datetimes = getAllDatetime();
@@ -558,4 +559,138 @@ void Orderbook::printSales(const std::string date, const std::string timestamp)
         // Error msg
         std::cerr << "Can't find requested period! Please try another one.\n\n";
     }
+};
+
+/* Prepare market depth data vector as a base for a chart */
+std::vector<double> Orderbook::marketDepthChart(const std::string date,
+                                                const std::string product,
+                                                const unsigned int steps)
+{
+
+    std::cout << "MarketDepthChart fired!\n";
+
+    // Get all timestamps for the time range
+    std::vector<std::string> timestamps = _orderbook.at(date).getTimestamps();
+
+    // Prepare vector of pointers to all applicable bid group pages
+    auto allBids = collectOrdTypPages(date, timestamps[steps - 1], product, OrderType::bid);
+
+    // Prepare vector of pointers to all applicable ask group pages
+    auto allAsks = collectOrdTypPages(date, timestamps[steps - 1], product, OrderType::ask);
+
+    // If there are no data at all -> throw an error to a caller to handle
+    if (allAsks.empty() && allBids.empty())
+        throw;
+
+    std::cout << "Calling xInfo\n";
+    std::map<std::string, double> xInfo = getXinfo(allAsks, allBids);
+    std::cout << "Min price: " << xInfo.at("min")
+              << ", max price: " << xInfo.at("max")
+              << ", single column value: " << xInfo.at("col") << "\n";
+
+    // Calculate and return basic information about X-axis
+    // std::map<double> xInfo = getXValue(date, finalStamp, product);
+
+    // // Try to get requested datepage
+    // try
+    // {
+    //     // Prepare vectors for bid and ask orders
+    //     std::vector<double> bids, asks;
+
+    //     // Get all timestamp pages container
+    //     std::map<std::string, TimestampPage> timestamps = _orderbook.at(date)
+    //                                                           .getDailyOrders();
+    //     // Setup iterator
+    //     auto iter = timestamps.begin();
+
+    //     // Counter
+    //     unsigned int i = 0;
+
+    //     // Start
+    //     while (i != steps)
+    //     {
+    //         // If there is product page in this timestamp
+    //         if (iter->second.checkProductPage(product))
+    //         {
+    //             // Prepare product page
+    //             ProductPage &prodPage = iter->second.getProductPage(product);
+
+    //             // Check that product page include asks
+    //             if (prodPage.checkOrdertypePage(OrderType::bid))
+    //             {
+    //                 // Iterate over orders
+    //                 prodPage.getOrdertypePage(OrderType::bid);
+    //             }
+    //         }
+
+    //         // Increment counter and iterator
+    //         ++i;
+    //         ++iter;
+    //     }
+    // }
+    // catch (const std::exception &e)
+    // {
+    //     std::cerr << "Can't find" << '\n';
+    // }
+
+    return std::vector<double>{1};
+};
+
+/** Get required information about X - axis of the chart
+ * @param asks vector of pointers to all suitable ask pages
+ * @param bids vector of pointers to all suitable bid pages
+ * @param columns number of columns in the graph (default - 120)
+ * @return map containing values of "min" price, "max" price, and single column value
+ */
+std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> &asks,
+                                                  std::vector<OrdertypeGroup *> &bids,
+                                                  unsigned int columns)
+{
+    // Declare result variable containing information about x axis
+    std::map<std::string, double> xInfo;
+
+    // Initialize price range variables
+    double maxBid = 0, maxAsk = 0, minBid = 0, minAsk = 0;
+
+    // Calculate bid spread
+    std::pair<double, double> bidSpread = OrdertypeGroup::getPriceSpread(bids);
+
+    // Set max and min values for bid
+    maxBid = bidSpread.first;
+    minBid = bidSpread.second;
+
+    // Calculate ask spread
+    std::pair<double, double> askSpread = OrdertypeGroup::getPriceSpread(asks);
+
+    // Set max and min values for ask
+    maxAsk = askSpread.first;
+    minAsk = askSpread.second;
+
+    // If graph has both asks and bids
+    if (!asks.empty() && !bids.empty())
+    {
+        // Add to the result: min, max
+        xInfo.insert({"min", std::min(minBid, minAsk)});
+        xInfo.insert({"max", std::max(maxBid, maxAsk)});
+    }
+    // If graph has only bids
+    else if (asks.empty())
+    {
+        // Add to the result: min, max
+        xInfo.insert({"min", minBid});
+        xInfo.insert({"max", maxBid});
+    }
+    // If graph has only asks
+    else if (bids.empty())
+    {
+        // Add to the result: min, max
+        xInfo.insert({"min", minAsk});
+        xInfo.insert({"max", maxAsk});
+    }
+
+    // Add to the result -> value of the single column
+    xInfo.insert({"col", (xInfo["max"] - xInfo["min"]) / columns});
+
+    // Return axis info
+    return xInfo;
 };

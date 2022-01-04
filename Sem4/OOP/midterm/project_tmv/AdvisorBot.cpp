@@ -404,7 +404,19 @@ void AdvisorBot::nextTurn()
 /** C10) Plot Market Depth Chart */
 void AdvisorBot::plotGraph()
 {
-    orderbook.printOrderbook(); // DELETE
+    // orderbook.printOrderbook(); // DELETE
+
+    // CHECK THAT DATE EXISTS, CHECK THAT DATE INCLUDE AT LEAST STEPS NUMBER OF PERIODS!
+    try
+    {
+        orderbook.marketDepthChart(curDateTime.first, "ETH/BTC", 1);
+    }
+    catch (const std::exception &e)
+    {
+        // Print error msg
+        std::cerr << "Can't find requested data to plot! Please try another period. \n";
+    }
+
     std::cout << "PLOT GRAPH fired!" << std::endl;
 };
 

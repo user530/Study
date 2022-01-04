@@ -70,8 +70,9 @@ public:
     void eraseLastOrd();
     void updateMetaReduce(const double, const double);
     void updateMetaErase(const double, const double, const OrderType &);
-    static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *>);
-    static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *>);
+    static OrdertypeGroup *getMaxPriceContainer(std::vector<OrdertypeGroup *> &);
+    static OrdertypeGroup *getMinPriceContainer(std::vector<OrdertypeGroup *> &);
     static OrdertypeGroup matchVectors(std::vector<OrdertypeGroup *> &,
                                        std::vector<OrdertypeGroup *> &);
+    static std::pair<double, double> getPriceSpread(std::vector<OrdertypeGroup *> &);
 };
