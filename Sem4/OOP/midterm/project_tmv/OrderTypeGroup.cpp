@@ -445,3 +445,27 @@ std::pair<double, double> OrdertypeGroup::getPriceSpread(std::vector<OrdertypeGr
 
     return std::make_pair(max, min);
 };
+
+/** Put all orders amounts into buckets depending on the price
+ * @param buckets buckets vector that stores all amounts
+ * @param minVal minimal value of the x-axis
+ * @param step step value of the x-axis
+ */
+void OrdertypeGroup::OrdTypeGrpToBuckets(std::vector<double> &buckets,
+                                         double minVal,
+                                         double step)
+{
+    // Iterate over every order in the order list
+    for (const Order &order : _orderList)
+    {
+        // Calculate the index to store the price amount (int will erase fraction)
+        unsigned int ind = (order.price - minVal) / step;
+        // Move max value inside the last bucket manually
+        if (ind >= buckets.size())
+        {
+            ind = buckets.size() - 1;
+        }
+        // Add order amount to the target bucket
+        buckets[ind] += order.amount;
+    }
+};

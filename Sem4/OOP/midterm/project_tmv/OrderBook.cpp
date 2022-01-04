@@ -566,6 +566,10 @@ std::vector<double> Orderbook::marketDepthChart(const std::string date,
                                                 const std::string product,
                                                 const unsigned int steps)
 {
+    const int cols = 120;
+    // Result variable
+    std::vector<double> columns(cols, 0);
+
     // Get all timestamps for the time range
     std::vector<std::string> timestamps = _orderbook.at(date).getTimestamps();
 
@@ -580,65 +584,42 @@ std::vector<double> Orderbook::marketDepthChart(const std::string date,
         throw(std::invalid_argument("Plot function error - Empty period, nothing to plot!"));
 
     // Get data about X - axis
-    std::map<std::string, double> xInfo = getXinfo(allAsks, allBids);
+    std::map<std::string, double> xInfo = getXinfo(allAsks, allBids, cols);
 
     // If there are single order -> throw an error to a caller to handle
     if (xInfo.at("col") == 0)
         throw(std::invalid_argument("Plot function error - Single order, nothing to plot!"));
 
-    // Calculate and return basic information about X-axis
-    // std::map<double> xInfo = getXValue(date, finalStamp, product);
+    // If there are ask groups
+    if (!allAsks.empty())
+    {
+        // Iterate over every group page
+        for (OrdertypeGroup *grpAddr : allAsks)
+        {
+            // And add order from this group to the buckets
+            grpAddr->OrdTypeGrpToBuckets(columns, xInfo.at("min"), xInfo.at("col"));
+        }
+    }
 
-    // // Try to get requested datepage
-    // try
-    // {
-    //     // Prepare vectors for bid and ask orders
-    //     std::vector<double> bids, asks;
+    // If there are bid groups
+    if (!allBids.empty())
+    {
+        // Iterate over every group page
+        for (OrdertypeGroup *grpAddr : allBids)
+        {
+            // And add order from this group to the buckets
+            grpAddr->OrdTypeGrpToBuckets(columns, xInfo.at("min"), xInfo.at("col"));
+        }
+    }
 
-    //     // Get all timestamp pages container
-    //     std::map<std::string, TimestampPage> timestamps = _orderbook.at(date)
-    //                                                           .getDailyOrders();
-    //     // Setup iterator
-    //     auto iter = timestamps.begin();
-
-    //     // Counter
-    //     unsigned int i = 0;
-
-    //     // Start
-    //     while (i != steps)
-    //     {
-    //         // If there is product page in this timestamp
-    //         if (iter->second.checkProductPage(product))
-    //         {
-    //             // Prepare product page
-    //             ProductPage &prodPage = iter->second.getProductPage(product);
-
-    //             // Check that product page include asks
-    //             if (prodPage.checkOrdertypePage(OrderType::bid))
-    //             {
-    //                 // Iterate over orders
-    //                 prodPage.getOrdertypePage(OrderType::bid);
-    //             }
-    //         }
-
-    //         // Increment counter and iterator
-    //         ++i;
-    //         ++iter;
-    //     }
-    // }
-    // catch (const std::exception &e)
-    // {
-    //     std::cerr << "Can't find" << '\n';
-    // }
-
-    return std::vector<double>{1};
+    return columns;
 };
 
 /** Get required information about X - axis of the chart
  * @param asks vector of pointers to all suitable ask pages
  * @param bids vector of pointers to all suitable bid pages
  * @param columns number of columns in the graph (default - 120)
- * @return map containing values of "min" price, "max" price, and single column value
+ * @return map containing values of "min" price, "max" price, and single column "col" value
  */
 std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> &asks,
                                                   std::vector<OrdertypeGroup *> &bids,
