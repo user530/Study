@@ -103,8 +103,6 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             // If there is no date page inside
             if (!orderbook.count(date))
             {
-                // std::cout << curLine << " line: Day page doesnt exist.\n";
-
                 // Create group wrapper and add order
                 OrdertypeGroup ordGrp{};
                 ordGrp.addOrder(order);
@@ -123,13 +121,9 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
             // Day page already exists
             else
             {
-                // std::cout << curLine << " line: Day page exists. ";
-
                 // If there is no time page inside
                 if (!orderbook[date].checkTimestampPage(time))
                 {
-                    // std::cout << curLine << "No time page exists.\n";
-
                     // Create group wrapper and add order
                     OrdertypeGroup ordGrp{};
                     ordGrp.addOrder(order);
@@ -146,15 +140,11 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                 // Day page already exists
                 else
                 {
-                    // std::cout << "Time page exists. ";
-
                     // If there is no product page inside
                     if (!orderbook[date]
                              .getTimestampPage(time)
                              .checkProductPage(prod))
                     {
-                        // std::cout << curLine << "Prod page doesnt exist.\n";
-
                         // Create group wrapper and add order
                         OrdertypeGroup ordGrp{};
                         ordGrp.addOrder(order);
@@ -169,16 +159,12 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                     // Product page already exists
                     else
                     {
-                        // std::cout << "Prod page exists. ";
-
                         // If there is no ordertype page inside
                         if (!orderbook[date]
                                  .getTimestampPage(time)
                                  .getProductPage(prod)
                                  .checkOrdertypePage(OTP))
                         {
-                            // std::cout << "OTP page doesnt exist.\n";
-
                             // Create group wrapper and add order
                             OrdertypeGroup ordGrp{};
                             ordGrp.addOrder(order);
@@ -191,11 +177,8 @@ std::map<std::string, DayData> CSVReader::transformCSV(const std::string filenam
                         // If ordertype group already exists
                         else
                         {
-                            // std::cout << "OTP page exists.\n";
-
                             // Ordertype page already exists
                             // Add order to the ordertype page
-
                             orderbook[date]
                                 .getTimestampPage(time)
                                 .getProductPage(prod)

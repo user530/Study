@@ -635,7 +635,8 @@ void Orderbook::marketDepthChart(const std::string date,
                                  yInfo.at("min"), yInfo.at("max"), yInfo.at("row"));
 
     // Print the graph
-    std::cout << graph << "\n\n";
+    std::cout << graph;
+    //  << "\n\n";
 };
 
 /** Get required information about X - axis of the chart
@@ -797,7 +798,7 @@ std::string Orderbook::plodData(const std::vector<double> &askBucket,
                                 const double yStep)
 {
     // Prepare graph
-    std::string graph = "\n\n";
+    std::string graph = "";
 
     // Prepare variable to calculate yAxis data field length
     unsigned int xAxisOffset = 0;

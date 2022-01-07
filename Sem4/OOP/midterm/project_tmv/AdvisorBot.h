@@ -54,6 +54,12 @@ step */
     /** C10) Plot Market Depth Chart */
     void plotGraph(const std::string, const std::string, const std::string);
 
+    /** C11) Print all orderbook in a structured way */
+    void printStruct();
+
+    /** C12) List all available dates */
+    void printDates();
+
     /** Get user input */
     std::string getUserInput();
 
