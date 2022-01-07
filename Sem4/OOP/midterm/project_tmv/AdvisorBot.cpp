@@ -27,6 +27,7 @@ void AdvisorBot::init()
         // Get user input
         input = getUserInput();
 
+        // Make some space
         std::cout << '\n';
 
         // Process user input
@@ -61,16 +62,19 @@ void AdvisorBot::printHelp()
               << "3) prod\n"
               << "4) min <product> <price_type>\n"
               << "5) max <product> <price_type>\n"
-              << "6) avg <product> <price_type> <timesteps_number>\n"
+              << "6) avg <product> <price_type> <timestamps_number>\n"
               << "7) predict <min/max> <product>\n"
               << "8) time\n"
               << "9) step\n"
-              << "10) plot <date> <product> <timesteps_number>\n"
+              << "10) plot <date> <product> <timestamps_number>\n"
               << "11) struct\n"
+              << "12) dates\n"
               << "To get additional information type 'help <command_name>'.\n";
 };
 
-/** C2) Output help for the speciﬁed command */
+/** C2) Output detailed help for the speciﬁed command
+ * @param cmd name of the command
+ */
 void AdvisorBot::printCmdHelp(std::string cmd)
 {
     // If user request information about help command
@@ -90,7 +94,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
     // If user request information about min command
     else if (cmd == "min")
     {
-        std::cout << "This command finds minimum bid or ask for the sent product in current timestep.\n"
+        std::cout << "This command finds minimum bid or ask for the sent product in current timestamp.\n"
                   << "Command form - 'min <product> <price_type>' - where:\n"
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
@@ -100,7 +104,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
     // If user request information about max command
     else if (cmd == "max")
     {
-        std::cout << "This command finds maximum bid or ask for the sent product in current timestep.\n"
+        std::cout << "This command finds maximum bid or ask for the sent product in current timestamp.\n"
                   << "Command form - 'max <product> <price_type>' - where:\n"
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
@@ -110,19 +114,19 @@ void AdvisorBot::printCmdHelp(std::string cmd)
     // If user request information about avg command
     else if (cmd == "avg")
     {
-        std::cout << "This command computes average (weighted average) price for the sent product over the set number of timesteps.\n"
-                  << "Command form - 'avg <product> <price_type> <timesteps_number>' - where:\n"
+        std::cout << "This command computes average (weighted average) price for the sent product over the set number of timestamps.\n"
+                  << "Command form - 'avg <product> <price_type> <timestamps_number>' - where:\n"
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
                   << "<price_type> - price type: bid or ask.\n"
                   << "Bid is the maximum price that a buyer is willing to pay, while ask is the minimum price seller is willing to take for the product.\n"
-                  << "<timesteps_number> - 1, 2, 3, etc.\n"
-                  << "How many timesteps, starting from the current one, use for the calculation.\n";
+                  << "<timestamps_number> - 1, 2, 3, etc.\n"
+                  << "How many timestamps, starting from the current one, use for the calculation.\n";
     }
     // If user request information about predict command
     else if (cmd == "predict")
     {
-        std::cout << "This command predicts requested price for the next timestep (weighted moving average).\n"
+        std::cout << "This command predicts requested price for the next timestamp (weighted moving average).\n"
                   << "Command form - 'predict <min/max> <product>' - where:\n"
                   << "<min/max> - min or max.\n"
                   << "Min is for the smallest price and Max is for the largest.\n"
@@ -138,7 +142,7 @@ void AdvisorBot::printCmdHelp(std::string cmd)
     // If user request information about step command
     else if (cmd == "step")
     {
-        std::cout << "This command moves program to the next timestep.\n"
+        std::cout << "This command moves program to the next timestamp.\n"
                   << "Matching all orders from this and all previous timestamps for this date\n"
                   << "Command form - 'step'.\n";
     }
@@ -147,17 +151,23 @@ void AdvisorBot::printCmdHelp(std::string cmd)
     {
         std::cout << "This command plots the market depth chart based on the orders "
                      "for the selected product over the set number of timestamps in selected date.\n"
-                  << "Command form - 'plot <date> <product> <timesteps_number>' - where:\n"
+                  << "Command form - 'plot <date> <product> <timestamps_number>' - where:\n"
                   << "<date> - 2020/06/01, 2020/06/02, etc.\n"
                   << "Information about all available dates can be found using 'dates' command.\n"
                   << "<product> - ETH/BTC, DOGE/BTC, BTC/USDT, etc.\n"
                   << "Information about all available products can be found using 'prod' command.\n"
-                  << "<timesteps_number> - 1, 2, 3, etc.\n"
-                  << "Collect data for visualisation from the selected number of timesteps from the selected date"
+                  << "<timestamps_number> - 1, 2, 3, etc.\n"
+                  << "Collect data for visualisation from the selected number of timestamps from the selected date"
                      "(this argument differs from avg command,\n"
-                  << "here we count steps for the date, not across whole book)\n";
+                  << "here we count timestamps for the date, not across the whole book)\n";
     }
-    //
+    // If user request information about struct command
+    else if (cmd == "struct")
+    {
+        std::cout << "This command list all orders in a structured way.\n"
+                  << "Command form - 'struct'.\n";
+    }
+    // If user request information about dates command
     else if (cmd == "dates")
     {
         std::cout << "This command lists all dates from the orderbook.\n"
@@ -187,14 +197,17 @@ void AdvisorBot::printProducts()
     std::cout << result.substr(0, result.size() - 2) << "\n";
 };
 
-/** C4) Find minimum active bid or ask for product in current time step */
+/** C4) Find and print minimum active bid or ask for product in current timestamp
+ * @param prod requested product to predict order
+ * @param ordType requested order type: bid(buy) or ask(sale)
+ */
 void AdvisorBot::findMin(const std::string prod, const std::string ordType)
 {
     // If product argument is incorrect
     if (!orderbook.checkProdArg(prod))
     {
         // Print error and stop execution
-        undefArgErr("product");
+        Errors::incrctProd();
         return;
     }
 
@@ -205,7 +218,7 @@ void AdvisorBot::findMin(const std::string prod, const std::string ordType)
     if (!orderbook.checkOTPArg(OTP))
     {
         // Print error and stop execution
-        undefArgErr("ordtype");
+        Errors::incrctOTP();
         return;
     }
 
@@ -236,17 +249,20 @@ void AdvisorBot::findMin(const std::string prod, const std::string ordType)
     }
 
     // Function didn't ended -> so product wasn't found
-    prod404Err();
+    Errors::noProdCurPeriod();
 };
 
-/** C5) Find maximum active bid or ask for product in current time step */
+/** C5) Find and print maximum active bid or ask for product in current timestamp
+ * @param prod requested product to predict order
+ * @param ordType requested order type: bid(buy) or ask(sale)
+ */
 void AdvisorBot::findMax(const std::string prod, const std::string ordType)
 {
     // If product argument is incorrect
     if (!orderbook.checkProdArg(prod))
     {
         // Print error and stop execution
-        undefArgErr("product");
+        Errors::incrctProd();
         return;
     }
 
@@ -257,7 +273,7 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
     if (!orderbook.checkOTPArg(OTP))
     {
         // Print error and stop execution
-        undefArgErr("ordtype");
+        Errors::incrctOTP();
         return;
     }
 
@@ -288,11 +304,15 @@ void AdvisorBot::findMax(const std::string prod, const std::string ordType)
     }
 
     // Function didn't ended -> so product wasn't found
-    prod404Err();
+    Errors::noProdCurPeriod();
 };
 
-/** C6) Compute average ask or bid for the sent product over the sent number
-of time steps */
+/** C6) Compute and print average ask or bid for the sent product over the sent number
+of timestamps
+* @param prod requested product to predict order
+* @param ordType requested order type: bid(buy) or ask(sale)
+* @param stepsNum number of timestamps to collect order data (here numbering is continous across all periods, i.e. 1 - first timestamp for the first date)
+*/
 void AdvisorBot::findAvg(const std::string prod,
                          const std::string ordType,
                          const std::string stepsNum)
@@ -301,7 +321,7 @@ void AdvisorBot::findAvg(const std::string prod,
     if (!orderbook.checkProdArg(prod))
     {
         // Print error and stop execution
-        undefArgErr("product");
+        Errors::incrctProd();
         return;
     }
 
@@ -312,7 +332,7 @@ void AdvisorBot::findAvg(const std::string prod,
     if (!orderbook.checkOTPArg(OTP))
     {
         // Print error and stop execution
-        undefArgErr("ordtype");
+        Errors::incrctOTP();
         return;
     }
 
@@ -327,7 +347,7 @@ void AdvisorBot::findAvg(const std::string prod,
         {
             // If range is valid -> calculate and print average for active orders
             std::cout << "The price of the average active " << ordType << " for " << prod
-                      << " over the first " << stepsNum << " timesteps is "
+                      << " over the first " << stepsNum << " timestamps is "
                       << orderbook.getRangeAvg(prod, OTP, stepsInt) << ".\n";
 
             // Check if there were any sales for this product in requeste period
@@ -337,28 +357,31 @@ void AdvisorBot::findAvg(const std::string prod,
             if (saleWA != 0)
                 // Print average for successful sale orders
                 std::cout << "The price of the average sale for " << prod
-                          << " over the first " << stepsNum << " timesteps is "
+                          << " over the first " << stepsNum << " timestamps is "
                           << saleWA << ".\n";
         }
         // Number is out of range
         else
         {
-            std::cout << "Timesteps argument is out of range."
-                      << "There are total " << orderbook.getTimestepsNum()
-                      << " period(s) in the orderbook.\n";
+            // Print error
+            Errors::timeBookRange(orderbook.getTimestepsNum());
         }
     }
 
     // Conversion failed, wrong argument
     catch (const std::exception &e)
     {
-        std::cerr << "Timesteps argument is incorrect! Please pass valid number.\n";
+        // Print error
+        Errors::incrctTime();
     }
 };
 
-/** C7) Predict max or min ask or bid for the sent product for the next time
-step (Weighted moving average, based on https://www.investopedia.com/articles/technical/060401.asp)
-*/
+/** C7) Predict and print max or min, ask or bid for the requested product for the next timestamp
+ * (Weighted moving average, based on https://www.investopedia.com/articles/technical/060401.asp)
+ * @param extrema requested extrema: min or max
+ * @param prod requested product to predict order
+ * @param ordType requested order type: bid(buy) or ask(sale)
+ */
 void AdvisorBot::predictPrice(const std::string extrema,
                               const std::string prod,
                               const std::string ordType)
@@ -367,7 +390,7 @@ void AdvisorBot::predictPrice(const std::string extrema,
     if (!orderbook.checkExtremaArg(extrema))
     {
         // Print error and stop execution
-        undefArgErr("extrema");
+        Errors::incrctExtrema();
         return;
     }
 
@@ -375,7 +398,7 @@ void AdvisorBot::predictPrice(const std::string extrema,
     if (!orderbook.checkProdArg(prod))
     {
         // Print error and stop execution
-        undefArgErr("product");
+        Errors::incrctProd();
         return;
     }
 
@@ -386,7 +409,7 @@ void AdvisorBot::predictPrice(const std::string extrema,
     if (!orderbook.checkOTPArg(OTP))
     {
         // Print error and stop execution
-        undefArgErr("ordtype");
+        Errors::incrctOTP();
         return;
     }
 
@@ -402,7 +425,7 @@ void AdvisorBot::printTimestamp()
               << ", current timestamp is: " << curDateTime.second << ".\n";
 };
 
-/** C9) Move to next time step */
+/** C9) Move to next timestamp, match orders in the current date and print sales information */
 void AdvisorBot::nextTurn()
 {
     // Match orders from the current period with (from first period of the day until current one)
@@ -415,7 +438,11 @@ void AdvisorBot::nextTurn()
     curDateTime = orderbook.nextPeriod(curDateTime.first, curDateTime.second);
 };
 
-/** C10) Plot Market Depth Chart */
+/** C10) Plot Market Depth Chart for the requested product across required number of timeperiods from the required date
+ * @param date date to collect data
+ * @param product product to collect related orders
+ * @param steps number of timestamps in requested date, to collect product orders
+ */
 void AdvisorBot::plotGraph(const std::string date,
                            const std::string product,
                            const std::string steps)
@@ -424,7 +451,7 @@ void AdvisorBot::plotGraph(const std::string date,
     if (!orderbook.checkDateArg(date))
     {
         // Print error and stop execution
-        undefArgErr("date");
+        Errors::incrctDate();
         return;
     }
 
@@ -432,14 +459,14 @@ void AdvisorBot::plotGraph(const std::string date,
     if (!orderbook.checkProdArg(product))
     {
         // Print error and stop execution
-        undefArgErr("product");
+        Errors::incrctProd();
         return;
     }
     // Correct product, but no product data for requested date
     else if (!orderbook.getDayPage(date).getDayProducts().count(product))
     {
         // Print error and stop execution
-        undefArgErr("prodDate");
+        Errors::noProdReqPeriod();
         return;
     }
 
@@ -456,7 +483,7 @@ void AdvisorBot::plotGraph(const std::string date,
     catch (const std::exception &e)
     {
         // Print error and stop execution
-        std::cerr << "Timesteps argument is incorrect! Please pass valid number.\n";
+        Errors::incrctTime();
         return;
     }
 
@@ -472,7 +499,7 @@ void AdvisorBot::plotGraph(const std::string date,
         // Error in the process
         catch (const std::exception &e)
         {
-            // Print error msg and terminate
+            // Catch and print internal function error msg, then terminate
             std::cerr << e.what() << "\n";
             return;
         }
@@ -481,15 +508,15 @@ void AdvisorBot::plotGraph(const std::string date,
     else
     {
         // Print error and terminate
-        std::cerr << "Timesteps argument is out of range."
-                  << "There are total "
-                  << orderbook.getDayPage(date).getTimestamps().size()
-                  << " timestamp(s) in requested date.\n";
+        Errors::timeDateRange(orderbook
+                                  .getDayPage(date)
+                                  .getTimestamps()
+                                  .size());
         return;
     }
 };
 
-/** C11) Print all orderbook in a structured way */
+/** C11) List all orderbook in a structured way */
 void AdvisorBot::printStruct()
 {
     // Service message
@@ -542,8 +569,7 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     case 0:
     {
         // Respond with error msg
-        std::cerr << "Input error - Empty line!\n"
-                  << "Please enter valid command.\n";
+        Errors::emptyCmd();
         break;
     }
 
@@ -587,14 +613,13 @@ void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
     default:
     {
         // Respond with error msg
-        std::cerr << "Input error - Too many arguments passed!\n"
-                  << "Please enter valid command.\n";
+        Errors::tooBigCmd();
         break;
     }
     }
 }
 
-/** Handle single line command
+/** Handle single line command -> route to appropriate function
  * @param cmd command line from the user input
  */
 void AdvisorBot::hadleSingleCmd(std::string cmd)
@@ -645,11 +670,11 @@ void AdvisorBot::hadleSingleCmd(std::string cmd)
     else
     {
         // Respond with error msg
-        undefCmdErr();
+        Errors::incrctCmd();
     }
 };
 
-/** Handle single arg commands
+/** Handle single arg commands  -> route to appropriate function
  * @param cmd command line from the user input
  * @param arg1 1st command line argument from the user input
  */
@@ -665,11 +690,11 @@ void AdvisorBot::hadle1ArgCmd(std::string cmd, std::string arg1)
     else
     {
         // Respond with error msg
-        undefCmdErr();
+        Errors::incrctCmd();
     }
 };
 
-/** Handle two arg commands
+/** Handle two arg commands -> route to appropriate function
  * @param cmd command line from the user input
  * @param arg1 1st command line argument from the user input
  * @param arg2 2nd command line argument from the user input
@@ -692,11 +717,11 @@ void AdvisorBot::hadle2ArgCmd(std::string cmd, const std::string arg1, const std
     else
     {
         // Respond with error msg
-        undefCmdErr();
+        Errors::incrctCmd();
     }
 };
 
-/** Handle three arg commands
+/** Handle three arg commands -> route to appropriate function
  * @param cmd command line from the user input
  * @param arg1 1st command line argument from the user input
  * @param arg2 2nd command line argument from the user input
@@ -725,57 +750,6 @@ void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg
     else
     {
         // Respond with error msg
-        undefCmdErr();
-    }
-};
-
-/** Print undefined command error */
-void AdvisorBot::undefCmdErr()
-{
-    std::cerr << "Input error - Undefined command!\n"
-              << "Please enter valid command.\n";
-};
-
-/** Print 'product not found' error */
-void AdvisorBot::prod404Err()
-{
-    std::cerr << "Can't find requested product in the current date-time.\n"
-              << "Please try another one.\n";
-};
-
-/** Print appropriate incorrect argument error depending on the flag passed
- * @param argFlag argument flag: "product", "ordtype"
- */
-void AdvisorBot::undefArgErr(std::string argFlag)
-{
-    // If product flag passed
-    if (argFlag == "product")
-    {
-        // Print message
-        std::cerr << "Incorrect product argument passed! Please check list of all valid products using 'prod' command.\n";
-    }
-    // If product-date flag passed
-    else if (argFlag == "prodDate")
-    {
-        // Print message
-        std::cerr << "There is no product data for selected date! Please try another product or date. \n";
-    }
-    // If ordertype flag passed
-    else if (argFlag == "ordtype")
-    {
-        // Print message
-        std::cerr << "Incorrect order type argument passed! Valid values are 'bid' and 'ask'.\n";
-    }
-    // If ordertype flag passed
-    else if (argFlag == "extrema")
-    {
-        // Print message
-        std::cerr << "Incorrect extrema argument passed! Valid values are 'min' and 'max'.\n";
-    }
-    // If date flag passed
-    else if (argFlag == "date")
-    {
-        // Print message
-        std::cerr << "Incorrect date argument passed! Please check list of all available dates using 'dates' command.\n";
+        Errors::incrctCmd();
     }
 };

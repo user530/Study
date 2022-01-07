@@ -7,7 +7,13 @@ public:
     /* Constructor */
     Errors();
 
-    /* Incorrect cmd error */
+    /* Empty command error */
+    static void emptyCmd();
+
+    /* Long command error */
+    static void tooBigCmd();
+
+    /* Incorrect command error */
     static void incrctCmd();
 
     /* Incorrect product argument error */
@@ -27,4 +33,13 @@ public:
 
     /* Incorrect date argument error */
     static void incrctDate();
+
+    /* Incorrect timestamps argument error */
+    static void incrctTime();
+
+    /* Timestamps-date range error */
+    static void timeDateRange(const std::size_t);
+
+    /* Timestamps-orderbook range error */
+    static void timeBookRange(const std::size_t);
 };
