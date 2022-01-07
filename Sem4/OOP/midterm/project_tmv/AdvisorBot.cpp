@@ -402,19 +402,76 @@ void AdvisorBot::nextTurn()
 };
 
 /** C10) Plot Market Depth Chart */
-void AdvisorBot::plotGraph()
+void AdvisorBot::plotGraph(const std::string date,
+                           const std::string product,
+                           const std::string steps)
 {
-    // orderbook.printOrderbook(); // DELETE
+    // If date argument is incorrect
+    if (!orderbook.checkDateArg(date))
+    {
+        // Print error and stop execution
+        undefArgErr("date");
+        return;
+    }
 
-    // CHECK THAT DATE EXISTS, CHECK THAT DATE INCLUDE AT LEAST STEPS NUMBER OF PERIODS!
+    // If product argument is incorrect
+    if (!orderbook.checkProdArg(product))
+    {
+        // Print error and stop execution
+        undefArgErr("product");
+        return;
+    }
+    // Correct product, but no product data for requested date
+    else if (!orderbook.getDayPage(date).getDayProducts().count(product))
+    {
+        // Print error and stop execution
+        undefArgErr("prodDate");
+        return;
+    }
+
+    // Prepare variable for data type transformation
+    unsigned int stepsInt = 0;
+
+    // Try to convert string to int and check steps argument
     try
     {
-        orderbook.marketDepthChart(curDateTime.first, "ETH/BTC", 1);
+        // Argument in form of int
+        stepsInt = std::stoul(steps, nullptr);
     }
+    // Conversion failed, wrong argument
     catch (const std::exception &e)
     {
-        // Print error msg and prevent crash
-        std::cerr << e.what() << "\n";
+        // Print error and stop execution
+        std::cerr << "Timesteps argument is incorrect! Please pass valid number.\n\n";
+        return;
+    }
+
+    // Check that int is in range
+    if (orderbook.checkStampsInDate(date, stepsInt))
+    {
+        // Try to plot
+        try
+        {
+            // If range is valid -> plot and print chart
+            orderbook.marketDepthChart(date, product, stepsInt);
+        }
+        // Error in the process
+        catch (const std::exception &e)
+        {
+            // Print error msg and terminate
+            std::cerr << e.what() << "\n";
+            return;
+        }
+    }
+    // Number is out of range
+    else
+    {
+        // Print error and terminate
+        std::cerr << "Timesteps argument is out of range."
+                  << "There are total "
+                  << orderbook.getDayPage(date).getTimestamps().size()
+                  << " timestamp(s) in requested date.\n\n";
+        return;
     }
 };
 
@@ -577,12 +634,6 @@ void AdvisorBot::hadle2ArgCmd(std::string cmd, const std::string arg1, const std
         // Execute MAX command with arguments
         findMax(arg1, arg2);
     }
-    // Plot command passed
-    else if (cmd == "plot")
-    {
-        // Execute Plot command with arguments
-        plotGraph();
-    }
     // Invalid command string
     else
     {
@@ -610,6 +661,12 @@ void AdvisorBot::hadle3ArgCmd(std::string cmd, std::string arg1, std::string arg
     {
         // Execute AVG command with arguments
         predictPrice(arg1, arg2, arg3);
+    }
+    // Plot command passed
+    else if (cmd == "plot")
+    {
+        // Execute Plot command with arguments
+        plotGraph(arg1, arg2, arg3);
     }
     else
     {
@@ -643,6 +700,12 @@ void AdvisorBot::undefArgErr(std::string argFlag)
         // Print message
         std::cerr << "Incorrect product argument passed! Please check list of all valid products using 'prod' command.\n\n";
     }
+    // If product-date flag passed
+    else if (argFlag == "prodDate")
+    {
+        // Print message
+        std::cerr << "There is no product data for selected date! Please try another product or date. \n\n";
+    }
     // If ordertype flag passed
     else if (argFlag == "ordtype")
     {
@@ -654,5 +717,11 @@ void AdvisorBot::undefArgErr(std::string argFlag)
     {
         // Print message
         std::cerr << "Incorrect extrema argument passed! Valid values are 'min' and 'max'.\n\n";
+    }
+    // If date flag passed
+    else if (argFlag == "date")
+    {
+        // Print message
+        std::cerr << "Incorrect date argument passed! Please check list of all available dates using 'dates' command.\n\n";
     }
 };

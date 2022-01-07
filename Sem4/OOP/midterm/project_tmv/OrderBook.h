@@ -50,6 +50,12 @@ public:
     /** Check that timestamp argument is correct */
     bool checkTimestampArg(unsigned int);
 
+    /** Check that date argument is correct */
+    bool checkDateArg(std::string);
+
+    /** Check that number of periods  */
+    bool checkStampsInDate(std::string, unsigned int);
+
     /** Check that order extrema argument is correct */
     bool checkExtremaArg(std::string);
 
@@ -71,13 +77,40 @@ public:
     /* Print all sales in the requested period */
     void printSales(const std::string, const std::string);
 
-    /* Prepare market depth data vector as a base for a chart */
-    std::vector<double> marketDepthChart(const std::string,
-                                         const std::string,
-                                         const unsigned int);
+    /* Visualise the market data in the form of the depth data graph */
+    void marketDepthChart(const std::string,
+                          const std::string,
+                          const unsigned int);
 
     /* Calculate information about the X axis for the chart */
-    std::map<std::string, double> getXinfo(std::vector<OrdertypeGroup *> &asks,
-                                           std::vector<OrdertypeGroup *> &bids,
-                                           unsigned int columns = 120);
+    std::map<std::string, double> getXinfo(std::vector<OrdertypeGroup *> &,
+                                           std::vector<OrdertypeGroup *> &,
+                                           unsigned int);
+
+    /* Calculate information about the Y axis for the chart */
+    std::map<std::string, double> getYinfo(std::vector<double> &,
+                                           std::vector<double> &,
+                                           unsigned int);
+
+    /* Prepare yAxisData do add to the plot */
+    std::string yAxisRowData(const double, const double, const double, const int);
+
+    /* Plot the data */
+    std::string plodData(const std::vector<double> &,
+                         const std::vector<double> &,
+                         const unsigned int,
+                         const unsigned int,
+                         const double,
+                         const double,
+                         const double,
+                         const double,
+                         const double,
+                         const double);
+
+    /* Prepare buckets vector from all ordertype group pages of ceratin OrderType */
+    std::vector<double>
+    allPagesToBuckets(std::vector<OrdertypeGroup *> &,
+                      double,
+                      double,
+                      unsigned int);
 };

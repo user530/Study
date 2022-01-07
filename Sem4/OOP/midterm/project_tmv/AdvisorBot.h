@@ -10,7 +10,8 @@ private:
     std::pair<std::string, std::string> curDateTime;
 
     /** Orderbook */
-    Orderbook orderbook{"testdata.csv"};
+    // Orderbook orderbook{"testdata.csv"};
+    Orderbook orderbook{"testdata2.csv"};
 
     /** List of all valid commands */
     std::vector<std::string> cmds;
@@ -51,7 +52,7 @@ step */
     void nextTurn();
 
     /** C10) Plot Market Depth Chart */
-    void plotGraph();
+    void plotGraph(const std::string, const std::string, const std::string);
 
     /** Get user input */
     std::string getUserInput();

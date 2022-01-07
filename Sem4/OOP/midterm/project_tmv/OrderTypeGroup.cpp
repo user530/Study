@@ -446,6 +446,44 @@ std::pair<double, double> OrdertypeGroup::getPriceSpread(std::vector<OrdertypeGr
     return std::make_pair(max, min);
 };
 
+/** Function to get min and max values from the range of the order type pages
+ * @param OTPBucket vector of amounts of orders for different price ranges
+ * @return pair of values: max and min amount for the requested ordertype group
+ */
+std::pair<double, double> OrdertypeGroup::getAmountSpread(std::vector<double> &OTPBucket)
+{
+    // Initialize amount range variables
+    double min = 0, max = 0;
+
+    // If bucket vector is not empty
+    if (!OTPBucket.empty())
+    {
+        // Set amount range variables to the initial value
+        min = OTPBucket[0];
+        max = OTPBucket[0];
+
+        // Iterate over all buckets
+        for (const double amount : OTPBucket)
+        {
+            // If bucket amount is lesser than min
+            if (amount < min)
+                // Set new min value
+                min = amount;
+            // If bucket amount is bigger than max
+            else if (amount > max)
+                // Set new max value
+                max = amount;
+        }
+    }
+    // If empty vector passed -> throw error
+    else
+    {
+        throw std::invalid_argument("OrdertypeGroup::getAmountSpread - Empty vector passed!");
+    }
+
+    return std::make_pair(max, min);
+};
+
 /** Put all orders amounts into buckets depending on the price
  * @param buckets buckets vector that stores all amounts
  * @param minVal minimal value of the x-axis
@@ -460,9 +498,10 @@ void OrdertypeGroup::OrdTypeGrpToBuckets(std::vector<double> &buckets,
     {
         // Calculate the index to store the price amount (int will erase fraction)
         unsigned int ind = (order.price - minVal) / step;
-        // Move max value inside the last bucket manually
+        // If buckets size is out of range
         if (ind >= buckets.size())
         {
+            std::cerr << "OrdertypeGroup::OrdTypeGrpToBuckets - Index is out of bounds!\n";
             ind = buckets.size() - 1;
         }
         // Add order amount to the target bucket

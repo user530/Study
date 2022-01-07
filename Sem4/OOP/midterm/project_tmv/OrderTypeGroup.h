@@ -75,6 +75,7 @@ public:
     static OrdertypeGroup matchVectors(std::vector<OrdertypeGroup *> &,
                                        std::vector<OrdertypeGroup *> &);
     static std::pair<double, double> getPriceSpread(std::vector<OrdertypeGroup *> &);
+    static std::pair<double, double> getAmountSpread(std::vector<double> &);
     void OrdTypeGrpToBuckets(std::vector<double> &,
                              double,
                              double);

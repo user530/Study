@@ -303,6 +303,25 @@ bool Orderbook::checkTimestampArg(unsigned int timestepsArg)
     return (timestepsArg <= getTimestepsNum() && timestepsArg > 0);
 };
 
+/** Check that timestamp argument is correct
+ * @param dateArg date to collect data from the orderbook
+ * @return true if orderbook holds  requested date, false otherwise
+ */
+bool Orderbook::checkDateArg(std::string dateArg)
+{
+    return getAllDatetime().count(dateArg);
+};
+
+/** Check that date holds required number of timestamps */
+bool Orderbook::checkStampsInDate(std::string dateArg, unsigned int timestepsArg)
+{
+    return (timestepsArg <= _orderbook
+                                .at(dateArg)
+                                .getTimestamps()
+                                .size() &&
+            timestepsArg > 0);
+};
+
 /** Check that order extrema argument is correct
  * @param extremArg requested order extrema
  * @return true if corrected value is passed, false otherwise
@@ -561,14 +580,21 @@ void Orderbook::printSales(const std::string date, const std::string timestamp)
     }
 };
 
-/* Prepare market depth data vector as a base for a chart */
-std::vector<double> Orderbook::marketDepthChart(const std::string date,
-                                                const std::string product,
-                                                const unsigned int steps)
+/** Print the market data in the form of the depth data graph
+ * @param date date of the period to check orders
+ * @param prod product to visualize orders
+ * @param steps number of timesteps for the selected date to collect data
+ */
+void Orderbook::marketDepthChart(const std::string date,
+                                 const std::string product,
+                                 const unsigned int steps)
 {
-    const int cols = 120;
+    // Number of columns and rows
+    const unsigned int columns = 80;
+    const unsigned int rows = 10;
+
     // Result variable
-    std::vector<double> columns(cols, 0);
+    std::vector<double> result(columns + 1, 0);
 
     // Get all timestamps for the time range
     std::vector<std::string> timestamps = _orderbook.at(date).getTimestamps();
@@ -581,44 +607,41 @@ std::vector<double> Orderbook::marketDepthChart(const std::string date,
 
     // If there are no data at all -> throw an error to a caller to handle
     if (allAsks.empty() && allBids.empty())
-        throw(std::invalid_argument("Plot function error - Empty period, nothing to plot!"));
+        throw(std::invalid_argument("Plot function error - No orders for the requested product in the requested timestamp(s)!"));
 
     // Get data about X - axis
-    std::map<std::string, double> xInfo = getXinfo(allAsks, allBids, cols);
+    std::map<std::string, double> xInfo = getXinfo(allAsks, allBids, columns);
 
     // If there are single order -> throw an error to a caller to handle
     if (xInfo.at("col") == 0)
         throw(std::invalid_argument("Plot function error - Single order, nothing to plot!"));
 
-    // If there are ask groups
-    if (!allAsks.empty())
-    {
-        // Iterate over every group page
-        for (OrdertypeGroup *grpAddr : allAsks)
-        {
-            // And add order from this group to the buckets
-            grpAddr->OrdTypeGrpToBuckets(columns, xInfo.at("min"), xInfo.at("col"));
-        }
-    }
+    // Sort all ask orders into buckets
+    std::vector<double> askBucket = allPagesToBuckets(allAsks,
+                                                      xInfo.at("min"),
+                                                      xInfo.at("col"), columns);
 
-    // If there are bid groups
-    if (!allBids.empty())
-    {
-        // Iterate over every group page
-        for (OrdertypeGroup *grpAddr : allBids)
-        {
-            // And add order from this group to the buckets
-            grpAddr->OrdTypeGrpToBuckets(columns, xInfo.at("min"), xInfo.at("col"));
-        }
-    }
+    // Sort all bid orders into buckets
+    std::vector<double> bidBucket = allPagesToBuckets(allBids,
+                                                      xInfo.at("min"),
+                                                      xInfo.at("col"), columns);
 
-    return columns;
+    // Get data about Y - axis
+    std::map<std::string, double> yInfo = getYinfo(askBucket, bidBucket, rows);
+
+    // Prepare the graph based on all the data
+    std::string graph = plodData(askBucket, bidBucket, rows, columns,
+                                 xInfo.at("min"), xInfo.at("max"), xInfo.at("col"),
+                                 yInfo.at("min"), yInfo.at("max"), yInfo.at("row"));
+
+    // Print the graph
+    std::cout << graph << "\n\n";
 };
 
 /** Get required information about X - axis of the chart
  * @param asks vector of pointers to all suitable ask pages
  * @param bids vector of pointers to all suitable bid pages
- * @param columns number of columns in the graph (default - 120)
+ * @param columns number of columns in the graph
  * @return map containing values of "min" price, "max" price, and single column "col" value
  */
 std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> &asks,
@@ -672,4 +695,288 @@ std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> 
 
     // Return axis info
     return xInfo;
+};
+
+/** Get required information about Y - axis of the chart
+ * @param askBuckets vector of buckets containing amount values of ask orders
+ * @param bidBuckets vector of buckets containing amount values of bid orders
+ * @param rows number of rows in the graph
+ * @return map containing values of "min" amoint, "max" amoint, and single row "row" value
+ */
+std::map<std::string, double> Orderbook::getYinfo(std::vector<double> &askBuckets,
+                                                  std::vector<double> &bidBuckets,
+                                                  unsigned int rows)
+{
+    // Declare result variable containing information about y axis
+    std::map<std::string, double> yInfo;
+
+    // Initialize amount range variables
+    double maxBid = 0, maxAsk = 0, minBid = 0, minAsk = 0;
+
+    // Calculate bid spread
+    std::pair<double, double> bidSpread = OrdertypeGroup::getAmountSpread(bidBuckets);
+
+    // Set max and min values for bid
+    maxBid = bidSpread.first;
+    minBid = bidSpread.second;
+
+    // Calculate ask spread
+    std::pair<double, double> askSpread = OrdertypeGroup::getAmountSpread(askBuckets);
+
+    // Set max and min values for ask
+    maxAsk = askSpread.first;
+    minAsk = askSpread.second;
+
+    // Set y info: min and max amounts, and value of the single row
+    yInfo.insert({"min", std::min(minBid, minAsk)});
+    yInfo.insert({"max", std::max(maxBid, maxAsk)});
+    yInfo.insert({"row", (yInfo["max"] - yInfo["min"]) / rows});
+
+    // Return axis info
+    return yInfo;
+};
+
+/** Prepare yAxis data to add to the plot based on the row index */
+std::string Orderbook::yAxisRowData(const double yMax,
+                                    const double yMin,
+                                    const double yRow,
+                                    const int ind)
+{
+    // Prepare result variable
+    std::string result = "";
+
+    // Length of the max amount value
+    unsigned int yValMaxLen = std::to_string(yMax).size();
+
+    // Low boundary of the amount range (row)
+    double lowBound = (yMin + (yRow * ind));
+
+    // Amount value for the current row (highest boundary)
+    double highBound = (yMin + (yRow * (ind + 1)));
+
+    // Stringify amount value
+    std::string highBoundStr = std::to_string(highBound);
+
+    // Even rows with values, odd - empty
+    if (ind % 2 == 0)
+        result = highBoundStr;
+    else
+        result = std::string(yValMaxLen - result.size(), ' ');
+
+    // If value is too short, add some whitespaces to even out all values
+    if (highBoundStr.size() < yValMaxLen)
+    {
+        result = result + std::string(yValMaxLen - result.size(), ' ');
+    }
+
+    return result;
+};
+
+/** Build the graph from ask and bid buckets and return it in the form of the string
+ * @param askBucket vector of buckets containing amount values of ask orders
+ * @param bidBucket vector of buckets containing amount values of bid orders
+ * @param rows number of rows in the plot
+ * @param columns number of columns in the plot
+ * @param xMin minimum price bucket value
+ * @param xMax maximum price bucket value
+ * @param xStep price difference of the single column
+ * @param yMin minimum amount value of the orders in the bucket
+ * @param yMax minimum amount value of the orders in the bucket
+ * @param yStep amount difference of the single row
+ * @return market depth data visualised in the form of the string
+ */
+std::string Orderbook::plodData(const std::vector<double> &askBucket,
+                                const std::vector<double> &bidBucket,
+                                const unsigned int rows,
+                                const unsigned int columns,
+                                const double xMin,
+                                const double xMax,
+                                const double xStep,
+                                const double yMin,
+                                const double yMax,
+                                const double yStep)
+{
+    // Prepare graph
+    std::string graph = "\n\n";
+
+    // Prepare variable to calculate yAxis data field length
+    unsigned int xAxisOffset = 0;
+
+    // Iterate for every row
+    for (int i = (rows - 1); i >= 0; --i)
+    {
+        // Prepare row
+        std::string row = "";
+
+        // Low boundary of the amount range (row)
+        double lowBound = yMin + yStep * i;
+
+        // Prepare yAxis Value consisting from the data and offset
+        std::string yAxisValue = yAxisRowData(yMax, yMin, yStep, i) + "   |";
+
+        // Save the size of the yAxis value as offset for the xAxis
+        xAxisOffset = yAxisValue.size();
+
+        // Add yAxis value to row
+        row += yAxisValue;
+
+        // Different char sets
+        // (https://stackoverflow.com/questions/24281603/c-underline-output)
+        char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
+        char green[] = {0x1b, '[', '0', ';', '3', '2', 'm', 0};
+        char yellow[] = {0x1b, '[', '0', ';', '3', '3', 'm', 0};
+        char blue[] = {0x1b, '[', '0', ';', '3', '4', 'm', 0};
+        char undrLineGreen[] = {0x1b, '[', '4', ';', '3', '2', 'm', 0};
+        char undrLineYellow[] = {0x1b, '[', '4', ';', '3', '3', 'm', 0};
+        char undrLineBlue[] = {0x1b, '[', '4', ';', '3', '4', 'm', 0};
+
+        // Iterate for every column
+        for (unsigned int j = 0; j <= columns; ++j)
+        {
+            // If there are both ask and bid orders in this price range
+            if (bidBucket[j] > lowBound && askBucket[j] > lowBound)
+            {
+                // If not last row -> just add colored
+                if (i != 0)
+                {
+                    // Mark with cross (we add color, char and then return color)
+                    row += yellow;
+                    row += "X";
+                    row += normal;
+                }
+                // Else, colored and underlined
+                else
+                {
+                    // Mark with colored and underlined cross
+                    row += undrLineYellow;
+                    row += "X";
+                    row += normal;
+                }
+            }
+            // If there are only bid orders in this price range
+            else if (bidBucket[j] > lowBound)
+            {
+                // If not last row -> just add colored
+                if (i != 0)
+                {
+                    // Mark with backslash (bids are on the left)
+                    row += green;
+                    row += "\\";
+                    row += normal;
+                }
+                // Else, colored and underlined
+                else
+                {
+                    // Mark with colored and underlined backslah
+                    row += undrLineGreen;
+                    row += "\\";
+                    row += normal;
+                }
+            }
+            // If there are only ask orders in this price range
+            else if (askBucket[j] > lowBound)
+            {
+                // If not last row -> just add colored
+                if (i != 0)
+                {
+                    // Mark with slash (asks are on the right)
+                    row += blue;
+                    row += "/";
+                    row += normal;
+                }
+                // Else, colored and underlined
+                else
+                {
+                    // Mark with colored and underlined slash
+                    row += undrLineBlue;
+                    row += "/";
+                    row += normal;
+                }
+            }
+            // If there are no orders in this price range
+            else
+            {
+                // If not last row
+                if (i != 0)
+                {
+                    // Mark with whitespace
+                    row += " ";
+                }
+                // Else, last row
+                else
+                {
+                    // Mark with underline
+                    row += "_";
+                }
+            }
+        }
+
+        // Add new row to the graph
+        graph += (row + "\n");
+    }
+
+    // Set the mark to the minimal price range
+    std::string xAxis1 = std::string(xAxisOffset, ' ') + '|';
+    // Add the first marking to the graph
+    graph += xAxis1;
+
+    // Prepare variable for the quarter of the range
+    unsigned int quart = (columns / 4);
+
+    // Add 25% markings on the x axis
+    for (unsigned int i = 0; i < 4; ++i)
+        graph += std::string(quart - 1, ' ') + '|';
+
+    // Move to the next line
+    graph += '\n';
+
+    // Stringify max value
+    std::string xMaxStr = std::to_string(xMax);
+
+    // Initial marking (we shift, based on the difference in size)
+    graph += std::string(xAxis1.size() - xMaxStr.size() / 2, ' ') + std::to_string(xMin);
+
+    // Iterate 4 times to add 25% markings
+    for (unsigned int i = 1; i < 5; ++i)
+    {
+        // Add to the graph another markings
+        graph += std::string(quart - xMaxStr.size(), ' ') +
+                 std::to_string(xMin + i * quart * xStep);
+    }
+
+    // Add information about the graph data representation
+    graph += "\n\nRange-amount cell with only ask orders is marked as blue '/' symbol. \n";
+    graph += "Range-amount cell with only bid orders is marked as green '\\' symbol. \n";
+    graph += "Range-amount cell with both ask and bid orders is marked as yellow 'X' symbol.";
+
+    return graph;
+};
+
+/** Sort orders from all groups in container
+ * @param ordTypePages container holding all applicable ordertype groups
+ * @param minXValue minimal value for the x axis
+ * @param XStepValue step value (price range) of single bucket
+ * @param columns number of columns in the graph
+ * @return vector of buckets containing amount of orders for different price range
+ */
+std::vector<double> Orderbook::allPagesToBuckets(std::vector<OrdertypeGroup *> &ordTypePages,
+                                                 double minXValue,
+                                                 double XStepValue,
+                                                 unsigned int columns)
+{
+    // Result buckets vector
+    std::vector<double> result(columns + 1, 0);
+
+    // If group is not empty
+    if (!ordTypePages.empty())
+    {
+        // Iterate over every group page
+        for (OrdertypeGroup *grpAddr : ordTypePages)
+        {
+            // And add order from this group to the result
+            grpAddr->OrdTypeGrpToBuckets(result, minXValue, XStepValue);
+        }
+    }
+
+    return result;
 };
