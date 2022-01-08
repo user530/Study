@@ -1,5 +1,6 @@
 #include "DayData.h"
 
+/** Constructor function */
 DayData::DayData(){};
 
 /** Function to add new product page to the timestamp page
@@ -42,7 +43,7 @@ TimestampPage &DayData::getTimestampPage(const std::string timeStr)
     }
 }
 
-/** Get daily orders for this day */
+/** Get all timestamp pages for this date */
 std::map<std::string, TimestampPage> &DayData::getDailyOrders()
 {
     return _dailyOrders;

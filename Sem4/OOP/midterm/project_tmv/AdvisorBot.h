@@ -11,7 +11,8 @@ private:
 
     /** Orderbook */
     // Orderbook orderbook{"testdata.csv"};
-    Orderbook orderbook{"testdata2.csv"};
+    // Orderbook orderbook{"testdata2.csv"};
+    Orderbook orderbook{"20200601.csv"};
 
     /** List of all valid commands */
     std::vector<std::string> cmds;
@@ -26,7 +27,7 @@ private:
     void printHelp();
 
     /** C2) Output help for the speciﬁed command */
-    void printCmdHelp(std::string);
+    void printCmdHelp(const std::string);
 
     /** C3) List available products */
     void printProducts();
@@ -63,11 +64,8 @@ step */
     /** Get user input */
     std::string getUserInput();
 
-    /** Parse unit input into vector of the strings */
-    std::vector<std::string> parseUserInput(std::string);
-
     /** Process user input */
-    void processUserInput(std::vector<std::string>);
+    void processUserInput(const std::vector<std::string>);
 
     /** Handle single line commands */
     void hadleSingleCmd(const std::string);
@@ -84,6 +82,7 @@ step */
 public:
     /** Constructor function */
     AdvisorBot();
+
     /** Initialize application */
     void init();
 };

@@ -75,7 +75,7 @@ void AdvisorBot::printHelp()
 /** C2) Output detailed help for the speciﬁed command
  * @param cmd name of the command
  */
-void AdvisorBot::printCmdHelp(std::string cmd)
+void AdvisorBot::printCmdHelp(const std::string cmd)
 {
     // If user request information about help command
     if (cmd == "help")
@@ -560,7 +560,7 @@ std::string AdvisorBot::getUserInput()
 /** Processes token string and responds with appropriate action
  * @param cmdVector-vector of strings defining user's command
  */
-void AdvisorBot::processUserInput(std::vector<std::string> cmdVector)
+void AdvisorBot::processUserInput(const std::vector<std::string> cmdVector)
 {
     // Check cmd string size and route to appropriate response
     switch (cmdVector.size())
@@ -656,7 +656,7 @@ void AdvisorBot::hadleSingleCmd(std::string cmd)
     else if (cmd == "struct")
     {
         // Print structured orderbook
-        orderbook.printOrderbook();
+        printStruct();
     }
 
     // Dates command

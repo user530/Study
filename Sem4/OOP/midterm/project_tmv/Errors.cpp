@@ -1,13 +1,13 @@
 #include "Errors.h"
 
-/* Empty command error */
+/** Empty command error */
 void Errors::emptyCmd()
 {
     std::cerr << "Input error - Empty line!\n"
               << "Please enter valid command.\n";
 };
 
-/* Long command error */
+/** Long command error */
 void Errors::tooBigCmd()
 {
     std::cerr << "Input error - Too many arguments passed!\n"

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <regex>
 
+/** Constructor function */
 CSVReader::CSVReader(){};
 
 /** Break string into vector of strings based on the separator
@@ -237,7 +238,7 @@ Order CSVReader::strToOrder(const std::string priceStr, const std::string amount
     return Order{price, amount};
 };
 
-/** Date-time token split
+/** Split date-time token into pair of values - date and time
  * @param datetimeStr string containing information about day and time
  * @return pair of strings where first one is date, and other one is timestamp
  * */
@@ -284,6 +285,7 @@ bool CSVReader::checkTokensLength(const int vectorLength, const unsigned int lin
 
 /** Check that date time can be split
  * @param datetimeStr string containing information about day and time
+ * @param line current CSV line
  * @return true if valid, false if not
  * */
 bool CSVReader::checkDateTimeToken(const std::string datetimeStr, const unsigned int line)

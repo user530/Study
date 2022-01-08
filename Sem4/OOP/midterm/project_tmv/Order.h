@@ -6,14 +6,11 @@ class Order
 {
 public:
     /** Constructor */
-    Order(double, double, std::string = "none", std::string = "none");
+    Order(const double, const double);
 
     /** Order price */
     double price;
+
     /** Order amount */
     double amount;
-    /** Order buyer */
-    std::string buyer;
-    /** Order seller */
-    std::string seller;
 };

@@ -279,7 +279,7 @@ std::pair<std::string, std::string> Orderbook::getInitialDatetime()
  * @param prodArg product name string
  * @return true if product exists in the orderbook, false otherwise
  */
-bool Orderbook::checkProdArg(std::string prodArg)
+bool Orderbook::checkProdArg(const std::string prodArg)
 {
     // If product exists return 1 (true), else return 0 (false)
     return getAllProducts().count(prodArg);
@@ -289,7 +289,7 @@ bool Orderbook::checkProdArg(std::string prodArg)
  * @param ordtypeArg ordertype to check
  * @return true if correct argument value is passed, false otherwise
  */
-bool Orderbook::checkOTPArg(OrderType ordtypeArg)
+bool Orderbook::checkOTPArg(const OrderType &ordtypeArg)
 {
     return (ordtypeArg != OrderType::unknown);
 };
@@ -298,7 +298,7 @@ bool Orderbook::checkOTPArg(OrderType ordtypeArg)
  * @param timestepsArg number of timesteps for the command to handle
  * @return true if orderbook holds  requested number of periods and arg > 0, false otherwise
  */
-bool Orderbook::checkTimestampArg(unsigned int timestepsArg)
+bool Orderbook::checkTimestampArg(const unsigned int timestepsArg)
 {
     return (timestepsArg <= getTimestepsNum() && timestepsArg > 0);
 };
@@ -307,13 +307,14 @@ bool Orderbook::checkTimestampArg(unsigned int timestepsArg)
  * @param dateArg date to collect data from the orderbook
  * @return true if orderbook holds  requested date, false otherwise
  */
-bool Orderbook::checkDateArg(std::string dateArg)
+bool Orderbook::checkDateArg(const std::string dateArg)
 {
     return getAllDatetime().count(dateArg);
 };
 
 /** Check that date holds required number of timestamps */
-bool Orderbook::checkStampsInDate(std::string dateArg, unsigned int timestepsArg)
+bool Orderbook::checkStampsInDate(const std::string dateArg,
+                                  const unsigned int timestepsArg)
 {
     return (timestepsArg <= _orderbook
                                 .at(dateArg)
@@ -326,7 +327,7 @@ bool Orderbook::checkStampsInDate(std::string dateArg, unsigned int timestepsArg
  * @param extremArg requested order extrema
  * @return true if corrected value is passed, false otherwise
  */
-bool Orderbook::checkExtremaArg(std::string extremArg)
+bool Orderbook::checkExtremaArg(const std::string extremArg)
 {
     return (extremArg == "min" || extremArg == "max");
 };
@@ -336,8 +337,8 @@ bool Orderbook::checkExtremaArg(std::string extremArg)
  * @param time current timestamp string
  * @return pair of values: date and timestamp
  */
-std::pair<std::string, std::string> Orderbook::nextPeriod(std::string date,
-                                                          std::string time)
+std::pair<std::string, std::string> Orderbook::nextPeriod(const std::string date,
+                                                          const std::string time)
 {
     // Get all known date-times
     std::map<std::string, std::vector<std::string>> datetimes = getAllDatetime();
@@ -646,7 +647,7 @@ void Orderbook::marketDepthChart(const std::string date,
  */
 std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> &asks,
                                                   std::vector<OrdertypeGroup *> &bids,
-                                                  unsigned int columns)
+                                                  const unsigned int columns)
 {
     // Declare result variable containing information about x axis
     std::map<std::string, double> xInfo;
@@ -705,7 +706,7 @@ std::map<std::string, double> Orderbook::getXinfo(std::vector<OrdertypeGroup *> 
  */
 std::map<std::string, double> Orderbook::getYinfo(std::vector<double> &askBuckets,
                                                   std::vector<double> &bidBuckets,
-                                                  unsigned int rows)
+                                                  const unsigned int rows)
 {
     // Declare result variable containing information about y axis
     std::map<std::string, double> yInfo;
@@ -959,10 +960,10 @@ std::string Orderbook::plodData(const std::vector<double> &askBucket,
  * @param columns number of columns in the graph
  * @return vector of buckets containing amount of orders for different price range
  */
-std::vector<double> Orderbook::allPagesToBuckets(std::vector<OrdertypeGroup *> &ordTypePages,
-                                                 double minXValue,
-                                                 double XStepValue,
-                                                 unsigned int columns)
+std::vector<double> Orderbook::allPagesToBuckets(const std::vector<OrdertypeGroup *> &ordTypePages,
+                                                 const double minXValue,
+                                                 const double XStepValue,
+                                                 const unsigned int columns)
 {
     // Result buckets vector
     std::vector<double> result(columns + 1, 0);

@@ -2,16 +2,9 @@
 #include <iostream>
 
 /** Constructor function for the single order
- * @param id identification number
- * @param price order price
- * @param amount order amount
- * @param buyer order buyer, if not specified set to - "none"
- * @param seller order seller, if not specified set to - "none"
+ * @param argPrice order price
+ * @param argAmount order amount
  */
-Order::Order(double argPrice,
-             double argAmount,
-             std::string argBuyer,
-             std::string argSeller) : price(argPrice),
-                                      amount(argAmount),
-                                      buyer(argBuyer),
-                                      seller(argSeller){};
+Order::Order(const double argPrice,
+             const double argAmount) : price(argPrice),
+                                       amount(argAmount){};

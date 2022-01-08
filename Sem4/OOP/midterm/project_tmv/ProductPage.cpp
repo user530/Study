@@ -7,7 +7,6 @@ ProductPage::ProductPage(){};
  * @param groupType ordertype of the ordergroup (bid,ask,sale)
  * @param ordertypeGroup group object that holds related orders
  * */
-// void ProductPage::addOrdertypeGroup(const std::string groupType, const OrdertypeGroup &ordertypeGroup)
 void ProductPage::addOrdertypeGroup(const OrderType &groupType, const OrdertypeGroup &ordertypeGroup)
 {
     //  Insert selected ordertypeGroup associated with the required groupType

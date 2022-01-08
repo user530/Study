@@ -235,7 +235,7 @@ void OrdertypeGroup::updateMetaErase(const double price,
  * @param ordTypePages vector of addresses to ordertype groups
  * @return address to the ordertype group with highest price order
  */
-OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup *> &ordTypePages)
+OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(const std::vector<OrdertypeGroup *> &ordTypePages)
 {
     // Check argument before start -> print error msg and return nullptr if empty
     if (ordTypePages.empty())
@@ -270,7 +270,7 @@ OrdertypeGroup *OrdertypeGroup::getMaxPriceContainer(std::vector<OrdertypeGroup 
  * @param ordTypePages vector of addresses to ordertype groups
  * @return address to the ordertype group with lowest price order
  */
-OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup *> &ordTypePages)
+OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(const std::vector<OrdertypeGroup *> &ordTypePages)
 {
     // Check argument before start -> print error msg and return nullptr if empty
     if (ordTypePages.empty())
@@ -306,8 +306,8 @@ OrdertypeGroup *OrdertypeGroup::getMinPriceContainer(std::vector<OrdertypeGroup 
  *  @param bids vector of pointers to all suitable bid pages
  *  @return 'sales' group page, containing all deals from this period
  */
-OrdertypeGroup OrdertypeGroup::matchVectors(std::vector<OrdertypeGroup *> &asks,
-                                            std::vector<OrdertypeGroup *> &bids)
+OrdertypeGroup OrdertypeGroup::matchVectors(const std::vector<OrdertypeGroup *> &asks,
+                                            const std::vector<OrdertypeGroup *> &bids)
 {
     // Prepare result variable
     OrdertypeGroup sales{};
@@ -430,7 +430,7 @@ OrdertypeGroup OrdertypeGroup::matchVectors(std::vector<OrdertypeGroup *> &asks,
  * @param ordTypePages vector of addresses to ordertype groups
  * @return pair of values: max and min prices for the requested ordertype group
  */
-std::pair<double, double> OrdertypeGroup::getPriceSpread(std::vector<OrdertypeGroup *> &ordTypePages)
+std::pair<double, double> OrdertypeGroup::getPriceSpread(const std::vector<OrdertypeGroup *> &ordTypePages)
 {
     // Initialize price range variables
     double min = 0, max = 0;
@@ -450,7 +450,7 @@ std::pair<double, double> OrdertypeGroup::getPriceSpread(std::vector<OrdertypeGr
  * @param OTPBucket vector of amounts of orders for different price ranges
  * @return pair of values: max and min amount for the requested ordertype group
  */
-std::pair<double, double> OrdertypeGroup::getAmountSpread(std::vector<double> &OTPBucket)
+std::pair<double, double> OrdertypeGroup::getAmountSpread(const std::vector<double> &OTPBucket)
 {
     // Initialize amount range variables
     double min = 0, max = 0;
@@ -490,8 +490,8 @@ std::pair<double, double> OrdertypeGroup::getAmountSpread(std::vector<double> &O
  * @param step step value of the x-axis
  */
 void OrdertypeGroup::OrdTypeGrpToBuckets(std::vector<double> &buckets,
-                                         double minVal,
-                                         double step)
+                                         const double minVal,
+                                         const double step)
 {
     // Iterate over every order in the order list
     for (const Order &order : _orderList)
