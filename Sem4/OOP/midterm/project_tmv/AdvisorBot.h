@@ -11,8 +11,8 @@ private:
 
     /** Orderbook */
     // Orderbook orderbook{"testdata.csv"};
-    // Orderbook orderbook{"testdata2.csv"};
-    Orderbook orderbook{"20200601.csv"};
+    Orderbook orderbook{"testdata2.csv"};
+    // Orderbook orderbook{"20200601.csv"};
 
     /** List of all valid commands */
     std::vector<std::string> cmds;
