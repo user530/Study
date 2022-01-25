@@ -60,12 +60,12 @@ private:
     double songLen;     // Length of the song
 
     // File player
-    juce::AudioFormatManager formatManager;                                 // Inner layer of file player
-    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;            // Mid layer of file player
-    juce::AudioTransportSource transportSource;                             // Outer layer of file player
-    juce::ResamplingAudioSource resampleSource{&transportSource, false};    // Transport source wrapper, allow playback speed alteration
+    //juce::AudioFormatManager formatManager;                                 // Inner layer of file player
+    //std::unique_ptr<juce::AudioFormatReaderSource> readerSource;            // Mid layer of file player
+    //juce::AudioTransportSource transportSource;                             // Outer layer of file player
+    //juce::ResamplingAudioSource resampleSource{&transportSource, false};    // Transport source wrapper, allow playback speed alteration
 
-    void loadURL(juce::URL);    // File loader
+    //void loadURL(juce::URL);    // File loader
 
     DJAudioPlayer player1;
 

@@ -33,5 +33,6 @@ class DJAudioPlayer: public juce::AudioSource{
         juce::AudioFormatManager formatManager;
         std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
         juce::AudioTransportSource transportSource;
+        juce::ResamplingAudioSource resampleSource{&transportSource, false};
 
 };

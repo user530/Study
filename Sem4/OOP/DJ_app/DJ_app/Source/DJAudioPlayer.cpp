@@ -21,10 +21,13 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
     // Pass the job to the transport layer
     transportSource.prepareToPlay(sampleRate, sampleRate);
+
+    // Also, pass to the wrapper
+    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 };
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill){
     // Pass the job to the transport layer
-    transportSource.getNextAudioBlock(bufferToFill);
+    resampleSource.getNextAudioBlock(bufferToFill);
 };
 void DJAudioPlayer::releaseResources(){
     // Pass the job to the transport layer
@@ -54,9 +57,27 @@ void DJAudioPlayer::loadURL(juce::URL audioURL){
         readerSource.reset(newSource.release());
     }
 };
-void DJAudioPlayer::setGain(double gain){};
-void DJAudioPlayer::setSpeed(double ratio){};
-void DJAudioPlayer::setPosition(double posInSecs){};
+void DJAudioPlayer::setGain(double gain){
+    // Set volume 
+    transportSource.setGain(gain);
+};
+void DJAudioPlayer::setSpeed(double ratio){
+    // Set speed
+    resampleSource.setResamplingRatio(ratio);
+};
+void DJAudioPlayer::setPosition(double posInSecs){
+    // Set position 
+    transportSource.setPosition(posInSecs);
+};
 
-void DJAudioPlayer::start(){};
-void DJAudioPlayer::stop(){};
+
+void DJAudioPlayer::start(){
+    // Set position to the start
+    transportSource.setPosition(0.0);
+    // Start the player
+    transportSource.start();
+};
+void DJAudioPlayer::stop(){
+    // Stop the player
+    transportSource.stop();
+};

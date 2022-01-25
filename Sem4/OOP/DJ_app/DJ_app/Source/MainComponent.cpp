@@ -76,14 +76,16 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
 
 
     // =====================================Load files
-    // Tell the format manager to register all formats
-    formatManager.registerBasicFormats();
+    //// Tell the format manager to register all formats
+    //formatManager.registerBasicFormats();
 
-    // Because now transport source will play -> we pass this job to it, along with arguments from the MainComponent::prepareToPlay
-    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    // Also, pass to the wrapper
-    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    //// Because now transport source will play -> we pass this job to it, along with arguments from the MainComponent::prepareToPlay
+    //transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    //// Also, pass to the wrapper
+    //resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 
+    // Pass the job to the AudioPlayerComponent
+    player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 //=========================================================================================AudioSyntesize
@@ -166,7 +168,10 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         //// Simmilar to the MainComponent::prepareToPlay, we pass this job down to the transport source (+arguments)
         //transportSource.getNextAudioBlock(bufferToFill);
         // Because now the outmost audio layer is resampleSource, pass this job to it
-        resampleSource.getNextAudioBlock(bufferToFill);
+        //resampleSource.getNextAudioBlock(bufferToFill);
+
+        // Pass the job to the AudioPlayerComponent
+        player1.getNextAudioBlock(bufferToFill);
     }
 
     // Get current time
@@ -184,7 +189,10 @@ void MainComponent::releaseResources()
     // For more details, see the help for AudioProcessor::releaseResources()
 
     // Simmilar to the MainComponent::prepareToPlay, we pass this job down to the transport source (+arguments)
-    transportSource.releaseResources();
+    //transportSource.releaseResources();
+
+    // Pass the job to the AudioPlayerComponent
+    player1.releaseResources();
 }
 
 //==============================================================================
@@ -231,9 +239,12 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
         dPhase = 0;
 
         // Start from the begining
-        transportSource.setPosition(0.0);
+        //transportSource.setPosition(0.0);
         // Start on the transport source level
-        transportSource.start();
+        //transportSource.start();
+
+        // Pass the job to the AudioPlayerComponent
+        player1.start();
     }
     else if (btnP == &stopButton) {
         DBG("Stop button was clicked! Stop playing... \n");
@@ -241,7 +252,10 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
         playing = false;
 
         // Stop playing
-        transportSource.stop();
+        //transportSource.stop();
+
+        // Pass the job to the AudioPlayerComponent
+        player1.stop();
     }
     else if (btnP == &loadFile) {
         DBG("Load file was clicked!... \n");
@@ -251,16 +265,16 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
         // If user selects file
         if (chooser.browseForFileToOpen()){
             // Load audio file from the URL of the selected file
-            loadURL(juce::URL{ chooser.getResult() });
+            player1.loadURL(juce::URL{ chooser.getResult() });
         }
 
         // Get time 
-        songLen = transportSource.getLengthInSeconds();
+        //songLen = transportSource.getLengthInSeconds();
 
-        DBG("Song length:" + std::to_string(songLen));
+        //DBG("Song length:" + std::to_string(songLen));
 
         // Set timeslider
-        setTime();
+        //setTime();
     }
 };
 
@@ -271,7 +285,7 @@ void MainComponent::sliderValueChanged(juce::Slider* sldP) {
         // Get value from the slider
         gain = volSlider.getValue();
         // Set volume 
-        transportSource.setGain(gain);
+        player1.setGain(gain);
 
     }
     else if (sldP == &speedSlider) {
@@ -280,7 +294,7 @@ void MainComponent::sliderValueChanged(juce::Slider* sldP) {
         // Get speed from the slider
         speed = speedSlider.getValue();
         // Set speed
-        resampleSource.setResamplingRatio(speed);
+        player1.setSpeed(speed);
     }
     else if (sldP == &timeSlider) {
         DBG("Timeslider is fired!");
@@ -288,33 +302,7 @@ void MainComponent::sliderValueChanged(juce::Slider* sldP) {
         // Get timestamp
         timestamp = timeSlider.getValue();
         // Set timestamp
-        transportSource.setPosition(timestamp);
-    }
-};
-
-void MainComponent::loadURL(juce::URL fileURL) {
-
-    // Create URL from the file
-    //juce::URL audioURL{ "file:///F:/Study/Sem4/OOP/DJ_app/DJ_app/tracks/aon_inspired.mp3" };
-
-    // Convert URL into input stream and Create reader from the input stream
-    auto* reader = formatManager.createReaderFor(fileURL.createInputStream(false));
-    // Check that file converted successfully
-    if (reader == nullptr)
-    {
-        DBG("FAILED TO LOAD AUDIO FILE!");
-    }
-    if (reader != nullptr)
-    {
-        // Create source from the converted Reader
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader, false));
-        // Create transport source from the ReaderSource
-        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-        /* Unique pointers are unique, so only one item can use them
-           If there is a problem with creating FormatReaderSource ->
-           local variable will cease to exist and release memory when function ends
-           But if everything is ok, we need to transfer pointer to the class scope variable  */
-        readerSource.reset(newSource.release());
+        player1.setPosition(timestamp);
     }
 };
 
