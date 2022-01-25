@@ -58,16 +58,57 @@ void DJAudioPlayer::loadURL(juce::URL audioURL){
     }
 };
 void DJAudioPlayer::setGain(double gain){
-    // Set volume 
-    transportSource.setGain(gain);
+    // Check the argument
+    if (gain < 0 || gain > 2) {
+        DBG("Gain argument is out of range. Should be between 0 and 2!");
+        return;
+    }
+    // If argument is OK
+    else {
+        // Set volume 
+        transportSource.setGain(gain);
+    }
 };
 void DJAudioPlayer::setSpeed(double ratio){
-    // Set speed
-    resampleSource.setResamplingRatio(ratio);
+    // Check the argument
+    if (ratio < 0 || ratio > 10) {
+        DBG("Ratio argument is out of range. Should be between 0 and 10!");
+        return;
+    }
+    // If argument is OK
+    else {
+        // Set speed
+        resampleSource.setResamplingRatio(ratio);
+    }
 };
 void DJAudioPlayer::setPosition(double posInSecs){
-    // Set position 
-    transportSource.setPosition(posInSecs);
+    // Get track length
+    double trackLen = transportSource.getLengthInSeconds();
+    // Check the argument
+    if (posInSecs < 0 || posInSecs > trackLen) {
+        DBG("PositionInSecs argument is out of range. Should be between 0 and " +
+            std::to_string(trackLen));
+        return;
+    }
+    // If argument is OK
+    else {
+        // Set volume 
+        transportSource.setPosition(posInSecs);
+    }
+    };
+void DJAudioPlayer::setPositionRelative(double pos){
+    // Check the argument
+    if (pos < 0 || pos > 1) {
+        DBG("Position argument is out of range. Should be between 0 and 1!");
+        return;
+    }
+    // If argument is OK
+    else {
+        // Calculate the position
+        double posInSecs = transportSource.getLengthInSeconds() * pos;
+        // Set position
+        setPosition(posInSecs);
+    }
 };
 
 

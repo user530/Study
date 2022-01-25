@@ -36,6 +36,9 @@ MainComponent::MainComponent()
     speedSlider.setRange(0.1, 8.0); // Limit speed from 10% to 800%
     speedSlider.setValue(1.0);      // Set initial speed to 100%
 
+    timeSlider.setRange(0.0, 1.0);  // Limit relative position from 0% to 100%
+    timeSlider.setValue(0.0);       // Set initial relative position to 0%
+
     playButton.addListener(this);   // Add listener to play btn
     stopButton.addListener(this);   // Add listener to stop btn
     loadFile.addListener(this);     // Add listener to load file btn
@@ -281,28 +284,22 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
 void MainComponent::sliderValueChanged(juce::Slider* sldP) {
     if (sldP == &volSlider) {
         DBG("Volumeslider is fired!");
-        
-        // Get value from the slider
-        gain = volSlider.getValue();
+
         // Set volume 
-        player1.setGain(gain);
+        player1.setGain(sldP->getValue());
 
     }
     else if (sldP == &speedSlider) {
         DBG("Speedslider is fired!");
 
-        // Get speed from the slider
-        speed = speedSlider.getValue();
         // Set speed
-        player1.setSpeed(speed);
+        player1.setSpeed(sldP->getValue());
     }
     else if (sldP == &timeSlider) {
         DBG("Timeslider is fired!");
 
-        // Get timestamp
-        timestamp = timeSlider.getValue();
         // Set timestamp
-        player1.setPosition(timestamp);
+        player1.setPositionRelative(sldP->getValue());
     }
 };
 
