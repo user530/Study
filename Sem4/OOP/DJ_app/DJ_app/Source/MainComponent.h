@@ -47,6 +47,8 @@ private:
 
     // Controls
     bool playing;
+    void setTime();
+    void updateTime(double);
 
     // Sound
     double phase;       // Main phase (so there is no discontinuties between the different samples
@@ -54,6 +56,7 @@ private:
     double gain;        // Sound volume/gain
     double speed;       // Player speed
     double timestamp;   // Timestamp
+    double songLen;     // Length of the song
 
     // File player
     juce::AudioFormatManager formatManager;                                 // Inner layer of file player

@@ -30,7 +30,11 @@ MainComponent::MainComponent()
     addAndMakeVisible(speedSlider); // Speed slider
     addAndMakeVisible(timeSlider);  // Timestamp slider
 
-    volSlider.setRange(0, 1);   // Limit volume from 0 to 1
+    volSlider.setRange(0.0, 2.0);   // Limit volume from 0% to 200%
+    volSlider.setValue(1.0);        // Set initial volume to 100%
+
+    speedSlider.setRange(0.1, 8.0); // Limit speed from 10% to 800%
+    speedSlider.setValue(1.0);      // Set initial speed to 100%
 
     playButton.addListener(this);   // Add listener to play btn
     stopButton.addListener(this);   // Add listener to stop btn
@@ -67,18 +71,19 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     dPhase = 0.0001;
     gain = 1;
     speed = 1;
-    timestamp = 0;
+    timestamp = 0.0;
+    songLen = 0.0;
 
 
     // =====================================Load files
     // Tell the format manager to register all formats
     formatManager.registerBasicFormats();
 
-
     // Because now transport source will play -> we pass this job to it, along with arguments from the MainComponent::prepareToPlay
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     // Also, pass to the wrapper
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+
 }
 
 //=========================================================================================AudioSyntesize
@@ -163,6 +168,12 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         // Because now the outmost audio layer is resampleSource, pass this job to it
         resampleSource.getNextAudioBlock(bufferToFill);
     }
+
+    // Get current time
+    //double curTime = transportSource.getCurrentPosition();
+    // Update slider
+    //timeSlider.setValue(curTime);
+    //updateTime(curTime);
 }
 
 void MainComponent::releaseResources()
@@ -181,8 +192,6 @@ void MainComponent::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    // You can add your drawing code here!
 
 }
 
@@ -222,7 +231,7 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
         dPhase = 0;
 
         // Start from the begining
-        transportSource.setPosition(0);
+        transportSource.setPosition(0.0);
         // Start on the transport source level
         transportSource.start();
     }
@@ -238,12 +247,20 @@ void MainComponent::buttonClicked(juce::Button* btnP) {
         DBG("Load file was clicked!... \n");
         // Create file chooser window
         juce::FileChooser chooser{"Select a file..."};
+
         // If user selects file
         if (chooser.browseForFileToOpen()){
             // Load audio file from the URL of the selected file
             loadURL(juce::URL{ chooser.getResult() });
         }
-        DBG("Song length is "+std::to_string(transportSource.getLengthInSeconds()));
+
+        // Get time 
+        songLen = transportSource.getLengthInSeconds();
+
+        DBG("Song length:" + std::to_string(songLen));
+
+        // Set timeslider
+        setTime();
     }
 };
 
@@ -300,3 +317,20 @@ void MainComponent::loadURL(juce::URL fileURL) {
         readerSource.reset(newSource.release());
     }
 };
+
+// Set initial time slider
+void MainComponent::setTime() {
+    DBG("SET TIME FIRED!");
+
+    // Set timeslider
+    timeSlider.setRange(0.0, songLen);
+    timeSlider.setValue(0.0);
+}
+
+// Update time slider
+void MainComponent::updateTime(double newVal) {
+    DBG("UPDATE TIME FIRED!");
+
+    // Update timeslider
+    timeSlider.setValue(newVal);
+}
