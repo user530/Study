@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DJAudioPlayer.h"
 
 //==============================================================================
 /*
@@ -65,6 +66,8 @@ private:
     juce::ResamplingAudioSource resampleSource{&transportSource, false};    // Transport source wrapper, allow playback speed alteration
 
     void loadURL(juce::URL);    // File loader
+
+    DJAudioPlayer player1;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
