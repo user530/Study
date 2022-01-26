@@ -27,9 +27,11 @@ class DJAudioPlayer: public juce::AudioSource{
         void setPosition(double posInSecs);
         void setPositionRelative(double pos);
 
-
         void start();
         void stop();
+
+        // Control variable
+        bool playing;
 
     private:
         juce::AudioFormatManager formatManager;

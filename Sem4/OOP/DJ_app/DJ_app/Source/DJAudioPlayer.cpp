@@ -16,6 +16,10 @@ DJAudioPlayer::~DJAudioPlayer(){};
 //AudioSourceInterface==================================================
 
 void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate){
+
+    // Initialize control variable
+    playing = false;
+
     // Register formats
     formatManager.registerBasicFormats();
 
@@ -25,10 +29,23 @@ void DJAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     // Also, pass to the wrapper
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 };
+
 void DJAudioPlayer::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill){
-    // Pass the job to the transport layer
-    resampleSource.getNextAudioBlock(bufferToFill);
+
+    if (!playing)
+    {
+        // Clear buffer
+        bufferToFill.clearActiveBufferRegion();
+        // End execution
+        return;
+    }
+    else
+    {
+        // Pass the job to the transport layer
+        resampleSource.getNextAudioBlock(bufferToFill);
+    }
 };
+
 void DJAudioPlayer::releaseResources(){
     // Pass the job to the transport layer
     transportSource.releaseResources();
