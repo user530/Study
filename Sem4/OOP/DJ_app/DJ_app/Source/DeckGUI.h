@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "DJAudioPlayer.h"
+#include "WaveformDisplay.h"
 
 //==============================================================================
 /*
@@ -51,6 +52,9 @@ private:
 
     // Pointer to the player
     DJAudioPlayer* player;
+
+    // WaveformDisplay component
+    WaveformDisplay waveformDisplay;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeckGUI)

@@ -17,13 +17,15 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player) :player(_player)
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
 
-	addAndMakeVisible(playButton);  // Play audio btn
-	addAndMakeVisible(stopButton);  // Stop audio btn
-	addAndMakeVisible(loadFile);    // Load file btn
+	addAndMakeVisible(playButton);		// Play audio btn
+	addAndMakeVisible(stopButton);		// Stop audio btn
+	addAndMakeVisible(loadFile);		// Load file btn
 
-	addAndMakeVisible(volSlider);   // Volume slider
-	addAndMakeVisible(speedSlider); // Speed slider
-	addAndMakeVisible(timeSlider);  // Timestamp slider
+	addAndMakeVisible(volSlider);		// Volume slider
+	addAndMakeVisible(speedSlider);		// Speed slider
+	addAndMakeVisible(timeSlider);		// Timestamp slider
+
+	addAndMakeVisible(waveformDisplay); // Waveform display
 
 
 	volSlider.setRange(0.0, 2.0);   // Limit volume from 0% to 200%
@@ -50,22 +52,9 @@ DeckGUI::~DeckGUI()
 
 void DeckGUI::paint(juce::Graphics& g)
 {
-	/* This demo code just fills the component's background and
-	   draws some placeholder text to get you started.
+	// Clear background
+	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId)); 
 
-	   You should replace everything in this method with your own
-	   drawing code..
-	*/
-
-	g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));   // clear the background
-
-	//g.setColour(juce::Colours::grey);
-	//g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-
-	//g.setColour(juce::Colours::white);
-	//g.setFont(14.0f);
-	//g.drawText("DeckGUI", getLocalBounds(),
-	//	juce::Justification::centred, true);   // draw some placeholder text
 }
 
 void DeckGUI::resized()
@@ -73,16 +62,18 @@ void DeckGUI::resized()
 	// This method is where you should set the bounds of any child
 	// components that your component contains..
 
-	double rowH = getHeight() / 6;
+	double rowH = getHeight() / 8;
 
-	playButton.setBounds(0, 0, getWidth(), rowH);           // Setup play btn
-	stopButton.setBounds(0, rowH, getWidth(), rowH);        // Setup stop btn
+	playButton.setBounds(0, 0, getWidth(), rowH);					// Setup play btn
+	stopButton.setBounds(0, rowH, getWidth(), rowH);				// Setup stop btn
 
-	volSlider.setBounds(0, 2 * rowH, getWidth(), rowH);     // Setup volume slider
-	speedSlider.setBounds(0, 3 * rowH, getWidth(), rowH);   // Setup speed slider
-	timeSlider.setBounds(0, 4 * rowH, getWidth(), rowH);    // Setup timestamp slider
+	volSlider.setBounds(0, 2 * rowH, getWidth(), rowH);				// Setup volume slider
+	speedSlider.setBounds(0, 3 * rowH, getWidth(), rowH);			// Setup speed slider
+	timeSlider.setBounds(0, 4 * rowH, getWidth(), rowH);			// Setup timestamp slider
 
-	loadFile.setBounds(0, 5 * rowH, getWidth(), rowH);      // Setup loadfile btn
+	waveformDisplay.setBounds(0, 5 * rowH, getWidth(), 2 * rowH);	// Setup waveform display
+
+	loadFile.setBounds(0, 7 * rowH, getWidth(), rowH);				// Setup loadfile btn
 }
 
 void DeckGUI::buttonClicked(juce::Button* btnP) {
