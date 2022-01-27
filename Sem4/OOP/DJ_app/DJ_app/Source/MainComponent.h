@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "DJAudioPlayer.h"
 #include "DeckGUI.h"
+#include "PlaylistComponent.h"
 
 //==============================================================================
 /*
@@ -32,6 +33,8 @@ private:
     juce::AudioFormatManager formatManager;
     juce::AudioThumbnailCache thumbCache{100};
 
+    // Playlist component
+    PlaylistComponent playlistComponent;
 
     // Helper variables
     juce::Random rng;

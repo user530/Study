@@ -26,7 +26,10 @@ MainComponent::MainComponent()
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
 
-    // To process files passed
+    // Playlist component
+    addAndMakeVisible(playlistComponent);
+
+    // To process audio files
     formatManager.registerBasicFormats();
 }
 
@@ -83,12 +86,16 @@ void MainComponent::resized()
     // update their positions.
     
     // Set the bounds to the half of the screen
-    deckGUI1.setBounds(0, 0, getWidth() / 2, getHeight());
+    deckGUI1.setBounds(0, 0, getWidth() / 2, getHeight() * 0.6);
     // Pass the job to the DeckGUI component
     deckGUI1.resized();
     
     // Set the bounds to the half of the screen
-    deckGUI2.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
+    deckGUI2.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight() * 0.6);
     // Pass the job to the DeckGUI component
     deckGUI2.resized();
+
+    // Playlist component
+    playlistComponent.setBounds(0, getHeight() * 0.6, getWidth(), getHeight() * 0.4);
+    playlistComponent.resized();
 }
