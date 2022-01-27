@@ -12,7 +12,10 @@
 #include "DeckGUI.h"
 
 //==============================================================================
-DeckGUI::DeckGUI(DJAudioPlayer* _player) :player(_player)
+DeckGUI::DeckGUI(DJAudioPlayer* _player,
+				 juce::AudioFormatManager& formatManagerToUse,
+				 juce::AudioThumbnailCache& cacheToUse) : player(_player),
+														  waveformDisplay(formatManagerToUse, cacheToUse)
 {
 	// In your constructor, you should add any child components, and
 	// initialise any special settings that your component needs.
@@ -99,6 +102,9 @@ void DeckGUI::buttonClicked(juce::Button* btnP) {
 		if (chooser.browseForFileToOpen()) {
 			// Load audio file from the URL of the selected file
 			player->loadURL(juce::URL{ chooser.getResult() });
+
+			// Pass audio file from the URL to the waveform component
+			waveformDisplay.loadURL(juce::URL{ chooser.getResult() });
 		}
 	}
 };

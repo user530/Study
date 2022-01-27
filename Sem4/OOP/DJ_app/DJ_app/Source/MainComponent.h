@@ -28,6 +28,11 @@ public:
 private:
     //==============================================================================
     
+    // Waveform component
+    juce::AudioFormatManager formatManager;
+    juce::AudioThumbnailCache thumbCache{100};
+
+
     // Helper variables
     juce::Random rng;
 
@@ -36,11 +41,11 @@ private:
 
     // Player 1 + GUI
     DJAudioPlayer player1;
-    DeckGUI deckGUI1{&player1};
+    DeckGUI deckGUI1{&player1, formatManager, thumbCache};
 
     // Player 2 + GUI
     DJAudioPlayer player2;
-    DeckGUI deckGUI2{&player2};
+    DeckGUI deckGUI2{&player2, formatManager, thumbCache};
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

@@ -26,6 +26,8 @@ MainComponent::MainComponent()
     addAndMakeVisible(deckGUI1);
     addAndMakeVisible(deckGUI2);
 
+    // To process files passed
+    formatManager.registerBasicFormats();
 }
 
 MainComponent::~MainComponent()

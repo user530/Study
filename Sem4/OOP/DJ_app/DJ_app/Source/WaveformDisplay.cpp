@@ -12,11 +12,16 @@
 #include "WaveformDisplay.h"
 
 //==============================================================================
-WaveformDisplay::WaveformDisplay()
+WaveformDisplay::WaveformDisplay(juce::AudioFormatManager& formatManagerToUse,
+                                 juce::AudioThumbnailCache& cacheToUse) 
+                                 : audioThumb{1000, formatManagerToUse , cacheToUse},
+                                   fileLoaded{ false }
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-
+        
+    // Add change listener to audioThumb
+    audioThumb.addChangeListener(this);
 }
 
 WaveformDisplay::~WaveformDisplay()
@@ -38,9 +43,25 @@ void WaveformDisplay::paint (juce::Graphics& g)
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
     g.setColour (juce::Colours::orange);
-    g.setFont (20.0f);
-    g.drawText ("FILE NOT LOADED YET", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
+
+    // If file is loaded
+    if (fileLoaded)
+    {
+        audioThumb.drawChannel(g,
+            getLocalBounds(),
+            0,
+            audioThumb.getTotalLength(),
+            0,
+            1.0f );
+    }
+    // If there is no file
+    else 
+    {
+        // Show status message
+        g.setFont (20.0f);
+        g.drawText ("FILE NOT LOADED YET", getLocalBounds(),
+                    juce::Justification::centred, true);   // draw some placeholder text
+    }
 }
 
 void WaveformDisplay::resized()
@@ -49,3 +70,18 @@ void WaveformDisplay::resized()
     // components that your component contains..
 
 }
+
+void WaveformDisplay::loadURL(juce::URL fileURL)
+{
+    DBG("LoadURL - Fired!");
+    // Clear source
+    audioThumb.clear();
+    // Try to load
+    fileLoaded = audioThumb.setSource(new juce::URLInputSource(fileURL));
+}
+
+void WaveformDisplay::changeListenerCallback(juce::ChangeBroadcaster* source)
+{
+    DBG("CHANGE LISTENER FIRED!");
+    repaint();
+};
