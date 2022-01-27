@@ -47,10 +47,15 @@ DeckGUI::DeckGUI(DJAudioPlayer* _player,
 	volSlider.addListener(this);    // Add listener to volume slider
 	speedSlider.addListener(this);  // Add listener to speed slider
 	timeSlider.addListener(this);   // Add listener to timstamp slider
+
+	// Start timer thread
+	startTimer(100); // Interval to call in ms
 }
 
 DeckGUI::~DeckGUI()
 {
+	// End timer
+	stopTimer();
 }
 
 void DeckGUI::paint(juce::Graphics& g)
@@ -137,4 +142,10 @@ void DeckGUI::filesDropped(const juce::StringArray& files, int x, int y)
 		// Load URL from the dropped file
 		player->loadURL(juce::URL{ juce::File{files[0]} });
 	}
+};
+
+void DeckGUI::timerCallback()
+{
+	// Get position from the player and pass it to the waveform display
+	waveformDisplay.setPositionRelative(player->getPositionRelative());
 };

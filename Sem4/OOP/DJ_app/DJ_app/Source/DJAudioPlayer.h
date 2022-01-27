@@ -13,7 +13,7 @@
 
 class DJAudioPlayer: public juce::AudioSource{
     public:
-        DJAudioPlayer();
+        DJAudioPlayer(juce::AudioFormatManager& formatManager);
         ~DJAudioPlayer();
 
         //AudioSourceInterface==================================================
@@ -33,8 +33,11 @@ class DJAudioPlayer: public juce::AudioSource{
         // Control variable
         bool playing;
 
+        // Get relative playhead position
+        double getPositionRelative() const;
+
     private:
-        juce::AudioFormatManager formatManager;
+        juce::AudioFormatManager& formatManager;
         std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
         juce::AudioTransportSource transportSource;
         juce::ResamplingAudioSource resampleSource{&transportSource, false};

@@ -27,11 +27,19 @@ public:
     void resized() override;
     void loadURL(juce::URL fileURL);
 
+
+    // Change listener
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+
+    // Show playhead
+    void setPositionRelative(double relativePosition);
 
 private:
     juce::AudioThumbnail audioThumb;
     bool fileLoaded;
+
+    // Playhead
+    double position;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformDisplay)
 };

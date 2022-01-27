@@ -40,11 +40,11 @@ private:
     juce::MixerAudioSource mixerSource;
 
     // Player 1 + GUI
-    DJAudioPlayer player1;
+    DJAudioPlayer player1{formatManager};
     DeckGUI deckGUI1{&player1, formatManager, thumbCache};
 
     // Player 2 + GUI
-    DJAudioPlayer player2;
+    DJAudioPlayer player2{formatManager};
     DeckGUI deckGUI2{&player2, formatManager, thumbCache};
 
 
