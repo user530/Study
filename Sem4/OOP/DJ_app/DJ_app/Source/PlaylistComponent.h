@@ -18,7 +18,8 @@
 /*
 */
 class PlaylistComponent  : public juce::Component,
-                           public juce::TableListBoxModel
+                           public juce::TableListBoxModel,
+                           public juce::Button::Listener
 {
 public:
     PlaylistComponent();
@@ -37,6 +38,9 @@ public:
     // Allow components into cells
     juce::Component* refreshComponentForCell(int rowNumber, int columnId,
         bool isRowSelected, juce::Component* existingComponentToUpdate) override;
+
+    // Button listener
+    void buttonClicked(juce::Button*) override;
 
 private:
 

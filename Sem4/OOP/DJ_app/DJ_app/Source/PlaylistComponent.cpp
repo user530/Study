@@ -111,9 +111,30 @@ juce::Component* PlaylistComponent::refreshComponentForCell(int rowNumber,
         // Component not created yet
         if (existingComponentToUpdate == nullptr)
         {
-            existingComponentToUpdate = new juce::TextButton{ "Play!" };
+            // Create pointer to the new Button
+            juce::TextButton* btnP = new juce::TextButton{ "Play" };
+
+            // Create JUCE string from the int, using std::string as intermediate
+            juce::String id{ std::to_string(rowNumber) };
+
+            // Add ID to the button
+            btnP->setComponentID(id);
+
+            // Add listener to this button
+            btnP->addListener(this);
+
+            // Create text button component and point to the button
+            existingComponentToUpdate = btnP;
         }
     }
     // Return component
     return existingComponentToUpdate;
+};
+
+void PlaylistComponent::buttonClicked(juce::Button* btnP)
+{
+    // Transfrom string ID back into the int, so we can use it to access the vector
+    int id = std::stoi(btnP->getComponentID().toStdString());
+
+    DBG("PLAYLIST BTN CLICKED! Track - "+trackTitles[id]);
 };
