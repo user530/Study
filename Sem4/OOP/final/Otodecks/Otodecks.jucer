@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="sU4xg1" name="Otodecks" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+  <MAINGROUP id="fV1swa" name="Otodecks">
+    <GROUP id="{8970A238-5B52-565C-7076-951507803F18}" name="Source">
+      <FILE id="FJtY4W" name="Library.cpp" compile="1" resource="0" file="Source/Library.cpp"/>
+      <FILE id="a07ccB" name="Library.h" compile="0" resource="0" file="Source/Library.h"/>
+      <FILE id="dkviXx" name="FileBrowser.cpp" compile="1" resource="0" file="Source/FileBrowser.cpp"/>
+      <FILE id="hxZ09i" name="FileBrowser.h" compile="0" resource="0" file="Source/FileBrowser.h"/>
+      <FILE id="XELfLm" name="MixerGUI.cpp" compile="1" resource="0" file="Source/MixerGUI.cpp"/>
+      <FILE id="pHtcWB" name="MixerGUI.h" compile="0" resource="0" file="Source/MixerGUI.h"/>
+      <FILE id="wbbjdp" name="Mixer.cpp" compile="1" resource="0" file="Source/Mixer.cpp"/>
+      <FILE id="chp1I5" name="Mixer.h" compile="0" resource="0" file="Source/Mixer.h"/>
+      <FILE id="K9CP68" name="Waveform.cpp" compile="1" resource="0" file="Source/Waveform.cpp"/>
+      <FILE id="l6Rdfr" name="Waveform.h" compile="0" resource="0" file="Source/Waveform.h"/>
+      <FILE id="pCSd7k" name="PlayerGUI.cpp" compile="1" resource="0" file="Source/PlayerGUI.cpp"/>
+      <FILE id="iEWJ5E" name="PlayerGUI.h" compile="0" resource="0" file="Source/PlayerGUI.h"/>
+      <FILE id="gY4uvj" name="Player.cpp" compile="1" resource="0" file="Source/Player.cpp"/>
+      <FILE id="RAczAU" name="Player.h" compile="0" resource="0" file="Source/Player.h"/>
+      <FILE id="O3wLcv" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="WqIZcz" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="OfGGX1" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Otodecks"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="Otodecks"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+</JUCERPROJECT>
