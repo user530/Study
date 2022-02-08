@@ -20,6 +20,11 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
 
+    // Register basic formats to be able to handle different audio files
+    formatManager.registerBasicFormats();
+
+
+    // Show GUI elements
     addAndMakeVisible(player1GUI);
     addAndMakeVisible(player2GUI);
     addAndMakeVisible(waveform1);
@@ -45,6 +50,19 @@ void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRat
     // but be careful - it will be called on the audio thread, not the GUI thread.
 
     // For more details, see the help for AudioProcessor::prepareToPlay()
+
+
+
+
+    // Add both players to the mixer
+    mixerSource.addInputSource(&player1, false);
+    mixerSource.addInputSource(&player2, false);
+
+    // Prepare the Player 1
+    player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
+
+    // Prepare the Player 2
+    player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
@@ -55,7 +73,11 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 
     // Right now we are not producing any data, in which case we need to clear the buffer
     // (to prevent the output of random noise)
-    bufferToFill.clearActiveBufferRegion();
+
+
+    // Pass the job to the mixer
+    mixerSource.getNextAudioBlock(bufferToFill);
+    
 }
 
 void MainComponent::releaseResources()
@@ -64,6 +86,16 @@ void MainComponent::releaseResources()
     // restarted due to a setting change.
 
     // For more details, see the help for AudioProcessor::releaseResources()
+
+
+    // Clean up the mixer
+    mixerSource.removeAllInputs();
+    mixerSource.releaseResources();
+
+    // Clean up the players
+    player1.releaseResources();
+    player2.releaseResources();
+
 }
 
 //==============================================================================
@@ -92,5 +124,4 @@ void MainComponent::resized()
     player2GUI.setBounds(wUnit * 6.5, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
     fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 3, hUnit * 3.5);
     library.setBounds(wUnit * 3, hUnit * 6.5, wUnit * 7, hUnit * 3.5);
-
 }

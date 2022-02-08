@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="sU4xg1" name="Otodecks" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="fV1swa" name="Otodecks">
     <GROUP id="{8970A238-5B52-565C-7076-951507803F18}" name="Source">
       <FILE id="FJtY4W" name="Library.cpp" compile="1" resource="0" file="Source/Library.cpp"/>

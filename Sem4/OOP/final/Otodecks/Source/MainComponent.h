@@ -28,14 +28,25 @@ public:
     void paint (juce::Graphics& g) override;
     void resized() override;
 
+
 private:
     //==============================================================================
     // Your private member variables go here...
 
+    // Universal format manager
+    juce::AudioFormatManager formatManager;
+
+    // Mixer object to handle 2 players
+    juce::MixerAudioSource mixerSource;
+
+
+    // Player components
+    Player player1{ formatManager };
+    Player player2{ formatManager };
 
     // Player GUI
-    PlayerGUI player1GUI;
-    PlayerGUI player2GUI;
+    PlayerGUI player1GUI{ &player1 };
+    PlayerGUI player2GUI{ &player2 };
 
     // Waveform interface
     Waveform waveform1;
@@ -50,8 +61,6 @@ private:
     // Library interface
     Library library;
 
-
-    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
