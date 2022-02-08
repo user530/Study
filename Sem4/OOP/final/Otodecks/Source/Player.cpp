@@ -134,3 +134,10 @@ bool Player::openFile(juce::URL audioURL)
     // Signal error
     return false;
 };
+
+
+// Get access to the transport source
+juce::AudioTransportSource* Player::getTransportSource() 
+{
+    return &transportSource;
+};

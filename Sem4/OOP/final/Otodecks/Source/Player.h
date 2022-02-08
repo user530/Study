@@ -59,14 +59,17 @@ public:
     bool openFile(juce::URL audioURL);
 
     // Make transport source public, so GUI can attach listener
-    juce::AudioTransportSource transportSource;
-    
+    //juce::AudioTransportSource transportSource;
+    juce::AudioTransportSource* getTransportSource();
+
+
     //==================================================================
 
     
 
 private:
 
+    juce::AudioTransportSource transportSource;
     juce::AudioFormatManager& formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     PlayerState state;

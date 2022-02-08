@@ -37,8 +37,8 @@ PlayerGUI::PlayerGUI(Player* _player) : player(_player)
     stopBtn.setButtonText("Stop");
     openBtn.setButtonText("Open file");
 
-    // Add listener
-    (player->transportSource).addChangeListener(this);
+    // Add listener to the transport source
+    ( player->getTransportSource() )->addChangeListener(this);
 } 
 
 PlayerGUI::~PlayerGUI()
@@ -79,7 +79,7 @@ void PlayerGUI::resized()
 void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
     // Pointer to the player transport source
-    auto* transpSourceP = &(player->transportSource);
+    auto* transpSourceP = player->getTransportSource();
 
     // Player state
     Player::PlayerState plState = player->getState();
