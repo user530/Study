@@ -31,7 +31,10 @@ Player::~Player()
 void Player::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
     // Pass the job to the transport source
-    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    //transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    
+    // Pass the job to the resample source
+    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 };
 
 void Player::releaseResources()
@@ -46,7 +49,10 @@ void Player::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
     if (readerSource.get() != nullptr)
     {
         // Pass the job to the transport source
-        transportSource.getNextAudioBlock(bufferToFill);
+        //transportSource.getNextAudioBlock(bufferToFill);
+        
+        // Pass the job to the resample source
+        resampleSource.getNextAudioBlock(bufferToFill);
     }
     // If not
     else {
@@ -140,4 +146,94 @@ bool Player::openFile(juce::URL audioURL)
 juce::AudioTransportSource* Player::getTransportSource() 
 {
     return &transportSource;
+};
+
+// Set new volume value
+void Player::setGain(float newValue)
+{
+    // Limit gain rage from 0 to 300%, if out of range ->
+    if (newValue < 0.0f || newValue > 3.0f)
+    {
+        // Message and break
+        DBG("Gain argument is out of range. Should be between 0.0f and 3.0f!");
+        return;
+    }
+    // If value is valid -> Set new gain
+    transportSource.setGain(newValue);
+};
+
+
+// Set relative position
+void Player::setPosRel(float relStamp)
+{
+    // Check if argument is out of range
+    if (relStamp < 0.0f || relStamp > 1.0f)
+    {
+        // Message and break
+        DBG("Relative timestamp is out of range. Should be between 0.0f and 1.0f!");
+        return;
+    }
+
+    // If value is valid -> Calculate the timestamp based on the relative position
+    float timeStamp = relStamp * transportSource.getLengthInSeconds();
+
+    // Set this position
+    setPos(timeStamp);
+
+};
+
+// Set position in seconds
+void Player::setPos(float timeStamp)
+{
+    // Check if argument is out of range
+    if (timeStamp < 0.0f || timeStamp > transportSource.getLengthInSeconds())
+    {
+        // Message and break
+        DBG("Timestamp is out of range. Should be between 0 and track length in seconds!");
+        return;
+    }
+
+    // If value is valid -> Set player to the new position
+    transportSource.setPosition(timeStamp);
+};
+
+// Set tempo
+void Player::setTempo(double tempo)
+{
+    // Check if argument is out of range (tempo between 10% and 800%)
+    if (tempo < 0.1 || tempo > 8.0)
+    {
+        // Message and break
+        DBG("Tempo is out of range. Should be between 0 and 8!");
+        return;
+    }
+
+    // If value is valid -> Set player to the new position
+    resampleSource.setResamplingRatio(tempo);
+};
+
+// Get loop state
+bool Player::isLooping() const
+{
+    // Check that reader source exists
+    if (readerSource != nullptr)
+    {
+        // Get looping state
+        return readerSource->isLooping();
+    }
+
+    // If no reader exists -> there is no looping
+    return false;
+};
+
+
+// Set loop state
+void Player::setLooping(bool willLoop)
+{
+    // Check that reader source exists
+    if (readerSource != nullptr) 
+    {
+        // Enable input source looping if true, disable if false
+        readerSource->setLooping(willLoop);
+    }
 };

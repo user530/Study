@@ -119,7 +119,7 @@ void MainComponent::resized()
 
     waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);
     waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);
-    player1GUI.setBounds(0, hUnit * 2.5, wUnit * 3.5, hUnit * 4.5);
+    player1GUI.setBounds(0, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
     mixerGUI.setBounds(wUnit * 3.5, hUnit * 2.5, wUnit * 3, hUnit * 4);
     player2GUI.setBounds(wUnit * 6.5, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
     fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 3, hUnit * 3.5);

@@ -58,23 +58,34 @@ public:
     // Open file
     bool openFile(juce::URL audioURL);
 
-    // Make transport source public, so GUI can attach listener
-    //juce::AudioTransportSource transportSource;
+    // Get access to the transport source, so GUI can attach listener
     juce::AudioTransportSource* getTransportSource();
 
+    // Set new volume value
+    void setGain(float newValue);
 
-    //==================================================================
+    // Set relative position
+    void setPosRel(float relStamp);
 
+    // Set position in seconds
+    void setPos(float timeStamp);
+
+    // Set tempo
+    void setTempo(double tempo);
     
+    // Get loop state
+    bool isLooping() const;
+
+    // Set loop state
+    void setLooping(bool willLoop);
 
 private:
 
     juce::AudioTransportSource transportSource;
     juce::AudioFormatManager& formatManager;
-    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
+    std::unique_ptr<juce::AudioFormatReaderSource> readerSource; 
+    juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
     PlayerState state;
-
-
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player)

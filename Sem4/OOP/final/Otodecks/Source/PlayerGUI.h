@@ -38,9 +38,21 @@ public:
 
 private:
 
-    void playBtnClick();
+    // Callback function for the play button
+    void playBtnClick() const;
+    // Callback function for the stop button
     void stopBtnClick();
+    // Callback function for the open button
     void openBtnClick();
+    // Callback function for the loop button
+    void loopBtnClick() const;
+
+    // Callback function for the gain slider
+    void gainSldChange() const;
+    // Callback function for the time slider
+    void timeSldChange() const;
+    // Callback function for the tempo slider
+    void tempoSldChange() const;
 
 
     // Start btn
@@ -51,6 +63,19 @@ private:
 
     // Open btn
     juce::TextButton openBtn;
+    
+    // Loop btn
+    juce::ToggleButton loopBtn;
+
+    // Gain slider
+    juce::Slider gainSld;
+
+    // Time slider
+    juce::Slider timeSld;
+    
+    // Tempo slider
+    juce::Slider tempoSld;
+
 
     // Connect player
     Player* player;

@@ -22,11 +22,20 @@ PlayerGUI::PlayerGUI(Player* _player) : player(_player)
     addAndMakeVisible(&playBtn);
     addAndMakeVisible(&stopBtn);
     addAndMakeVisible(&openBtn);
+    addAndMakeVisible(&gainSld);
+    addAndMakeVisible(&timeSld);
+    addAndMakeVisible(&tempoSld);
+    addAndMakeVisible(&loopBtn);
     
     // Add callbacks to the GUI elements
     playBtn.onClick = [this] { playBtnClick(); };
     stopBtn.onClick = [this] { stopBtnClick(); };
     openBtn.onClick = [this] { openBtnClick(); };
+    loopBtn.onClick = [this] { loopBtnClick(); };
+
+    gainSld.onValueChange = [this] { gainSldChange(); };
+    timeSld.onValueChange = [this] { timeSldChange(); };
+    tempoSld.onValueChange = [this] { tempoSldChange(); };
 
     // Disable control buttons when there is no track
     playBtn.setEnabled(false);
@@ -36,6 +45,19 @@ PlayerGUI::PlayerGUI(Player* _player) : player(_player)
     playBtn.setButtonText("Play");
     stopBtn.setButtonText("Stop");
     openBtn.setButtonText("Open file");
+
+    // Setup gain slider
+    gainSld.setRange(0.0, 3.0);
+    gainSld.setValue(1.0);
+
+    // Setup time slider
+    timeSld.setRange(0.0, 1.0);
+    timeSld.setValue(0.0);
+
+    // Setup time slider
+    tempoSld.setRange(0.1, 8.0);
+    tempoSld.setValue(1);
+
 
     // Add listener to the transport source
     ( player->getTransportSource() )->addChangeListener(this);
@@ -69,9 +91,14 @@ void PlayerGUI::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
-    playBtn.setBounds(getWidth() / 4, 0, getWidth() / 2, getHeight() / 6);
-    stopBtn.setBounds(getWidth() / 4, getHeight() * 1/6, getWidth() / 2, getHeight() / 6);
-    openBtn.setBounds(getWidth() / 4, getHeight() * 2/6, getWidth() / 2, getHeight() / 6);
+    playBtn.setBounds(0, 0, getWidth() / 4, getHeight() / 6);
+    stopBtn.setBounds(0, getHeight() * 1/6, getWidth() / 4, getHeight() / 6);
+    openBtn.setBounds(0, getHeight() * 2/6, getWidth() / 4, getHeight() / 6);
+    gainSld.setBounds(0, getHeight() * 3/6, getWidth(), getHeight() / 6);
+    timeSld.setBounds(0, getHeight() * 4/6, getWidth(), getHeight() / 6);
+    tempoSld.setBounds(0, getHeight() * 5/6, getWidth(), getHeight() / 6);
+
+    loopBtn.setBounds(getWidth() * 3 / 4, 0, getWidth() / 4, getHeight() / 6);
 }
 
 
@@ -128,7 +155,7 @@ void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
     }
 };
 
-void PlayerGUI::playBtnClick() 
+void PlayerGUI::playBtnClick() const
 {
     // Get player state
     auto playerState = player->getState();
@@ -150,7 +177,7 @@ void PlayerGUI::playBtnClick()
     }
 };
 
-void PlayerGUI::stopBtnClick() 
+void PlayerGUI::stopBtnClick()
 {
     // If player is already paused
     if (player->getState() == Player::PlayerState::Paused)
@@ -173,8 +200,10 @@ void PlayerGUI::stopBtnClick()
     }
 };
 
-void PlayerGUI::openBtnClick() 
+void PlayerGUI::openBtnClick()
 {
+    //=======================================================================Multithreading problem!
+
     // Create file chooser
     chooser = std::make_unique<juce::FileChooser>("Select a file to play...", 
                                                     juce::File{}, 
@@ -193,14 +222,14 @@ void PlayerGUI::openBtnClick()
             // Check that user selected actual file in the browser window
             if (file != juce::File{})
             {
-                // Open file in the player
-                //player->openFile(juce::URL{ file });
-
                 // If file opened successfully
                 if (player->openFile(juce::URL{ file }))
                 {
                     // Enable play btn after file is loaded
                     playBtn.setEnabled(true);
+
+                    // Restore loop setting
+                    player->setLooping(loopBtn.getToggleState());
                 }
                 // If not
                 else
@@ -211,6 +240,39 @@ void PlayerGUI::openBtnClick()
             }
         });
 
+};
+
+void PlayerGUI::loopBtnClick() const
+{
+    // Set new loop state based on the btn value
+    player->setLooping( loopBtn.getToggleState() );
+};
+
+void PlayerGUI::gainSldChange() const
+{
+    //Get the value of the slider and converse type
+    float newGain = (float) gainSld.getValue();
+
+    // Set new gain level of the player
+    (player->getTransportSource())->setGain(newGain);
+};
+
+void PlayerGUI::timeSldChange() const
+{
+    //Get the value of the slider and converse type
+    float newPos = (float)timeSld.getValue();
+
+    // Set new timestamp
+    player->setPosRel(newPos);
+};
+
+void PlayerGUI::tempoSldChange() const
+{
+    // Get the value of the slider
+    double newTempo = tempoSld.getValue();
+
+    // Set new tempo
+    player->setTempo(newTempo);
 };
 
 
