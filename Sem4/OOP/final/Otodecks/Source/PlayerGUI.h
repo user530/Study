@@ -12,6 +12,7 @@
 
 #include <JuceHeader.h>
 #include "Player.h"
+#include "Waveform.h"
 
 //==============================================================================
 /*
@@ -21,7 +22,9 @@ class PlayerGUI  : public juce::Component,
                     public juce::FileDragAndDropTarget
 {
 public:
-    PlayerGUI(Player* player);
+    PlayerGUI(Player* player,
+              juce::AudioFormatManager& formatManager,
+              juce::AudioThumbnailCache& thumbcache);
     ~PlayerGUI() override;
 
     void paint (juce::Graphics&) override;
@@ -54,6 +57,11 @@ private:
     // Callback function for the tempo slider
     void tempoSldChange() const;
 
+    // Logic behind changes of transport source
+    void transpChange(juce::AudioTransportSource* transpSrcP);
+
+    // Logic behind changes of thumbnail
+    void thumbChange(juce::AudioThumbnail* thumbP);
 
     // Start btn
     juce::TextButton playBtn;
@@ -76,9 +84,11 @@ private:
     // Tempo slider
     juce::Slider tempoSld;
 
-
     // Connect player
     Player* player;
+
+    // Connect waveform display
+    Waveform waveform;
 
     // File chooser                 - DELETE LATER!
     std::unique_ptr<juce::FileChooser> chooser;

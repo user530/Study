@@ -36,6 +36,9 @@ private:
     // Universal format manager
     juce::AudioFormatManager formatManager;
 
+    // Universal thumbnail cache
+    juce::AudioThumbnailCache thumbCache{ 100 }; // Store 100 thumbnails
+
     // Mixer object to handle 2 players
     juce::MixerAudioSource mixerSource;
 
@@ -45,12 +48,12 @@ private:
     Player player2{ formatManager };
 
     // Player GUI
-    PlayerGUI player1GUI{ &player1 };
-    PlayerGUI player2GUI{ &player2 };
+    PlayerGUI player1GUI{ &player1, formatManager, thumbCache };
+    PlayerGUI player2GUI{ &player2, formatManager, thumbCache };
 
     // Waveform interface
-    Waveform waveform1;
-    Waveform waveform2;
+    Waveform waveform1{ formatManager, thumbCache };
+    Waveform waveform2{ formatManager, thumbCache };
 
     // Mixer GUI
     MixerGUI mixerGUI;

@@ -127,7 +127,7 @@ bool Player::openFile(juce::URL audioURL)
             std::make_unique<juce::AudioFormatReaderSource>(fReader, true);
 
         // Pass newSource to the transport source
-        transportSource.setSource(newSource.get(), 0, nullptr, fReader->sampleRate);
+        transportSource.setSource(newSource.get(), 0, nullptr, fReader -> sampleRate);
 
         /* Transfer ownership of the new Audio Format Reader Source
             from the newSource to the readerSource, when newSource releases pointer */
@@ -151,14 +151,14 @@ juce::AudioTransportSource* Player::getTransportSource()
 // Set new volume value
 void Player::setGain(float newValue)
 {
-    // Limit gain rage from 0 to 300%, if out of range ->
+    // Limit gain rage from 0 to 300%, if out of range
     if (newValue < 0.0f || newValue > 3.0f)
     {
         // Message and break
         DBG("Gain argument is out of range. Should be between 0.0f and 3.0f!");
         return;
     }
-    // If value is valid -> Set new gain
+    // If value is valid, set new gain
     transportSource.setGain(newValue);
 };
 
@@ -174,7 +174,7 @@ void Player::setPosRel(float relStamp)
         return;
     }
 
-    // If value is valid -> Calculate the timestamp based on the relative position
+    // If value is valid, calculate the timestamp based on the relative position
     float timeStamp = relStamp * transportSource.getLengthInSeconds();
 
     // Set this position
@@ -193,7 +193,7 @@ void Player::setPos(float timeStamp)
         return;
     }
 
-    // If value is valid -> Set player to the new position
+    // If value is valid, set player to the new position
     transportSource.setPosition(timeStamp);
 };
 
@@ -208,7 +208,7 @@ void Player::setTempo(double tempo)
         return;
     }
 
-    // If value is valid -> Set player to the new position
+    // If value is valid, set player to the new position
     resampleSource.setResamplingRatio(tempo);
 };
 
@@ -219,10 +219,10 @@ bool Player::isLooping() const
     if (readerSource != nullptr)
     {
         // Get looping state
-        return readerSource->isLooping();
+        return readerSource -> isLooping();
     }
 
-    // If no reader exists -> there is no looping
+    // If no reader exists, then no looping
     return false;
 };
 
@@ -234,6 +234,6 @@ void Player::setLooping(bool willLoop)
     if (readerSource != nullptr) 
     {
         // Enable input source looping if true, disable if false
-        readerSource->setLooping(willLoop);
+        readerSource -> setLooping(willLoop);
     }
 };

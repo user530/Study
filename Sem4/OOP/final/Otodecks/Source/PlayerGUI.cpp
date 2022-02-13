@@ -12,7 +12,10 @@
 #include "PlayerGUI.h"
 
 //==============================================================================
-PlayerGUI::PlayerGUI(Player* _player) : player(_player)
+PlayerGUI::PlayerGUI(Player* _player,
+    juce::AudioFormatManager& formatManager,
+    juce::AudioThumbnailCache& thumbCache) : player(_player),
+                                             waveform(formatManager, thumbCache)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -22,11 +25,18 @@ PlayerGUI::PlayerGUI(Player* _player) : player(_player)
     addAndMakeVisible(&playBtn);
     addAndMakeVisible(&stopBtn);
     addAndMakeVisible(&openBtn);
+
+    // Control sliders
     addAndMakeVisible(&gainSld);
     addAndMakeVisible(&timeSld);
     addAndMakeVisible(&tempoSld);
+
+    // Loop btn
     addAndMakeVisible(&loopBtn);
-    
+
+    // DELETE?
+    //addAndMakeVisible(&waveform);
+        
     // Add callbacks to the GUI elements
     playBtn.onClick = [this] { playBtnClick(); };
     stopBtn.onClick = [this] { stopBtnClick(); };
@@ -60,7 +70,9 @@ PlayerGUI::PlayerGUI(Player* _player) : player(_player)
 
 
     // Add listener to the transport source
-    ( player->getTransportSource() )->addChangeListener(this);
+    (player -> getTransportSource()) -> addChangeListener(this);
+    // Add listener to the waveform
+    (waveform.getAudioThumb()) -> addChangeListener(this);
 } 
 
 PlayerGUI::~PlayerGUI()
@@ -85,6 +97,7 @@ void PlayerGUI::paint (juce::Graphics& g)
     g.setFont (14.0f);
     g.drawText ("PlayerGUI", getLocalBounds(),
                 juce::Justification::centred, true);   // draw some placeholder text
+
 }
 
 void PlayerGUI::resized()
@@ -99,59 +112,26 @@ void PlayerGUI::resized()
     tempoSld.setBounds(0, getHeight() * 5/6, getWidth(), getHeight() / 6);
 
     loopBtn.setBounds(getWidth() * 3 / 4, 0, getWidth() / 4, getHeight() / 6);
+
+    // DELETE?
+    //waveform.setBoundsRelative(0.0f, 0.0f, 0.5f, 0.25f);
 }
 
 
 // Callback function that will be fired each time listener register change(s)
 void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
 {
-    // Pointer to the player transport source
-    auto* transpSourceP = player->getTransportSource();
-
-    // Player state
-    Player::PlayerState plState = player->getState();
-
-    // If check is fired by the change of the transport source
-     if (source == transpSourceP)
+    // If change fired by transport source
+    if (source == player -> getTransportSource())
     {
-        // If audio is currently playing
-        if (transpSourceP->isPlaying())
-        {
-            // Set state accordingly
-            player->changeState(Player::PlayerState::Playing);
-
-            // Set btn text to "Pause" and "Stop"
-            playBtn.setButtonText("Pause");
-            stopBtn.setButtonText("Stop");
-
-            // Enable stop btn
-            stopBtn.setEnabled(true);
-        }
-        // If player winding down
-        else if ((plState == Player::PlayerState::Stopping) || 
-                    (plState == Player::PlayerState::Playing))
-        {
-            // Stop the player
-            player->changeState(Player::PlayerState::Stopped);
-
-            // Set btn text to "Play" and "Stop"
-            playBtn.setButtonText("Play");
-            stopBtn.setButtonText("Stop");
-
-            // Disable stop btn
-            stopBtn.setEnabled(false);
-
-        }
-        // If user player pausing
-        else if (plState == Player::PlayerState::Pausing) 
-        {
-            // Pause the player
-            player->changeState(Player::PlayerState::Paused);
-
-            // Set btn txt to "Resume" and "Reset"
-            playBtn.setButtonText("Resume");
-            stopBtn.setButtonText("Reset");
-        }
+        // Change player based on the state
+        transpChange(player -> getTransportSource());
+    }
+    // If change fired by audio thumb
+    else if(source == waveform.getAudioThumb())
+    {
+        // Execute thumbnail change callback
+        thumbChange(waveform.getAudioThumb());
     }
 };
 
@@ -214,7 +194,7 @@ void PlayerGUI::openBtnClick()
                         juce::FileBrowserComponent::canSelectFiles;
 
     // Run asynchronous file browser window
-    chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& FC)
+    chooser -> launchAsync(chooserFlags, [this](const juce::FileChooser& FC)
         {
             // File selected in the window
             juce::File file = FC.getResult();
@@ -223,13 +203,17 @@ void PlayerGUI::openBtnClick()
             if (file != juce::File{})
             {
                 // If file opened successfully
-                if (player->openFile(juce::URL{ file }))
+                if (player -> openFile(juce::URL{ file }))
                 {
                     // Enable play btn after file is loaded
                     playBtn.setEnabled(true);
 
                     // Restore loop setting
-                    player->setLooping(loopBtn.getToggleState());
+                    player -> setLooping(loopBtn.getToggleState());
+
+                    // Pass the audio data to the AudioThumb object to draw the waveform 
+                    (waveform.getAudioThumb()) ->
+                                                 setSource(new juce::FileInputSource(file));
                 }
                 // If not
                 else
@@ -274,6 +258,60 @@ void PlayerGUI::tempoSldChange() const
     // Set new tempo
     player->setTempo(newTempo);
 };
+
+// Logic behind changes of transport source
+void PlayerGUI::transpChange(juce::AudioTransportSource* transpSrcP)
+{   
+    // Player state
+    Player::PlayerState plState = player -> getState();
+
+    // If audio is currently playing
+    if (transpSrcP -> isPlaying())
+    {
+        // Set state accordingly
+        player -> changeState(Player::PlayerState::Playing);
+
+        // Set btn text to "Pause" and "Stop"
+        playBtn.setButtonText("Pause");
+        stopBtn.setButtonText("Stop");
+
+        // Enable stop btn
+        stopBtn.setEnabled(true);
+    }
+    // If player winding down
+    else if ((plState == Player::PlayerState::Stopping) ||
+        (plState == Player::PlayerState::Playing))
+    {
+        // Stop the player
+        player -> changeState(Player::PlayerState::Stopped);
+
+        // Set btn text to "Play" and "Stop"
+        playBtn.setButtonText("Play");
+        stopBtn.setButtonText("Stop");
+
+        // Disable stop btn
+        stopBtn.setEnabled(false);
+
+    }
+    // If user player pausing
+    else if (plState == Player::PlayerState::Pausing)
+    {
+        // Pause the player
+        player -> changeState(Player::PlayerState::Paused);
+
+        // Set btn txt to "Resume" and "Reset"
+        playBtn.setButtonText("Resume");
+        stopBtn.setButtonText("Reset");
+    }
+};
+
+// Logic behind changes of thumbnail
+void PlayerGUI::thumbChange(juce::AudioThumbnail* thumbP)
+{
+    // Update visuals
+    waveform.repaint();
+};
+
 
 
 bool PlayerGUI::isInterestedInFileDrag(const juce::StringArray& files)
