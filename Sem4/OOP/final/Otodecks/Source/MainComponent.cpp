@@ -116,8 +116,8 @@ void MainComponent::resized()
     double wUnit = getWidth() / 10;
     double hUnit = getHeight() / 10;
 
-    //waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
-    //waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
+    waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
+    waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
     player1GUI.setBounds(0, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
     mixerGUI.setBounds(wUnit * 3.5, hUnit * 2.5, wUnit * 3, hUnit * 4);
     player2GUI.setBounds(wUnit * 6.5, hUnit * 2.5, wUnit * 3.5, hUnit * 4);

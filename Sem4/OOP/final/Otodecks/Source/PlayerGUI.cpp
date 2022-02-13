@@ -13,9 +13,8 @@
 
 //==============================================================================
 PlayerGUI::PlayerGUI(Player* _player,
-    juce::AudioFormatManager& formatManager,
-    juce::AudioThumbnailCache& thumbCache) : player(_player),
-                                             waveform(formatManager, thumbCache)
+                     Waveform* _waveform) : player(_player),
+                                             waveform(_waveform)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -33,9 +32,6 @@ PlayerGUI::PlayerGUI(Player* _player,
 
     // Loop btn
     addAndMakeVisible(&loopBtn);
-
-    // DELETE?
-    //addAndMakeVisible(&waveform);
         
     // Add callbacks to the GUI elements
     playBtn.onClick = [this] { playBtnClick(); };
@@ -72,7 +68,7 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Add listener to the transport source
     (player -> getTransportSource()) -> addChangeListener(this);
     // Add listener to the waveform
-    (waveform.getAudioThumb()) -> addChangeListener(this);
+    (waveform -> getAudioThumb()) -> addChangeListener(this);
 } 
 
 PlayerGUI::~PlayerGUI()
@@ -113,8 +109,6 @@ void PlayerGUI::resized()
 
     loopBtn.setBounds(getWidth() * 3 / 4, 0, getWidth() / 4, getHeight() / 6);
 
-    // DELETE?
-    //waveform.setBoundsRelative(0.0f, 0.0f, 0.5f, 0.25f);
 }
 
 
@@ -128,10 +122,10 @@ void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
         transpChange(player -> getTransportSource());
     }
     // If change fired by audio thumb
-    else if(source == waveform.getAudioThumb())
+    else if(source == waveform -> getAudioThumb())
     {
         // Execute thumbnail change callback
-        thumbChange(waveform.getAudioThumb());
+        thumbChange(waveform -> getAudioThumb());
     }
 };
 
@@ -212,7 +206,7 @@ void PlayerGUI::openBtnClick()
                     player -> setLooping(loopBtn.getToggleState());
 
                     // Pass the audio data to the AudioThumb object to draw the waveform 
-                    (waveform.getAudioThumb()) ->
+                    (waveform -> getAudioThumb()) ->
                                                  setSource(new juce::FileInputSource(file));
                 }
                 // If not
@@ -309,7 +303,7 @@ void PlayerGUI::transpChange(juce::AudioTransportSource* transpSrcP)
 void PlayerGUI::thumbChange(juce::AudioThumbnail* thumbP)
 {
     // Update visuals
-    waveform.repaint();
+    waveform -> repaint();
 };
 
 

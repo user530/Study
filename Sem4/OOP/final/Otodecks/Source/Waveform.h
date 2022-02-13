@@ -36,5 +36,8 @@ public:
 private:
     juce::AudioThumbnail audioThumb;
 
+    // Background color
+    juce::Colour bgCol = getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId);
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Waveform)
 };

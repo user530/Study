@@ -23,8 +23,7 @@ class PlayerGUI  : public juce::Component,
 {
 public:
     PlayerGUI(Player* player,
-              juce::AudioFormatManager& formatManager,
-              juce::AudioThumbnailCache& thumbcache);
+              Waveform* waveform);
     ~PlayerGUI() override;
 
     void paint (juce::Graphics&) override;
@@ -88,7 +87,7 @@ private:
     Player* player;
 
     // Connect waveform display
-    Waveform waveform;
+    Waveform* waveform;
 
     // File chooser                 - DELETE LATER!
     std::unique_ptr<juce::FileChooser> chooser;

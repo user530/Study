@@ -37,30 +37,34 @@ void Waveform::paint (juce::Graphics& g)
 
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
 
-    g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
     g.drawText ("Waveform", getLocalBounds(),
                 juce::Justification::centred, true);   // draw some placeholder text
 
-    //
+    // If file not loaded
     if (audioThumb.getNumChannels() == 0)
     {
+        // Callback for empty thumbnail
         paintIfEmpty(g);
     }
+    // If loaded
     else 
     {
+        // Callback to draw waveform
         paintIfLoaded(g);
     }
+
+    // Draw an outline around the component
+    g.setColour(juce::Colours::grey);
+    g.drawRect(getLocalBounds(), 1);   
 }
 
 // Paint helper functions
 void Waveform::paintIfLoaded(juce::Graphics& g)
 {
     // Background color
-    g.setColour(juce::Colours::grey);
+    g.setColour(bgCol);
     // Fill background
     g.fillRect(getLocalBounds());
     // Waveform color
@@ -74,15 +78,15 @@ void Waveform::paintIfLoaded(juce::Graphics& g)
 void Waveform::paintIfEmpty(juce::Graphics& g)
 {
     // Background color
-    g.setColour(juce::Colours::grey);
+    g.setColour(bgCol);
     // Fill background
     g.fillRect(getLocalBounds());
     // Text color
-    g.setColour(juce::Colours::white);
+    g.setColour(juce::Colours::lawngreen);
     // Set font size
     g.setFont(28.0f);
     // Print text   
-    g.drawFittedText("NO FILE LOADED", getLocalBounds(), juce::Justification::centred, 1);
+    g.drawFittedText("NO WAVEFORM DETECTED!", getLocalBounds(), juce::Justification::centred, 1);
 };
 
 void Waveform::resized()

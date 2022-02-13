@@ -47,13 +47,13 @@ private:
     Player player1{ formatManager };
     Player player2{ formatManager };
 
-    // Player GUI
-    PlayerGUI player1GUI{ &player1, formatManager, thumbCache };
-    PlayerGUI player2GUI{ &player2, formatManager, thumbCache };
-
     // Waveform interface
     Waveform waveform1{ formatManager, thumbCache };
     Waveform waveform2{ formatManager, thumbCache };
+
+    // Player GUI
+    PlayerGUI player1GUI{ &player1, &waveform1};
+    PlayerGUI player2GUI{ &player2, &waveform2 };
 
     // Mixer GUI
     MixerGUI mixerGUI;
