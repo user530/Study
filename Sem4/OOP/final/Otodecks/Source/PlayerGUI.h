@@ -19,7 +19,8 @@
 */
 class PlayerGUI  : public juce::Component,
                     public juce::ChangeListener,
-                    public juce::FileDragAndDropTarget
+                    public juce::FileDragAndDropTarget,
+                    private juce::Timer
 {
 public:
     PlayerGUI(Player* player,
@@ -29,12 +30,13 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
-    // Override pure virtual functions from the FileDragAndDropTarget parent class
+    // Override pure virtual functions from the FileDragAndDropTarget base class
     virtual bool isInterestedInFileDrag(const juce::StringArray& files) override;
     virtual void filesDropped(const juce::StringArray& files, int x, int y) override;
 
-    // Override pure virtual functions from the ChangeListener parent class
+    // Override pure virtual functions from the ChangeListener base class
     virtual void changeListenerCallback(juce::ChangeBroadcaster* source) override;
+
 
 
 
@@ -91,6 +93,9 @@ private:
 
     // File chooser                 - DELETE LATER!
     std::unique_ptr<juce::FileChooser> chooser;
+
+    // Override pure virtual functions from the Timer base class
+    virtual void timerCallback() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayerGUI)
 };

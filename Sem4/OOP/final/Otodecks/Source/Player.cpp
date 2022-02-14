@@ -162,7 +162,6 @@ void Player::setGain(float newValue)
     transportSource.setGain(newValue);
 };
 
-
 // Set relative position
 void Player::setPosRel(float relStamp)
 {
@@ -180,6 +179,12 @@ void Player::setPosRel(float relStamp)
     // Set this position
     setPos(timeStamp);
 
+};
+
+// Get relative position
+double Player::getPosRel() const
+{
+    return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
 };
 
 // Set position in seconds

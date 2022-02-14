@@ -16,7 +16,8 @@ Waveform::Waveform(juce::AudioFormatManager& formatManagerAdr,
                    juce::AudioThumbnailCache& thumbCacheAdr) : 
                                                                 audioThumb(1024,
                                                                            formatManagerAdr,
-                                                                           thumbCacheAdr)
+                                                                           thumbCacheAdr),
+                                                                curPos(0.0)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -73,6 +74,16 @@ void Waveform::paintIfLoaded(juce::Graphics& g)
     // Draw waveform
     audioThumb.drawChannel(g, getLocalBounds(),
                             0.0, audioThumb.getTotalLength(), 0, 1.0f);
+
+    // Playhead color
+    g.setColour(juce::Colours::red);
+
+    // Calculate position on the screen
+    float absPos = curPos * getWidth();
+
+    // Draw the playhead
+    g.drawRect(absPos, 0.0f, 1.0f, (float)getHeight());
+    
 };
 
 void Waveform::paintIfEmpty(juce::Graphics& g)
@@ -100,4 +111,16 @@ void Waveform::resized()
 juce::AudioThumbnail* Waveform::getAudioThumb()
 {
     return &audioThumb;
+};
+
+void Waveform::setRelPos(double relPos)
+{
+    // If relative position is differs from the current one
+    if (curPos != relPos)
+    {
+        // Update position
+        curPos = relPos;
+        // Redraw waveform
+        repaint();
+    }
 };

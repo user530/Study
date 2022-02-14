@@ -69,6 +69,10 @@ PlayerGUI::PlayerGUI(Player* _player,
     (player -> getTransportSource()) -> addChangeListener(this);
     // Add listener to the waveform
     (waveform -> getAudioThumb()) -> addChangeListener(this);
+
+    // Start timer thread
+    startTimer(40);
+
 } 
 
 PlayerGUI::~PlayerGUI()
@@ -128,6 +132,14 @@ void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
         thumbChange(waveform -> getAudioThumb());
     }
 };
+
+// The user-defined callback routine that actually gets called periodically.
+void PlayerGUI::timerCallback()
+{
+    // Update playhead position
+    waveform->setRelPos(player -> getPosRel());
+};
+
 
 void PlayerGUI::playBtnClick() const
 {
@@ -305,8 +317,6 @@ void PlayerGUI::thumbChange(juce::AudioThumbnail* thumbP)
     // Update visuals
     waveform -> repaint();
 };
-
-
 
 bool PlayerGUI::isInterestedInFileDrag(const juce::StringArray& files)
 {

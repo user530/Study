@@ -67,6 +67,9 @@ public:
     // Set relative position
     void setPosRel(float relStamp);
 
+    // Get relative position
+    double getPosRel() const;
+
     // Set position in seconds
     void setPos(float timeStamp);
 
