@@ -280,37 +280,38 @@ void PlayerGUI::openBtnClick()
                 // If file opened successfully
                 if (player -> openFile(juce::URL{ file }))
                 {
-                    // Enable btns after file is loaded
-                    playBtn.setEnabled(true);                                      // OPTIMISE!
+                    fileLoaded(file);
+                    //// Enable btns after file is loaded
+                    //playBtn.setEnabled(true);                                      // OPTIMISE!
 
-                    loopBtn.setEnabled(true);
-                    queEditBtn.setEnabled(true);
-                    Que1Btn.setEnabled(true);
-                    Que2Btn.setEnabled(true);
-                    Que3Btn.setEnabled(true);
-                    Que4Btn.setEnabled(true);
-                    Que5Btn.setEnabled(true);
-                    Que6Btn.setEnabled(true);
-                    Que7Btn.setEnabled(true);
-                    Que8Btn.setEnabled(true);
+                    //loopBtn.setEnabled(true);
+                    //queEditBtn.setEnabled(true);
+                    //Que1Btn.setEnabled(true);
+                    //Que2Btn.setEnabled(true);
+                    //Que3Btn.setEnabled(true);
+                    //Que4Btn.setEnabled(true);
+                    //Que5Btn.setEnabled(true);
+                    //Que6Btn.setEnabled(true);
+                    //Que7Btn.setEnabled(true);
+                    //Que8Btn.setEnabled(true);
 
-                    // Iterate over all que data
-                    for (int i = 0; i < 8; ++i)
-                    {
-                        // Reset to zero
-                        player->setHotQue(i, 0.0);
-                    }
+                    //// Iterate over all que data
+                    //for (int i = 0; i < 8; ++i)
+                    //{
+                    //    // Reset to zero
+                    //    player->setHotQue(i, 0.0);
+                    //}
 
-                    // Toggle all queBtns off
-                    queBtnsOff();
-                                            
+                    //// Toggle all queBtns off
+                    //queBtnsOff();
+                    //                        
 
-                    // Restore loop setting
-                    player -> setLooping(loopBtn.getToggleState());
+                    //// Restore loop setting
+                    //player -> setLooping(loopBtn.getToggleState());
 
-                    // Pass the audio data to the AudioThumb object to draw the waveform 
-                    (waveform -> getAudioThumb()) ->
-                                                 setSource(new juce::FileInputSource(file));
+                    //// Pass the audio data to the AudioThumb object to draw the waveform 
+                    //(waveform -> getAudioThumb()) ->
+                    //                             setSource(new juce::FileInputSource(file));
                 }
                 // If not
                 else
@@ -322,6 +323,50 @@ void PlayerGUI::openBtnClick()
         });
 
 };
+
+// Successfull file load callback
+void PlayerGUI::fileLoaded(juce::File file)
+{
+    // Change state
+    player->changeState(Player::PlayerState::Stopped);
+
+    // Enable btns after file is loaded
+    playBtn.setEnabled(true);                                      // OPTIMISE!
+
+    loopBtn.setEnabled(true);
+    queEditBtn.setEnabled(true);
+
+    Que1Btn.setEnabled(true);
+    Que2Btn.setEnabled(true);
+    Que3Btn.setEnabled(true);
+    Que4Btn.setEnabled(true);
+    Que5Btn.setEnabled(true);
+    Que6Btn.setEnabled(true);
+    Que7Btn.setEnabled(true);
+    Que8Btn.setEnabled(true);
+
+    // Change text
+    playBtn.setButtonText("Play");
+    stopBtn.setButtonText("Stop");
+
+    // Iterate over all que data
+    for (int i = 0; i < 8; ++i)
+    {
+        // Reset to zero
+        player->setHotQue(i, 0.0);
+    }
+
+    // Toggle all queBtns off
+    queBtnsOff();
+
+    // Restore loop setting
+    player->setLooping(loopBtn.getToggleState());
+
+    // Pass the audio data to the AudioThumb object to draw the waveform 
+    (waveform->getAudioThumb()) ->
+        setSource(new juce::FileInputSource(file));
+};
+
 
 void PlayerGUI::loopBtnClick()
 {
@@ -528,7 +573,15 @@ void PlayerGUI::filesDropped(const juce::StringArray& files, int x, int y)
     // Check that only one file dropped
     if (files.size() == 1)
     {
-        // Load URL from the dropped file
-        player->openFile(juce::URL{ juce::File{files[0]} });
+        // File
+        juce::File file{ files[0] };
+
+        // If file opened successfully
+        if (player->openFile(juce::URL{ file }))
+        {
+            fileLoaded(file);
+        };
+
+
     }
 };

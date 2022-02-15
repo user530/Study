@@ -51,6 +51,10 @@ private:
     // Callback function for the loop button
     void loopBtnClick();
 
+    // Successfull file load callback
+    void fileLoaded(juce::File file);
+
+
     // Callback function for the hotQue
     void queEditClick();
     // Callback function for the hotQue
