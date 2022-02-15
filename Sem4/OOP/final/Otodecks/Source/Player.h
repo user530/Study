@@ -61,6 +61,9 @@ public:
     // Get access to the transport source, so GUI can attach listener
     juce::AudioTransportSource* getTransportSource();
 
+    // Check that reader source is not empty
+    bool rdrSrcNotEmpty() const;
+
     // Set new volume value
     void setGain(float newValue);
 
@@ -82,6 +85,18 @@ public:
     // Set loop state
     void setLooping(bool willLoop);
 
+    // Set edit mode
+    void setQueEdit(bool isEditable);
+
+    // Get edit mode
+    bool getQueEdit() const;
+
+    // Set hot que
+    void setHotQue(int ind, double timestamp);
+
+    // Get hot que timestamp
+    double getHotQue(int ind) const;
+
 private:
 
     juce::AudioTransportSource transportSource;
@@ -89,6 +104,11 @@ private:
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource; 
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
     PlayerState state;
+
+    bool loopMode;
+    bool queEditMode;
+
+    std::array<double, 8> hotQues;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player)

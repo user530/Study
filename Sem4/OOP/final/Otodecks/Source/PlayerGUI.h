@@ -49,7 +49,15 @@ private:
     // Callback function for the open button
     void openBtnClick();
     // Callback function for the loop button
-    void loopBtnClick() const;
+    void loopBtnClick();
+
+    // Callback function for the hotQue
+    void queEditClick();
+    // Callback function for the hotQue
+    void hotQueClick(juce::TextButton* btnAddr) const;
+
+    // Toggle off all hot que btns
+    void queBtnsOff();
 
     // Callback function for the gain slider
     void gainSldChange() const;
@@ -62,7 +70,7 @@ private:
     void transpChange(juce::AudioTransportSource* transpSrcP);
 
     // Logic behind changes of thumbnail
-    void thumbChange(juce::AudioThumbnail* thumbP);
+    void thumbChange();
 
     // Start btn
     juce::TextButton playBtn;
@@ -71,10 +79,24 @@ private:
     juce::TextButton stopBtn;
 
     // Open btn
-    juce::TextButton openBtn;
+    juce::TextButton openBtn{ "Open file" };
     
     // Loop btn
-    juce::ToggleButton loopBtn;
+    //juce::ToggleButton loopBtn{ "Loop file" };                              // DELETE!
+    juce::TextButton loopBtn{ "Loop file" };                              // DELETE!
+
+    // Hot que edit mode
+    juce::TextButton queEditBtn{ "Edit hot ques" };
+
+    // Hot que btns
+    juce::TextButton Que1Btn{ "1" };
+    juce::TextButton Que2Btn{ "2" };
+    juce::TextButton Que3Btn{ "3" };
+    juce::TextButton Que4Btn{ "4" };
+    juce::TextButton Que5Btn{ "5" };
+    juce::TextButton Que6Btn{ "6" };
+    juce::TextButton Que7Btn{ "7" };
+    juce::TextButton Que8Btn{ "8" };
 
     // Gain slider
     juce::Slider gainSld;

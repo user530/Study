@@ -13,12 +13,13 @@
 
 //==============================================================================
 Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager),
-                                                            state(PlayerState::Stopped)
+                                                            state(PlayerState::Stopped),
+                                                            loopMode(false),
+                                                            queEditMode(false),
+                                                            hotQues({ 0 })
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
-
-
 
 }
 
@@ -46,11 +47,8 @@ void Player::releaseResources()
 void Player::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
     // If valid source loaded
-    if (readerSource.get() != nullptr)
+    if (rdrSrcNotEmpty())
     {
-        // Pass the job to the transport source
-        //transportSource.getNextAudioBlock(bufferToFill);
-        
         // Pass the job to the resample source
         resampleSource.getNextAudioBlock(bufferToFill);
     }
@@ -141,11 +139,21 @@ bool Player::openFile(juce::URL audioURL)
     return false;
 };
 
-
 // Get access to the transport source
 juce::AudioTransportSource* Player::getTransportSource() 
 {
     return &transportSource;
+};
+
+// Check that reader source is not empty
+bool Player::rdrSrcNotEmpty() const
+{
+    // If reader source is not empty, return true
+    if (readerSource.get() != nullptr)
+        return true;
+
+    // Else, return false
+    return false;
 };
 
 // Set new volume value
@@ -221,7 +229,7 @@ void Player::setTempo(double tempo)
 bool Player::isLooping() const
 {
     // Check that reader source exists
-    if (readerSource != nullptr)
+    if (rdrSrcNotEmpty())
     {
         // Get looping state
         return readerSource -> isLooping();
@@ -231,14 +239,64 @@ bool Player::isLooping() const
     return false;
 };
 
-
 // Set loop state
 void Player::setLooping(bool willLoop)
 {
+    // Set new player state
+    loopMode = willLoop;
+
     // Check that reader source exists
-    if (readerSource != nullptr) 
+    if (rdrSrcNotEmpty())
     {
         // Enable input source looping if true, disable if false
         readerSource -> setLooping(willLoop);
     }
+};
+
+// Set edit mode state
+void Player::setQueEdit(bool isEditable)
+{
+    // Set new player state
+    queEditMode = isEditable;
+};
+
+// Get edit mode state
+bool Player::getQueEdit() const
+{
+    return queEditMode;
+};
+
+// Set hot que relative position
+void Player::setHotQue(int ind, double timestamp)
+{
+    // If index argument is invalid print error msg and stop
+    if (ind < 0 || ind > hotQues.size() - 1 )
+    {
+        DBG("HOT QUE INDEX IS OUT OF RANGE!");
+        return;
+    }
+    
+    // If timestamp argument is invalid print error msg and stop
+    if (timestamp < 0 || timestamp > transportSource.getLengthInSeconds())
+    {
+        DBG("HOT QUE TIMESTAMP IS OUT OF RANGE!");
+        return;
+    }
+
+    // Store timestamp
+    hotQues[ind] = timestamp;
+};
+
+// Get hot que timestamp
+double Player::getHotQue(int ind) const
+{
+    // If index argument is invalid print error msg and stop
+    if (ind < 0 || ind > hotQues.size() - 1)
+    {
+        DBG("HOT QUE INDEX IS OUT OF RANGE!");
+        return 0.0;
+    }
+
+    // Get timestamp
+    return hotQues[ind];
 };
