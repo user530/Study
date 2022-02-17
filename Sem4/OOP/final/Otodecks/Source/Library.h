@@ -11,19 +11,67 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "FileBrowser.h"
 
 //==============================================================================
 /*
 */
-class Library  : public juce::Component
+class Library  : public juce::Component,
+                    public juce::FileBrowserListener,
+                    public juce::TableListBoxModel
 {
 public:
-    Library();
+    Library(FileBrowser*);
     ~Library() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
+
+    // Inherited from the base class FileBrowserListener
+    virtual void selectionChanged() override;
+    virtual void fileClicked(const juce::File& file, const juce::MouseEvent& e) override;
+    virtual void fileDoubleClicked(const juce::File& file) override;
+    virtual void browserRootChanged(const juce::File& newRoot) override;
+
+    // Inherited from the base class TableListBoxModel
+    virtual int getNumRows() override;
+    virtual void paintRowBackground(juce::Graphics&, 
+                                    int rowNumber, 
+                                    int width, 
+                                    int height, 
+                                    bool rowIsSelected) override;
+    virtual void paintCell(juce::Graphics&, 
+                            int rowNumber, 
+                            int columnId, 
+                            int width, 
+                            int height, 
+                            bool rowIsSelected) override;
+
+
+
+    // File browser component
+    FileBrowser* fileBrowser;
+
+    // Library data collection
+    juce::Array<juce::URL> library;
+
+    // Library table component
+    juce::TableListBox libTable;
+    // Library table font
+    juce::Font tableFont{ 12.0f };
+
+    // Current library xml
+    std::unique_ptr<juce::XmlElement> curLibrary = nullptr;
+    // Columns from the library file
+    juce::XmlElement* libColumns = nullptr;
+    // Data from the library file
+    juce::XmlElement* libData = nullptr;
+
+
+
+
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Library)
 };

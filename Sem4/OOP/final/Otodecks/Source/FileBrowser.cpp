@@ -27,10 +27,6 @@ FileBrowser::FileBrowser()
 
     // File tree
     fileTree.setTitle("Files");
-    //fileTree.setColour(juce::FileTreeComponent::backgroundColourId,juce::Colours::lightgrey);
-
-    // Add listener
-    fileTree.addListener(this);
 
     // Start thread
     browserThread.startThread(3);
@@ -63,25 +59,8 @@ void FileBrowser::resized()
     fileTree.setBounds(0, 0, getWidth(), getHeight());
 }
 
-// Callback when the user selects a different file in the browser
-void FileBrowser::selectionChanged() {};
-
-// Callback when the user clicks on a file in the browser
-void FileBrowser::fileClicked(const juce::File& file, const juce::MouseEvent& e){};
-
-// Callback when the user double-clicks on a file in the browser
-void FileBrowser::fileDoubleClicked(const juce::File& file)
+// Get access to the file tree
+juce::FileTreeComponent* FileBrowser::getFiletree()
 {
-    // If file has correct format
-    if (file.getFileExtension() == ".mp3" ||
-        file.getFileExtension() == ".wav;" ||
-        file.getFileExtension() == ".aif")
-    {
-        DBG("CORRECT FORMAT!");
-        // Store selected file
-        selectedFile = juce::URL{ file };
-    }
+    return &fileTree;
 };
-
-// Callback when the browser's root folder changes
-void FileBrowser::browserRootChanged(const juce::File& newRoot){};

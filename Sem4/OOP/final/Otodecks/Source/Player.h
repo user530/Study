@@ -105,9 +105,13 @@ private:
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
     PlayerState state;
 
+    // Loop mode
     bool loopMode;
+
+    // Hot que edit mode
     bool queEditMode;
 
+    // Hot que's data storage
     std::array<double, 8> hotQues;
 
 
