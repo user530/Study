@@ -49,6 +49,15 @@ private:
                             int height, 
                             bool rowIsSelected) override;
 
+    // Create XML library template 
+    juce::XmlElement newLibXML(juce::String libName = "OTODECKS_LIBRARY");
+    
+    // Add file from the file tree to the library
+    void addTrackToLib(const juce::File& file);
+
+    // Make XML entry to the current library
+    void makeLibEntry(const juce::StringArray params);
+
 
 
     // File browser component
