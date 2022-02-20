@@ -28,10 +28,6 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
     libFile = juce::File::getCurrentWorkingDirectory().getChildFile("Lib.oto");
     libFile.create();
 
-    //auto newFile = juce::File::getCurrentWorkingDirectory().getChildFile("Lib.oto");
-    //newFile.create();
-
-
 
     // Make table visible
     addAndMakeVisible(libTable);
@@ -41,9 +37,20 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
     // Set columns (we dont need to show last URL column, so shorten col number by 1)
     for (int i = 0; i < curLibrary.getFirstChildElement()->getNumChildElements() - 1; ++i)
     {
-        libTable.getHeader().addColumn(libStructure->getChildElement(i)->getAttributeValue(1), 
-                                        i + 1,
-                                        50);
+        // Get column name
+        juce::String colName = libStructure->getChildElement(i)->getAttributeValue(1);
+
+        // Prepare column width variable
+        int colW = 100;
+
+        // For ID and Track columns, we use separate column width
+        if (colName == "ID")
+            colW = 40;
+        else if (colName == "Track")
+            colW = 200;
+
+        // Add columns for each attribute of the library structure
+        libTable.getHeader().addColumn(colName, i + 1, colW);
     }
 
     // Make auto stretch, to fill all provided space
@@ -83,7 +90,7 @@ void Library::resized()
     // components that your component contains..
     
     // Library table position
-    libTable.setBounds(0, getHeight() * 0.1, getWidth(), getHeight() * 0.9);
+    libTable.setBounds(0, getHeight() * 0.15, getWidth(), getHeight() * 0.85);
 
 }
 
@@ -273,5 +280,47 @@ void Library::paintCell(juce::Graphics& g,
 
 };
 
+// This callback is made when the user clicks on one of the cells in the table
+void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
+{
+    DBG("CLICKED " + std::to_string(rowNumber) + " ROW, " + std::to_string(columnId) + " COL");
+    
+};
 
+// This callback is made when the table's sort order is changed        
+void Library::sortOrderChanged(int newSortColumnId, bool isForwards) 
+{
+    // Setup sorter based on the column name and search direction
+    DemoDataSorter sorter(libEntries->
+                            getFirstChildElement()->
+                                getAttributeName(newSortColumnId - 1), isForwards);
+
+    // Sort entries
+    libEntries->sortChildElements(sorter);
+
+    // Update library table
+    libTable.updateContent();
+};
+
+// Override this to be informed when the delete key is pressed
+void Library::deleteKeyPressed(int lastRowSelected)
+{
+    DBG("DELETE CLICKED! ROW INDEX - " + juce::String{lastRowSelected});
+};
+
+// To allow rows from your table to be dragged - and -dropped, implement this method
+juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows)
+{
+    juce::Array<int> arr{};
+
+    for (int i = 0; i < currentlySelectedRows.size(); ++i)
+    {
+        arr.add(currentlySelectedRows[i]);
+        DBG("DRAG ROWS: elem i = " + std::to_string(i) + ", value - " + std::to_string(currentlySelectedRows[i]));
+    }
+
+    juce::var result{0};
+
+    return result;
+};
 //===================================================================

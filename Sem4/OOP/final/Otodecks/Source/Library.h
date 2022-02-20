@@ -18,7 +18,8 @@
 */
 class Library  : public juce::Component,
                     public juce::FileBrowserListener,
-                    public juce::TableListBoxModel
+                    public juce::TableListBoxModel,
+                    public juce::DragAndDropContainer
 {
 public:
     Library(FileBrowser*);
@@ -35,6 +36,8 @@ private:
     virtual void fileDoubleClicked(const juce::File& file) override;
     virtual void browserRootChanged(const juce::File& newRoot) override;
 
+    //===================================================================
+
     // Inherited from the base class TableListBoxModel
     virtual int getNumRows() override;
     virtual void paintRowBackground(juce::Graphics&, 
@@ -49,6 +52,48 @@ private:
                             int height, 
                             bool rowIsSelected) override;
 
+    // This callback is made when the user clicks on one of the cells in the table
+    virtual void cellClicked(int rowNumber, int columnId, const juce::MouseEvent&);
+
+    // This callback is made when the table's sort order is changed        
+    virtual void sortOrderChanged(int newSortColumnId, bool isForwards);
+
+    // Override this to be informed when the delete key is pressed
+    virtual void deleteKeyPressed(int lastRowSelected);
+      
+    // To allow rows from your table to be dragged - and -dropped, implement this method
+    virtual juce::var getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows);
+
+    // Comparator class used to sort data in table 
+    // (copied from the WidgetsDemo from the base JUCE demo collection)
+    class DemoDataSorter
+    {
+    public:
+        DemoDataSorter(const juce::String& attributeToSortBy, bool forwards)
+                        : attributeToSort(attributeToSortBy),
+                          direction(forwards ? 1 : -1)
+        {
+        }
+
+        int compareElements(juce::XmlElement* first, juce::XmlElement* second) const
+        {
+            auto result = first->getStringAttribute(attributeToSort)
+                .compareNatural(second->getStringAttribute(attributeToSort));
+
+            if (result == 0)
+                result = first->getStringAttribute("ID")
+                .compareNatural(second->getStringAttribute("ID"));
+
+            return direction * result;
+        }
+
+    private:
+        juce::String attributeToSort;
+        int direction;
+    };
+
+
+    //===================================================================
 
     // Setup XML library template 
     void libTemplate(juce::XmlElement* emptyLib);
