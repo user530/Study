@@ -73,6 +73,7 @@ private:
 
     // Current library xml
     std::unique_ptr<juce::XmlElement> curLibrary = nullptr;
+
     // Columns from the library file
     juce::XmlElement* libColumns = nullptr;
     // Data from the library file

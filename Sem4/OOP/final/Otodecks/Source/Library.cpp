@@ -42,6 +42,8 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
 
 Library::~Library()
 {
+    // Release XML Element to prevent memory leaks
+    curLibrary.release();
 }
 
 void Library::paint (juce::Graphics& g)
@@ -105,8 +107,7 @@ juce::XmlElement Library::newLibXML(juce::String libName)
     // Store initial structure to the XML element for future use
     newLib.addChildElement(new juce::XmlElement{ "STRUCTURE" });
     newLib.addChildElement(new juce::XmlElement{ "ENTRIES" });
-
-
+    
     // Prepare all column names
     juce::StringArray columns{ "ID", "Track", "Artist", "Album", "Genre", "Length", "BPM", "Key", "URL"};
     
@@ -134,7 +135,7 @@ juce::XmlElement Library::newLibXML(juce::String libName)
     return newLib;
 };
 
-// Make XML entry to the current library         Make function to take number of params to store, not file
+// Make XML entry to the current library
 void Library::makeLibEntry(const juce::StringArray params)
 {
     // Create new entry element
@@ -143,16 +144,25 @@ void Library::makeLibEntry(const juce::StringArray params)
     // Get easy access to the structure child element
     juce::XmlElement* structure = curLibrary->getFirstChildElement();
 
-    DBG("THERE IS " + std::to_string(structure->getNumChildElements()) + " ELEMENTS IN THE STRUCTURE");
-
-    // Iterate over all columns and 
-    for (auto col : structure->getChildIterator())
+    // If argument array is the different size
+    if (structure->getNumChildElements() != params.size())
     {
-        newEntry->setAttribute(col->getAttributeValue(1),  // column name
-                                "");    // file name !!! PLACEHOLDER
+        // Print error and stop execution
+        DBG("Library::makeLibEntry - Error! Number of parameters doesn't match the data structure!");
+        return;
     }
 
-    // Add new entry
+    // Iterate over all columns
+    for (int i = 0; i < structure->getNumChildElements(); ++i)
+    {
+        // Column name
+        juce::String colName = structure->getChildElement(i)->getAttributeValue(1);
+
+        // Set passed value as column value
+        newEntry->setAttribute(colName,params[i]);
+    }
+
+    // Add new entry to the current library
     curLibrary->getChildByName("ENTRIES")->addChildElement(newEntry);
 };
 
@@ -175,7 +185,21 @@ void Library::addTrackToLib(const juce::File& file)
         // Check if lib file is opened 
         if (curLibrary != nullptr)
         {
-            DBG("ADD ENTRY TO THE EXISTING FILE");
+            DBG(curLibrary->getNumChildElements());                                        // DELETE
+            // Prepare params
+            juce::StringArray params{ juce::String(555),
+                                        file.getFileNameWithoutExtension(),
+                                        "#Artist",
+                                        "#Album",
+                                        "#Genre",
+                                        "#Length",
+                                        "#BPM",
+                                        "#Key",
+                                        juce::URL{file}.toString(false) };
+
+            // Make entry based on the passed data
+            makeLibEntry(params);
+            DBG(curLibrary->toString());                                        // DELETE
         }
         else
         {
@@ -188,15 +212,28 @@ void Library::addTrackToLib(const juce::File& file)
 
             // Set the new library as the current one
             curLibrary = std::unique_ptr<juce::XmlElement>{ &newLib };
-
+            
             // Check that correct file is passed
             if (file != juce::File{})
             {
+                // Prepare params
+                juce::StringArray params{ juce::String(1),
+                                            file.getFileNameWithoutExtension(),
+                                            "#Artist",
+                                            "#Album",
+                                            "#Genre",
+                                            "#Length",
+                                            "#BPM",
+                                            "#Key",
+                                            juce::URL{file}.toString(false) };
+
                 // Make entry based on the passed data
-                makeLibEntry(juce::StringArray{"TOP", "KEK"});
+                makeLibEntry(params);
 
             }
 
+
+            DBG(curLibrary->getNumChildElements);                                           // DELETE
             // SAVE CHANGES                                                        // DELETE
             newLib.writeTo(newFile);
         }
@@ -212,7 +249,12 @@ void Library::addTrackToLib(const juce::File& file)
 // This must return the number of rows currently in the table
 int Library::getNumRows()
 {
-    return 8;
+    // If no current library > return 0
+    if (curLibrary == nullptr)
+        return 0;
+    // If library created > add number of elements in structure element
+    else
+        return curLibrary->getFirstChildElement()->getNumChildElements();
 };
 
 // This must draw the background behind one of the rows in the table
