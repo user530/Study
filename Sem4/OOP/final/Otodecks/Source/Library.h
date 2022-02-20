@@ -49,9 +49,10 @@ private:
                             int height, 
                             bool rowIsSelected) override;
 
-    // Create XML library template 
-    juce::XmlElement newLibXML(juce::String libName = "OTODECKS_LIBRARY");
-    
+
+    // Setup XML library template 
+    void libTemplate(juce::XmlElement* emptyLib);
+
     // Add file from the file tree to the library
     void addTrackToLib(const juce::File& file);
 
@@ -72,12 +73,16 @@ private:
     juce::Font tableFont{ 12.0f };
 
     // Current library xml
-    std::unique_ptr<juce::XmlElement> curLibrary = nullptr;
+    juce::XmlElement curLibrary{ "OTODECKS_LIBRARY" };
 
-    // Columns from the library file
-    juce::XmlElement* libColumns = nullptr;
-    // Data from the library file
-    juce::XmlElement* libData = nullptr;
+    // Library structure xml element
+    juce::XmlElement* libStructure = nullptr;
+    // Library entries xml element
+    juce::XmlElement* libEntries = nullptr;
+
+
+    // Library file
+    juce::File libFile{};
 
 
 

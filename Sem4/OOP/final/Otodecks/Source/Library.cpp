@@ -17,24 +17,37 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     
+    // Setup initial library structure
+    libTemplate(&curLibrary);
+
+    // Set shortcut pointers
+    libStructure = curLibrary.getChildByName("STRUCTURE");
+    libEntries = curLibrary.getChildByName("ENTRIES");
+
+    // Create new lib file
+    libFile = juce::File::getCurrentWorkingDirectory().getChildFile("Lib.oto");
+    libFile.create();
+
+    //auto newFile = juce::File::getCurrentWorkingDirectory().getChildFile("Lib.oto");
+    //newFile.create();
+
+
+
     // Make table visible
     addAndMakeVisible(libTable);
     // Change table model to our component
     libTable.setModel(this);
 
-    // Set columns
-    libTable.getHeader().addColumn("ID", 1, 50);
-    libTable.getHeader().addColumn("Track", 2, 50);
-    libTable.getHeader().addColumn("Artist", 3, 50);
-    libTable.getHeader().addColumn("Album", 4, 50);
-    libTable.getHeader().addColumn("Genre", 5, 50);
-    libTable.getHeader().addColumn("Length", 6, 50);
-    libTable.getHeader().addColumn("BPM", 7, 50);
-    libTable.getHeader().addColumn("Key", 8, 50);
+    // Set columns (we dont need to show last URL column, so shorten col number by 1)
+    for (int i = 0; i < curLibrary.getFirstChildElement()->getNumChildElements() - 1; ++i)
+    {
+        libTable.getHeader().addColumn(libStructure->getChildElement(i)->getAttributeValue(1), 
+                                        i + 1,
+                                        50);
+    }
 
+    // Make auto stretch, to fill all provided space
     libTable.getHeader().setStretchToFitActive(true);
-
-
 
     // Add listener to the file browser
     ( fileBrowser -> getFiletree() ) -> addListener(this);
@@ -42,8 +55,6 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
 
 Library::~Library()
 {
-    // Release XML Element to prevent memory leaks
-    curLibrary.release();
 }
 
 void Library::paint (juce::Graphics& g)
@@ -89,6 +100,9 @@ void Library::fileDoubleClicked(const juce::File& file)
 {
     // Add file to the library
     addTrackToLib(file);
+
+    // Update library table
+    libTable.updateContent();
 };
 
 // Callback when the browser's root folder changes
@@ -96,23 +110,26 @@ void Library::browserRootChanged(const juce::File& newRoot) {};
 
 //===================================================================
 
-
-
-// Create XML library template 
-juce::XmlElement Library::newLibXML(juce::String libName)
+// Setup XML library template 
+void Library::libTemplate(juce::XmlElement* emptyLib)
 {
-    // Create new XML lib element
-    juce::XmlElement newLib{ libName };
+    // If empty pointer is passed
+    if (emptyLib == nullptr)
+    {
+        // Message and terminate
+        DBG("Library::libTemplate - ERROR! Empty pointer passed!");
+        return;
+    }
 
     // Store initial structure to the XML element for future use
-    newLib.addChildElement(new juce::XmlElement{ "STRUCTURE" });
-    newLib.addChildElement(new juce::XmlElement{ "ENTRIES" });
+    emptyLib->addChildElement(new juce::XmlElement{ "STRUCTURE" });
+    emptyLib->addChildElement(new juce::XmlElement{ "ENTRIES" });
     
     // Prepare all column names
     juce::StringArray columns{ "ID", "Track", "Artist", "Album", "Genre", "Length", "BPM", "Key", "URL"};
     
     // Get easy access to the structure child element
-    juce::XmlElement* structure = newLib.getFirstChildElement();
+    juce::XmlElement* structure = emptyLib->getFirstChildElement();
 
     // Setup structure based on the column names, default width=50
     for (int i = 0; i < columns.size(); ++i)
@@ -130,9 +147,6 @@ juce::XmlElement Library::newLibXML(juce::String libName)
         // Add column element
         structure->addChildElement(newCol);
     }
-
-    // Return library
-    return newLib;
 };
 
 // Make XML entry to the current library
@@ -142,7 +156,7 @@ void Library::makeLibEntry(const juce::StringArray params)
     juce::XmlElement* newEntry = new juce::XmlElement{ "ENTRY" };
 
     // Get easy access to the structure child element
-    juce::XmlElement* structure = curLibrary->getFirstChildElement();
+    juce::XmlElement* structure = curLibrary.getFirstChildElement();
 
     // If argument array is the different size
     if (structure->getNumChildElements() != params.size())
@@ -163,9 +177,8 @@ void Library::makeLibEntry(const juce::StringArray params)
     }
 
     // Add new entry to the current library
-    curLibrary->getChildByName("ENTRIES")->addChildElement(newEntry);
+    curLibrary.getChildByName("ENTRIES")->addChildElement(newEntry);
 };
-
 
 // Add file from the file tree to the library
 void Library::addTrackToLib(const juce::File& file)
@@ -176,110 +189,89 @@ void Library::addTrackToLib(const juce::File& file)
         file.getFileExtension() != ".aif")
     {
         // Print message and stop execution
-        DBG("ERROR! UNSUPPORTED FILE FORMAT!");
+        DBG("Library::addTrackToLib - ERROR! UNSUPPORTED FILE FORMAT!");
         return;
     }
-    // If file format is correct
-    else {
-
-        // Check if lib file is opened 
-        if (curLibrary != nullptr)
-        {
-            DBG(curLibrary->getNumChildElements());                                        // DELETE
-            // Prepare params
-            juce::StringArray params{ juce::String(555),
-                                        file.getFileNameWithoutExtension(),
-                                        "#Artist",
-                                        "#Album",
-                                        "#Genre",
-                                        "#Length",
-                                        "#BPM",
-                                        "#Key",
-                                        juce::URL{file}.toString(false) };
-
-            // Make entry based on the passed data
-            makeLibEntry(params);
-            DBG(curLibrary->toString());                                        // DELETE
-        }
-        else
-        {
-            // Create new lib file
-            auto newFile = juce::File::getCurrentWorkingDirectory().getChildFile("Lib.oto");
-            newFile.create();
-
-            // Create new library xml document
-            juce::XmlElement newLib = newLibXML();
-
-            // Set the new library as the current one
-            curLibrary = std::unique_ptr<juce::XmlElement>{ &newLib };
-            
-            // Check that correct file is passed
-            if (file != juce::File{})
-            {
-                // Prepare params
-                juce::StringArray params{ juce::String(1),
-                                            file.getFileNameWithoutExtension(),
-                                            "#Artist",
-                                            "#Album",
-                                            "#Genre",
-                                            "#Length",
-                                            "#BPM",
-                                            "#Key",
-                                            juce::URL{file}.toString(false) };
-
-                // Make entry based on the passed data
-                makeLibEntry(params);
-
-            }
-
-
-            DBG(curLibrary->getNumChildElements);                                           // DELETE
-            // SAVE CHANGES                                                        // DELETE
-            newLib.writeTo(newFile);
-        }
-
+    // If empty file passed
+    else if (file == juce::File{})
+    {
+        // Print message and stop execution
+        DBG("Library::addTrackToLib - ERROR! EMPTY FILE PASSED!");
+        return;
     }
+    // If everything is fine
+    else 
+    {
+        // Prepare params
+        juce::StringArray params{ juce::String{ curLibrary
+                                                .getChildByName("ENTRIES")
+                                                ->getNumChildElements() + 1 },
+                                    file.getFileNameWithoutExtension(),
+                                    "#Artist",
+                                    "#Album",
+                                    "#Genre",
+                                    "#Length",
+                                    "#BPM",
+                                    "#Key",
+                                    juce::URL{file}.toString(false) };
 
+        // Make entry based on the passed data
+        makeLibEntry(params);
+     
+        // SAVE CHANGES                                                        // DELETE
+        curLibrary.writeTo(libFile);
+    }
 };
-
-
 
 //===================================================================
 
 // This must return the number of rows currently in the table
 int Library::getNumRows()
 {
-    // If no current library > return 0
-    if (curLibrary == nullptr)
-        return 0;
-    // If library created > add number of elements in structure element
-    else
-        return curLibrary->getFirstChildElement()->getNumChildElements();
+    return curLibrary.getChildByName("ENTRIES")->getNumChildElements();
 };
 
 // This must draw the background behind one of the rows in the table
 void Library::paintRowBackground(juce::Graphics& g,
-    int rowNumber,
-    int width,
-    int height,
-    bool rowIsSelected)
+                                    int rowNumber,
+                                    int width,
+                                    int height,
+                                    bool rowIsSelected)
 {
-
+    if (rowIsSelected)
+    {
+        g.fillAll(juce::Colours::orange);
+    }
+    else {
+        g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    }
 };
 
 // This must draw one of the cells
 void Library::paintCell(juce::Graphics& g,
-    int rowNumber,
-    int columnId,
-    int width,
-    int height,
-    bool rowIsSelected)
+                            int rowNumber,
+                            int columnId,
+                            int width,
+                            int height,
+                            bool rowIsSelected)
 {
     // Set font
     g.setColour(juce::Colours::white);
     g.setFont(tableFont);
 
-    
+    if (juce::XmlElement* entryP = libEntries->getChildElement(rowNumber))
+    {
+        // Get column name
+        //juce::String colName = entryP->getAttributeName(columnId);                    //DELETE
+        
+        // Get data from the cell based on the col id
+        juce::String cellData = entryP->getAttributeValue(columnId-1);
+
+        // Draw cell data
+        g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
+    }
+
 };
+
 
 //===================================================================
