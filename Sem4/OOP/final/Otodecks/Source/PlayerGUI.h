@@ -20,6 +20,7 @@
 class PlayerGUI  : public juce::Component,
                     public juce::ChangeListener,
                     public juce::FileDragAndDropTarget,
+                    public juce::DragAndDropTarget,
                     private juce::Timer
 {
 public:
@@ -33,6 +34,11 @@ public:
     // Override pure virtual functions from the FileDragAndDropTarget base class
     virtual bool isInterestedInFileDrag(const juce::StringArray& files) override;
     virtual void filesDropped(const juce::StringArray& files, int x, int y) override;
+
+    // Override pure virtual functions from the DragAndDropTarget base class
+    virtual bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
+    virtual void itemDropped(const SourceDetails& dragSourceDetails) override;
+    virtual bool shouldDrawDragImageWhenOver() override;
 
     // Override pure virtual functions from the ChangeListener base class
     virtual void changeListenerCallback(juce::ChangeBroadcaster* source) override;

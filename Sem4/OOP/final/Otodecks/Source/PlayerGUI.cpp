@@ -210,6 +210,7 @@ void PlayerGUI::timerCallback()
     waveform->setRelPos(player -> getPosRel());
 };
 
+// Callback function for the play button
 void PlayerGUI::playBtnClick() const
 {
     // Get player state
@@ -232,6 +233,7 @@ void PlayerGUI::playBtnClick() const
     }
 };
 
+// Callback function for the stop button
 void PlayerGUI::stopBtnClick()
 {
     // If player is already paused
@@ -255,6 +257,7 @@ void PlayerGUI::stopBtnClick()
     }
 };
 
+// Callback function for the open button
 void PlayerGUI::openBtnClick()
 {
     //=======================================================================Multithreading problem!
@@ -331,13 +334,13 @@ void PlayerGUI::fileLoaded(juce::File file)
 
     // Restore loop setting
     player->setLooping(loopBtn.getToggleState());
-
+    
     // Pass the audio data to the AudioThumb object to draw the waveform 
-    (waveform->getAudioThumb()) ->
+    (waveform->getAudioThumb()) -> 
         setSource(new juce::FileInputSource(file));
 };
 
-
+// Callback function for the loop button
 void PlayerGUI::loopBtnClick()
 {
     // Set button text depending on the btn state
@@ -354,6 +357,7 @@ void PlayerGUI::loopBtnClick()
     player->setLooping( loopBtn.getToggleState() );
 };
 
+// Callback function for the gain slider
 void PlayerGUI::gainSldChange() const
 {
     //Get the value of the slider and converse type
@@ -363,6 +367,7 @@ void PlayerGUI::gainSldChange() const
     (player->getTransportSource())->setGain(newGain);
 };
 
+// Callback function for the time slider
 void PlayerGUI::timeSldChange() const
 {
     //Get the value of the slider and converse type
@@ -372,6 +377,7 @@ void PlayerGUI::timeSldChange() const
     player->setPosRel(newPos);
 };
 
+// Callback function for the tempo slider
 void PlayerGUI::tempoSldChange() const
 {
     // Get the value of the slider
@@ -532,12 +538,13 @@ void PlayerGUI::queBtnsOff()
     Que8Btn.setToggleState(false, juce::NotificationType::dontSendNotification);
 };
 
-
+// Callback to check whether this target is interested in the set of files being offered
 bool PlayerGUI::isInterestedInFileDrag(const juce::StringArray& files)
 {
     return true;
 };
 
+// Callback to indicate that the user has dropped the files onto this component
 void PlayerGUI::filesDropped(const juce::StringArray& files, int x, int y)
 {
     // Check that only one file dropped
@@ -554,4 +561,32 @@ void PlayerGUI::filesDropped(const juce::StringArray& files, int x, int y)
 
 
     }
+};
+
+// Callback to check whether this target is interested in the type of object being dragged
+bool PlayerGUI::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
+{
+    return true;
+};
+
+// Callback to indicate that the user has dropped something onto this component
+void PlayerGUI::itemDropped(const SourceDetails& dragSourceDetails)
+{
+    DBG("ITEM DROPPED!");
+    DBG(dragSourceDetails.description.toString());
+
+    juce::File track{ dragSourceDetails.description.toString() };
+
+    // If file opened successfully
+    if (player->openFile(juce::URL{ track }))
+    {
+        // Load track
+        fileLoaded(track);
+    };
+};
+
+// Overriding this allows the target to tell the drag container whether to draw the drag image while the cursor is over it
+bool PlayerGUI::shouldDrawDragImageWhenOver()
+{
+    return true;
 };

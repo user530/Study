@@ -56,6 +56,7 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
     // Make auto stretch, to fill all provided space
     libTable.getHeader().setStretchToFitActive(true);
 
+
     // Add listener to the file browser
     ( fileBrowser -> getFiletree() ) -> addListener(this);
 }
@@ -91,7 +92,7 @@ void Library::resized()
     
     // Library table position
     libTable.setBounds(0, getHeight() * 0.15, getWidth(), getHeight() * 0.85);
-
+    
 }
 
 //===================================================================
@@ -220,7 +221,7 @@ void Library::addTrackToLib(const juce::File& file)
                                     "#Length",
                                     "#BPM",
                                     "#Key",
-                                    juce::URL{file}.toString(false) };
+                                    file.getFullPathName()};
 
         // Make entry based on the passed data
         makeLibEntry(params);
@@ -268,9 +269,6 @@ void Library::paintCell(juce::Graphics& g,
 
     if (juce::XmlElement* entryP = libEntries->getChildElement(rowNumber))
     {
-        // Get column name
-        //juce::String colName = entryP->getAttributeName(columnId);                    //DELETE
-        
         // Get data from the cell based on the col id
         juce::String cellData = entryP->getAttributeValue(columnId-1);
 
@@ -283,6 +281,7 @@ void Library::paintCell(juce::Graphics& g,
 // This callback is made when the user clicks on one of the cells in the table
 void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
 {
+    DBG(libTable.getLastRowSelected());
     DBG("CLICKED " + std::to_string(rowNumber) + " ROW, " + std::to_string(columnId) + " COL");
     
 };
@@ -311,16 +310,10 @@ void Library::deleteKeyPressed(int lastRowSelected)
 // To allow rows from your table to be dragged - and -dropped, implement this method
 juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows)
 {
-    juce::Array<int> arr{};
-
-    for (int i = 0; i < currentlySelectedRows.size(); ++i)
-    {
-        arr.add(currentlySelectedRows[i]);
-        DBG("DRAG ROWS: elem i = " + std::to_string(i) + ", value - " + std::to_string(currentlySelectedRows[i]));
-    }
-
-    juce::var result{0};
-
-    return result;
+    // Pass URL attribute (File path)
+    return libEntries->
+                getChildElement(currentlySelectedRows[0])->
+                    getStringAttribute("URL");
 };
+
 //===================================================================

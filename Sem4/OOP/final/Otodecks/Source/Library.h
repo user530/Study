@@ -92,7 +92,6 @@ private:
         int direction;
     };
 
-
     //===================================================================
 
     // Setup XML library template 
@@ -104,13 +103,8 @@ private:
     // Make XML entry to the current library
     void makeLibEntry(const juce::StringArray params);
 
-
-
     // File browser component
     FileBrowser* fileBrowser;
-
-    // Library data collection
-    juce::Array<juce::URL> library;
 
     // Library table component
     juce::TableListBox libTable;
@@ -125,9 +119,9 @@ private:
     // Library entries xml element
     juce::XmlElement* libEntries = nullptr;
 
-
     // Library file
     juce::File libFile{};
+
 
 
 

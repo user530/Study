@@ -192,7 +192,14 @@ void Player::setPosRel(float relStamp)
 // Get relative position
 double Player::getPosRel() const
 {
-    return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
+    // To prevent division by 0 we check that track length is not zero
+    if (transportSource.getLengthInSeconds() != 0)
+    {
+        return transportSource.getCurrentPosition() / transportSource.getLengthInSeconds();
+    }
+
+    // If transport source length is 0
+    return 0.0;
 };
 
 // Set position in seconds
