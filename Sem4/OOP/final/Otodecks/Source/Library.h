@@ -64,8 +64,10 @@ private:
     // To allow rows from your table to be dragged - and -dropped, implement this method
     virtual juce::var getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows);
 
+    //===================================================================
+
     // Comparator class used to sort data in table 
-    // (copied from the WidgetsDemo from the base JUCE demo collection)
+    // (from the WidgetsDemo from the base JUCE demo collection)
     class DemoDataSorter
     {
     public:
@@ -91,6 +93,8 @@ private:
         juce::String attributeToSort;
         int direction;
     };
+
+
 
     //===================================================================
 

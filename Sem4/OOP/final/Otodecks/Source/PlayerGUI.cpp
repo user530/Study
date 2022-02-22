@@ -572,9 +572,7 @@ bool PlayerGUI::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
 // Callback to indicate that the user has dropped something onto this component
 void PlayerGUI::itemDropped(const SourceDetails& dragSourceDetails)
 {
-    DBG("ITEM DROPPED!");
-    DBG(dragSourceDetails.description.toString());
-
+    // Try to get file from the stored address
     juce::File track{ dragSourceDetails.description.toString() };
 
     // If file opened successfully

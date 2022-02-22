@@ -214,14 +214,14 @@ void Library::addTrackToLib(const juce::File& file)
         juce::StringArray params{ juce::String{ curLibrary
                                                 .getChildByName("ENTRIES")
                                                 ->getNumChildElements() + 1 },
-                                    file.getFileNameWithoutExtension(),
-                                    "#Artist",
-                                    "#Album",
-                                    "#Genre",
-                                    "#Length",
-                                    "#BPM",
-                                    "#Key",
-                                    file.getFullPathName()};
+                                                file.getFileNameWithoutExtension(),
+                                                "#Artist",
+                                                "#Album",
+                                                "#Genre",
+                                                "#Length",
+                                                "#BPM",
+                                                "#Key",
+                                                file.getFullPathName()};
 
         // Make entry based on the passed data
         makeLibEntry(params);
@@ -282,7 +282,7 @@ void Library::paintCell(juce::Graphics& g,
 void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
 {
     DBG(libTable.getLastRowSelected());
-    DBG("CLICKED " + std::to_string(rowNumber) + " ROW, " + std::to_string(columnId) + " COL");
+    DBG("CLICKED " + std::to_string(rowNumber + 1) + " ROW, " + std::to_string(columnId) + " COL");
     
 };
 
