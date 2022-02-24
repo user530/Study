@@ -121,6 +121,6 @@ void MainComponent::resized()
     player1GUI.setBounds(0, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
     mixerGUI.setBounds(wUnit * 3.5, hUnit * 2.5, wUnit * 3, hUnit * 4);
     player2GUI.setBounds(wUnit * 6.5, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
-    fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 3, hUnit * 3.5);
-    library.setBounds(wUnit * 3, hUnit * 6.5, wUnit * 7, hUnit * 3.5);
+    fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 2.5, hUnit * 3.5);
+    library.setBounds(wUnit * 2.5, hUnit * 6.5, wUnit * 7.5, hUnit * 3.5);
 }

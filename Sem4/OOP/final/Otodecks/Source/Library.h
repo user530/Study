@@ -38,6 +38,8 @@ private:
 
     //===================================================================
 
+
+
     // Inherited from the base class TableListBoxModel
     virtual int getNumRows() override;
     virtual void paintRowBackground(juce::Graphics&, 
@@ -58,16 +60,22 @@ private:
     // This callback is made when the table's sort order is changed        
     virtual void sortOrderChanged(int newSortColumnId, bool isForwards);
 
-    // Override this to be informed when the delete key is pressed
+    // Override this to be informed when the delete key 
     virtual void deleteKeyPressed(int lastRowSelected);
       
     // To allow rows from your table to be dragged - and -dropped, implement this method
     virtual juce::var getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows);
 
+    // This is used to create or update a custom component to go in a cell
+    virtual juce::Component* refreshComponentForCell(int rowNumber,
+                                                int columnId,
+                                                bool isRowSelected,
+                                                Component* existingComponentToUpdate) override;
+
     //===================================================================
 
     // Comparator class used to sort data in table 
-    // (from the WidgetsDemo from the base JUCE demo collection)
+    // (from the WidgetsDemo from the base JUCE demo collection, adapted)
     class DemoDataSorter
     {
     public:
@@ -94,9 +102,77 @@ private:
         int direction;
     };
 
+    // This is a custom Label component, which we use for the table's editable text columns.
+    // (Based on the WidgetsDemo from the base JUCE demo collection, adapted to handle drag and drop)
+    class EditableTextCustomComponent : public juce::Label,
+                                        public juce::DragAndDropContainer
+    {
+    public:
+        EditableTextCustomComponent(Library& td ) : owner(td)
+        {
+            // double click to edit the label text; single click handled below
+            setEditable(false, true, false);
+        }
 
+        
+        void mouseDown(const juce::MouseEvent& event) override
+        {
+            // single click on the label should simply select the row
+            owner.libTable.selectRowsBasedOnModifierKeys(row, event.mods, false);
+
+            Label::mouseDown(event);
+
+            // Get URL index
+            int urlInd = owner.libEntries->getFirstChildElement()->getNumAttributes() - 1;
+
+            // On click start drag and drop, dragging file URL
+            startDragging(owner.libEntries->getChildElement(row)->getAttributeValue(urlInd),
+                            this,          
+                            juce::ScaledImage{},
+                            true);
+        }
+
+        void textWasEdited() override
+        {
+            owner.setText(columnId, row, getText());
+        }
+
+        // Our demo code will call this when we may need to update our contents
+        void setRowAndColumn(const int newRow, const int newColumn)
+        {
+            row = newRow;
+            columnId = newColumn;
+            setText(owner.getText(columnId, row), juce::dontSendNotification);
+        }
+
+        void paint(juce::Graphics& g) override
+        {
+            auto& lf = getLookAndFeel();
+            if (!dynamic_cast<juce::LookAndFeel_V4*> (&lf))
+                lf.setColour(textColourId, juce::Colours::black);
+
+            Label::paint(g);
+        }
+
+    private:
+        Library& owner;
+        int row, columnId;
+        juce::Colour textColour;
+    };
+
+    // Helper functin to get current value from the selected cell
+    juce::String getText(const int columnNumber, const int rowNumber) const;
+
+    // Helper functin to set new value to the selected cell
+    void setText(const int columnNumber, const int rowNumber, const juce::String& newText);
 
     //===================================================================
+
+    // Open file
+    void loadLibFile(juce::String libName) const;
+    
+    // Save file
+    void saveLibFile(juce::String libName) const;
 
     // Setup XML library template 
     void libTemplate(juce::XmlElement* emptyLib);
@@ -106,6 +182,31 @@ private:
 
     // Make XML entry to the current library
     void makeLibEntry(const juce::StringArray params);
+
+    // Update XML entry from the current library
+    void updateLibEntry(const int columnNumber, 
+                        const int rowNumber, 
+                        const juce::String& newText);
+
+    // Delete XML entry from the current library
+    void deleteLibEntry(const int rowNumber);
+
+    // Update library ID order
+    void orderLibID() const;
+
+    // Helper function to get attribute name based on the passed column number
+    juce::String getColName(const int columnNumber) const;
+
+
+    // Callback functions for interface elements
+    void loadLibClick();
+    void saveLibClick();
+    void addTrackClick();
+    void delTrackClick();
+    void searchChange() const;
+
+
+    //===================================================================
 
     // File browser component
     FileBrowser* fileBrowser;
@@ -126,10 +227,15 @@ private:
     // Library file
     juce::File libFile{};
 
+    // Library interface
+    juce::TextButton loadLibBtn{ "Load library" };
+    juce::TextButton saveLibBtn{ "Save library" };
+    juce::TextButton addTrackBtn{ "Add track" };
+    juce::TextButton delTrackBtn{ "Remove track" };
+    juce::TextEditor searchField{ "Search lib..." };
 
-
-
-
+    // File chooser for library interactions
+    std::unique_ptr<juce::FileChooser> fileChooserPtr = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Library)
 };
