@@ -123,10 +123,10 @@ private:
             Label::mouseDown(event);
 
             // Get URL index
-            int urlInd = owner.libEntries->getFirstChildElement()->getNumAttributes() - 1;
+            int urlInd = owner.visibleEntries[row]->getNumAttributes() - 1;
 
             // On click start drag and drop, dragging file URL
-            startDragging(owner.libEntries->getChildElement(row)->getAttributeValue(urlInd),
+            startDragging(owner.visibleEntries[row]->getAttributeValue(urlInd),
                             this,          
                             juce::ScaledImage{},
                             true);
@@ -197,8 +197,11 @@ private:
     // Helper function to get attribute name based on the passed column number
     juce::String getColName(const int columnNumber) const;
 
-    // Filter current library
-    juce::Array<juce::XmlElement*> filterLib(juce::String fString);
+    // Update visible lib entries
+    void updateVisible();
+
+    // Get metadata
+    juce::String getMetadata();
 
     // Callback functions for interface elements
     void loadLibClick();
@@ -206,7 +209,6 @@ private:
     void addTrackClick();
     void delTrackClick();
     void searchChange();
-
 
     //===================================================================
 
@@ -235,9 +237,6 @@ private:
     juce::TextButton addTrackBtn{ "Add track" };
     juce::TextButton delTrackBtn{ "Remove track" };
     juce::TextEditor searchField{ "Search lib..." };
-
-    // Library filtered state
-    bool filterOn;
 
     // File chooser for library interactions
     std::unique_ptr<juce::FileChooser> fileChooserPtr = nullptr;

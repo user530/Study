@@ -12,8 +12,7 @@
 #include "Library.h"
 
 //==============================================================================
-Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser),
-                                                filterOn(false)
+Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -24,6 +23,10 @@ Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser),
     // Set shortcut pointers
     libStructure = curLibrary.getChildByName("STRUCTURE");
     libEntries = curLibrary.getChildByName("ENTRIES");
+
+    // Make visible entries list
+    updateVisible();
+
 
     // Make table visible
     addAndMakeVisible(libTable);
@@ -138,7 +141,7 @@ void Library::browserRootChanged(const juce::File& newRoot) {};
 juce::String Library::getText(const int columnNumber, const int rowNumber) const
 {
     // Get requested value
-    return libEntries->getChildElement(rowNumber)->getAttributeValue(columnNumber-1);
+    return visibleEntries[rowNumber]->getAttributeValue(columnNumber-1);
 };
 
 // Helper functin to set new value to the selected cell
@@ -148,6 +151,12 @@ void Library::setText(const int columnNumber, const int rowNumber, const juce::S
     libEntries->
         getChildElement(rowNumber)->
             setAttribute(getColName(columnNumber), newText);
+
+    // Sort rows
+    sortOrderChanged(columnNumber, true);
+
+    // Update visible entries list
+    updateVisible();
 
     // Update library table
     libTable.updateContent();
@@ -221,6 +230,9 @@ void Library::makeLibEntry(const juce::StringArray params)
     // Add new entry to the current library
     libEntries->addChildElement(newEntry);
 
+    // Update visible entries list
+    updateVisible();
+
     // Update library table
     libTable.updateContent();
 };
@@ -247,6 +259,9 @@ void Library::deleteLibEntry(const int rowNumber)
     // Update ID for every entry
     orderLibID();
 
+    // Update visible entries list
+    updateVisible();
+
     // Update library table
     libTable.updateContent();
 };
@@ -269,10 +284,13 @@ juce::String Library::getColName(const int columnNumber) const
 };
 
 // Filter current library based on the argument passed
-juce::Array<juce::XmlElement*> Library::filterLib(juce::String fString)
+void Library::updateVisible()
 {
-    // Prepare result variable
-    juce::Array<juce::XmlElement*> result;
+    // Get search field value
+    juce::String fString = searchField.getText().trim();
+
+    // Clean visible entries
+    visibleEntries.clear();
 
     // Iterate over every element
     for (auto element : libEntries->getChildIterator())
@@ -283,21 +301,27 @@ juce::Array<juce::XmlElement*> Library::filterLib(juce::String fString)
         // Iterate over every attribute
         for (int i = 0; i < length; ++i)
         {
-            // Checking if attribute contains filtered substring (case insensitive)
+            // Checking if attribute contains filtered substring (case insensitive) OR empty string is passed
             bool check = element->getAttributeValue(i).toLowerCase()
-                        .contains(fString.toLowerCase());
+                        .contains(fString.toLowerCase())    ||
+                                                                fString == "";
 
-            // If attribute contains filter string
+            // If attribute contains filter string OR empty string is passed
             if (check)
             {
-                // Add this element to the filtered lib and move to the next one
-                result.add(element);
+                // Add this element to the visible list and move to the next one
+                visibleEntries.add(element);
                 break;
             }
         }
     }
+};
 
-    return result;
+// Get metadata
+juce::String Library::getMetadata()
+{
+
+
 };
 
 // Callback function to load library
@@ -328,6 +352,9 @@ void Library::loadLibClick()
                 // Reset shortcut pointers
                 libStructure = curLibrary.getChildByName("STRUCTURE");
                 libEntries = curLibrary.getChildByName("ENTRIES");
+
+                // Update visible entries list
+                updateVisible();
 
                 // Update library table
                 libTable.updateContent();
@@ -405,19 +432,11 @@ void Library::searchChange()
 {
     DBG("Search field changed!");
 
-    // Get Search bar content
-    juce::String input = searchField.getText().trim();
+    // Update list of visible entries
+    updateVisible();
 
-    // When non empty value entered in the search bar
-    if (input != "" )
-    {
-        filterOn = true;
-        visibleEntries = filterLib(input);
-        libTable.updateContent();
-    }
-    else {
-        filterOn = false;
-    }
+    // Update table data
+    libTable.updateContent();
 };
  
 // Add file from the file tree to the library
@@ -466,16 +485,7 @@ void Library::addTrackToLib(const juce::File& file)
 // This must return the number of rows currently in the table
 int Library::getNumRows()
 {
-    // If filter is set on
-    if (filterOn)
-    {
-        return visibleEntries.size();
-    }
-    // if filter is off
-    else 
-    {
-        return libEntries->getNumChildElements();
-    }
+    return visibleEntries.size();
 };
 
 // This must draw the background behind one of the rows in the table
@@ -510,17 +520,14 @@ void Library::paintCell(juce::Graphics& g,
     g.setColour(juce::Colours::white);
     g.setFont(tableFont);
 
-    // No filter applied
-    if (!filterOn)
+    // Draw visible cells
+    if (juce::XmlElement* entryP = visibleEntries[rowNumber])
     {
-        if (juce::XmlElement* entryP = libEntries->getChildElement(rowNumber))
-        {
-            // Get data from the cell based on the col id
-            juce::String cellData = entryP->getAttributeValue(columnId - 1);
+        // Get data from the cell based on the col id
+        juce::String cellData = entryP->getAttributeValue(columnId - 1);
 
-            // Draw cell data
-            g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
-        }
+        // Draw cell data
+        g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
     }
     
     
@@ -545,6 +552,9 @@ void Library::sortOrderChanged(int newSortColumnId, bool isForwards)
 
         // Sort entries
         libEntries->sortChildElements(sorter);
+
+        // Update visible entries list
+        updateVisible();
 
         // Update library table
         libTable.updateContent();
