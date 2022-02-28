@@ -197,13 +197,15 @@ private:
     // Helper function to get attribute name based on the passed column number
     juce::String getColName(const int columnNumber) const;
 
+    // Filter current library
+    juce::Array<juce::XmlElement*> filterLib(juce::String fString);
 
     // Callback functions for interface elements
     void loadLibClick();
     void saveLibClick();
     void addTrackClick();
     void delTrackClick();
-    void searchChange() const;
+    void searchChange();
 
 
     //===================================================================
@@ -219,13 +221,13 @@ private:
     // Current library xml
     juce::XmlElement curLibrary{ "OTODECKS_LIBRARY" };
 
+    // Visible library entries
+    juce::Array<juce::XmlElement*> visibleEntries;
+
     // Library structure xml element
     juce::XmlElement* libStructure = nullptr;
     // Library entries xml element
     juce::XmlElement* libEntries = nullptr;
-
-    // Library file
-    juce::File libFile{};
 
     // Library interface
     juce::TextButton loadLibBtn{ "Load library" };
@@ -233,6 +235,9 @@ private:
     juce::TextButton addTrackBtn{ "Add track" };
     juce::TextButton delTrackBtn{ "Remove track" };
     juce::TextEditor searchField{ "Search lib..." };
+
+    // Library filtered state
+    bool filterOn;
 
     // File chooser for library interactions
     std::unique_ptr<juce::FileChooser> fileChooserPtr = nullptr;

@@ -25,7 +25,7 @@ Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_format
 
 Player::~Player()
 {
-    
+
 };
 
 

@@ -12,7 +12,8 @@
 #include "Library.h"
 
 //==============================================================================
-Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
+Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser),
+                                                filterOn(false)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -83,15 +84,18 @@ void Library::paint (juce::Graphics& g)
        drawing code..
     */
 
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
+    g.fillAll (getLookAndFeel()
+                .findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
 
     g.setColour (juce::Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
-    g.drawText ("Library", getLocalBounds(),
+    g.drawText ("Library", 
+                getLocalBounds(),
                 juce::Justification::centred, true);   // draw some placeholder text
+
 }
 
 void Library::resized()
@@ -103,11 +107,11 @@ void Library::resized()
     libTable.setBounds(0, getHeight() * 0.15, getWidth(), getHeight() * 0.85);
     
     // Library control elements
-    loadLibBtn.setBounds(0, 0, getWidth() * 0.2, getHeight() * 0.15);
-    saveLibBtn.setBounds(getWidth() * 0.2, 0, getWidth() * 0.2, getHeight() * 0.15);
-    addTrackBtn.setBounds(getWidth() * 0.4, 0, getWidth() * 0.2, getHeight() * 0.15);
-    delTrackBtn.setBounds(getWidth() * 0.6, 0, getWidth() * 0.2, getHeight() * 0.15);
-    searchField.setBounds(getWidth() * 0.8, 0, getWidth() * 0.2, getHeight() * 0.15);
+    loadLibBtn.setBounds(0, 0, getWidth() * 0.135, getHeight() * 0.15);
+    saveLibBtn.setBounds(getWidth() * 0.155, 0, getWidth() * 0.135, getHeight() * 0.15);
+    addTrackBtn.setBounds(getWidth() * 0.31, 0, getWidth() * 0.135, getHeight() * 0.15);
+    delTrackBtn.setBounds(getWidth() * 0.465, 0, getWidth() * 0.135, getHeight() * 0.15);
+    searchField.setBounds(getWidth() * 0.62, 0, getWidth() * 0.38, getHeight() * 0.15);
 }
 
 //===================================================================
@@ -150,20 +154,6 @@ void Library::setText(const int columnNumber, const int rowNumber, const juce::S
 };
 
 //===================================================================
-
-// Open file
-void Library::loadLibFile(juce::String libName) const
-{
-    DBG(libFile.getFullPathName() + libName);
-};
-
-// Save file
-void Library::saveLibFile(juce::String libName) const
-{
-    // SAVE CHANGES                                                        // DELETE
-    libFile.getCurrentWorkingDirectory().getChildFile(libName + ".oto");
-};
-
 
 // Setup XML library template 
 void Library::libTemplate(juce::XmlElement* emptyLib)
@@ -278,6 +268,38 @@ juce::String Library::getColName(const int columnNumber) const
     return libTable.getHeader().getColumnName(columnNumber);
 };
 
+// Filter current library based on the argument passed
+juce::Array<juce::XmlElement*> Library::filterLib(juce::String fString)
+{
+    // Prepare result variable
+    juce::Array<juce::XmlElement*> result;
+
+    // Iterate over every element
+    for (auto element : libEntries->getChildIterator())
+    {
+        // Calculate number of attributes (except URL)
+        const int length = element->getNumAttributes() - 1;
+
+        // Iterate over every attribute
+        for (int i = 0; i < length; ++i)
+        {
+            // Checking if attribute contains filtered substring (case insensitive)
+            bool check = element->getAttributeValue(i).toLowerCase()
+                        .contains(fString.toLowerCase());
+
+            // If attribute contains filter string
+            if (check)
+            {
+                // Add this element to the filtered lib and move to the next one
+                result.add(element);
+                break;
+            }
+        }
+    }
+
+    return result;
+};
+
 // Callback function to load library
 void Library::loadLibClick()
 {
@@ -379,12 +401,25 @@ void Library::delTrackClick()
 };
 
 // Callback function for the load button
-void Library::searchChange() const
+void Library::searchChange()
 {
     DBG("Search field changed!");
+
+    // Get Search bar content
+    juce::String input = searchField.getText().trim();
+
+    // When non empty value entered in the search bar
+    if (input != "" )
+    {
+        filterOn = true;
+        visibleEntries = filterLib(input);
+        libTable.updateContent();
+    }
+    else {
+        filterOn = false;
+    }
 };
-
-
+ 
 // Add file from the file tree to the library
 void Library::addTrackToLib(const juce::File& file)
 {
@@ -431,7 +466,16 @@ void Library::addTrackToLib(const juce::File& file)
 // This must return the number of rows currently in the table
 int Library::getNumRows()
 {
-    return libEntries->getNumChildElements();
+    // If filter is set on
+    if (filterOn)
+    {
+        return visibleEntries.size();
+    }
+    // if filter is off
+    else 
+    {
+        return libEntries->getNumChildElements();
+    }
 };
 
 // This must draw the background behind one of the rows in the table
@@ -446,7 +490,11 @@ void Library::paintRowBackground(juce::Graphics& g,
         g.fillAll(juce::Colours::orange);
     }
     else {
-        g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+        // make different colours for different rows
+        if (rowNumber % 2 == 0)
+        {
+            g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+        }
     }
 };
 
@@ -462,20 +510,27 @@ void Library::paintCell(juce::Graphics& g,
     g.setColour(juce::Colours::white);
     g.setFont(tableFont);
 
-    if (juce::XmlElement* entryP = libEntries->getChildElement(rowNumber))
+    // No filter applied
+    if (!filterOn)
     {
-        // Get data from the cell based on the col id
-        juce::String cellData = entryP->getAttributeValue(columnId-1);
+        if (juce::XmlElement* entryP = libEntries->getChildElement(rowNumber))
+        {
+            // Get data from the cell based on the col id
+            juce::String cellData = entryP->getAttributeValue(columnId - 1);
 
-        // Draw cell data
-        g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
+            // Draw cell data
+            g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
+        }
     }
+    
+    
 
 };
 
 // This callback is made when the user clicks on one of the cells in the table
 void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
 {
+    
 };
 
 // This callback is made when the table's sort order is changed        
