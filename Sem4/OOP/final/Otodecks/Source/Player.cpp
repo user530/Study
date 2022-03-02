@@ -25,14 +25,12 @@ Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_format
 
 Player::~Player()
 {
-    
+
 };
 
 
 void Player::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    // Pass the job to the transport source
-    //transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
     
     // Pass the job to the resample source
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);

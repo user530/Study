@@ -62,7 +62,7 @@ private:
     FileBrowser fileBrowser;
 
     // Library interface
-    Library library{&fileBrowser};
+    Library library{&fileBrowser, formatManager};
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

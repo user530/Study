@@ -12,7 +12,9 @@
 #include "Library.h"
 
 //==============================================================================
-Library::Library(FileBrowser* _fileBrowser) : fileBrowser(_fileBrowser)
+Library::Library(FileBrowser* _fileBrowser, 
+                    juce::AudioFormatManager& _formatManager) : fileBrowser(_fileBrowser),
+                                                                formatManager(_formatManager)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -164,6 +166,75 @@ void Library::setText(const int columnNumber, const int rowNumber, const juce::S
 
 //===================================================================
 
+void Library::loadLibFile(juce::File& libFile)
+{
+    // Try to read selected file into an XML element pointer
+    std::unique_ptr<juce::XmlElement> res = juce::parseXML(libFile);
+
+    // Prepare flag variable to update library (erase "ghost" entries)
+    bool shouldResave = false;
+
+    // If XML parsed successfully
+    if (res != nullptr)
+    {
+        // Create new XML file based on the saved lib
+        juce::XmlElement verifiedRes{ *res };
+
+        // Get shortcut to entries
+        juce::XmlElement* verEntries = verifiedRes.getChildByName("ENTRIES");
+
+        // Iterate over every loaded entry
+        for (auto entry : verEntries->getChildIterator())
+        {
+            // Try to create file based on the URL
+            juce::File f{ entry->getAttributeValue(
+                                    entry->getNumAttributes() - 1) };
+
+            // If there is no file with passed URL
+            if (!f.existsAsFile())
+            {
+                // Remove "ghost" entry
+                verEntries->removeChildElement(entry, false);
+
+                // If flag is not switched yet > set flag ON
+                if (!shouldResave)shouldResave = true;
+            }
+        }
+
+        // Release result pointer to prevent memory leaks
+        res.release();
+
+        // Load verified library
+        curLibrary = verifiedRes;
+
+        // Reset shortcut pointers
+        libStructure = curLibrary.getChildByName("STRUCTURE");
+        libEntries = curLibrary.getChildByName("ENTRIES");
+
+        // In case some tracks failed to load, reset ID order
+        orderLibID();
+
+        // If we need to "Re-save" library > do it
+        if (shouldResave)
+            saveLibFile(libFile);
+
+        // Update visible entries list
+        updateVisible();
+
+        // Update library table
+        libTable.updateContent();
+    }
+};
+
+// Save file
+void Library::saveLibFile(juce::File& libFile)
+{
+    // Save copy of the library to the file
+    curLibrary.writeTo(libFile);
+};
+
+
+
 // Setup XML library template 
 void Library::libTemplate(juce::XmlElement* emptyLib)
 {
@@ -283,6 +354,18 @@ juce::String Library::getColName(const int columnNumber) const
     return libTable.getHeader().getColumnName(columnNumber);
 };
 
+// Find lib entry ID based on the visble entry ID
+const int Library::getAbsID(const int visibleID) const
+{
+    // Get shortcut to the entry
+    const juce::XmlElement* visEntry = visibleEntries[visibleID];
+
+    // Get entry attribute name (ID)
+    const juce::String idName = visEntry->getAttributeName(0);
+
+    return visEntry->getIntAttribute(idName, -1);
+};
+
 // Filter current library based on the argument passed
 void Library::updateVisible()
 {
@@ -318,10 +401,49 @@ void Library::updateVisible()
 };
 
 // Get metadata
-juce::String Library::getMetadata()
+juce::StringPairArray Library::getMetadata(juce::File file)
 {
+    // Prepare result variable
+    juce::StringPairArray metaArr;
 
+    // Attempt to create a reader for the file
+    auto* reader = formatManager.createReaderFor(file);
 
+    // If selected file has supported format and reader succesfully created
+    if (reader != nullptr)
+    {
+        juce::AudioTransportSource trSrc{};
+
+        // Create new ReaderSource object from the reader and prepare pointer
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource =
+            std::make_unique<juce::AudioFormatReaderSource>(reader, true);
+
+        // Pass newSource to the transport source
+        trSrc.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
+
+        // Length in seconds (we transform from double to int)
+        int lenSec = (int) trSrc.getLengthInSeconds();
+
+        // Formated length as string
+        juce::String length = std::to_string((int)(lenSec / 60)) + ":" + 
+                              std::to_string((int)(fmod(lenSec, 60.0)));
+
+        // Add length data to the result
+        metaArr.set("Length", length);
+
+        // Release ReaderSource pointer
+        newSource.release();
+
+        // Iterate over metadata container
+        for (juce::String key : reader->metadataValues.getAllKeys())
+        {
+            // Add pair to the result array
+            metaArr.set(key,
+                reader->metadataValues.getValue(key, "none"));
+        }
+    }
+
+    return metaArr;
 };
 
 // Callback function to load library
@@ -340,25 +462,8 @@ void Library::loadLibClick()
                                 juce::FileBrowserComponent::canSelectFiles,
         [this](const juce::FileChooser& chooser)
         {
-            // Try to read selected file into an XML element pointer
-            std::unique_ptr<juce::XmlElement> res = juce::parseXML(chooser.getResult());
-
-            // If XML parsed successfully
-            if (res != nullptr)
-            {
-                // Fill current library with library data
-                curLibrary = *res.release();
-
-                // Reset shortcut pointers
-                libStructure = curLibrary.getChildByName("STRUCTURE");
-                libEntries = curLibrary.getChildByName("ENTRIES");
-
-                // Update visible entries list
-                updateVisible();
-
-                // Update library table
-                libTable.updateContent();
-            }
+            // Load library file based on the selection
+            loadLibFile(chooser.getResult());
         });
 
 };
@@ -367,9 +472,6 @@ void Library::loadLibClick()
 void Library::saveLibClick()
 {
     DBG("Save lib button");
-
-    // Store library copy to the variable for the future use                    //DELETE
-    //juce::XmlElement lib{ curLibrary };
 
     // Create new FileChooser and get the file name
     fileChooserPtr.reset(new juce::FileChooser("Choose a library name",
@@ -383,12 +485,8 @@ void Library::saveLibClick()
                                 juce::FileBrowserComponent::canSelectFiles,
                                 [this](const juce::FileChooser& chooser)
                                 {
-                                    // File selected in file chooser
-                                    juce::File res = chooser.getResult();
-
-                                    // Save copy of the library to file
-                                    curLibrary.writeTo(chooser.getResult());
-                                    //lib.writeTo(chooser.getResult());             //DELETE
+                                    // Save library file
+                                    saveLibFile(chooser.getResult());
                                 }); 
 };
 
@@ -423,8 +521,15 @@ void Library::delTrackClick()
 {
     DBG("Del lib button");
 
-    // Delete selected row
-    deleteLibEntry(libTable.getSelectedRows()[0]);
+    // If some row is selected
+    if (libTable.getSelectedRow() != -1)
+    {
+        // Get absolute ID
+        const int absId = getAbsID(libTable.getSelectedRow()) - 1;
+
+        // Delete row based on the absId
+        deleteLibEntry(absId);
+    }
 };
 
 // Callback function for the load button
@@ -444,11 +549,12 @@ void Library::addTrackToLib(const juce::File& file)
 {
     // If file has invalid format
     if (file.getFileExtension() != ".mp3" &&
-        file.getFileExtension() != ".wav;" &&
+        file.getFileExtension() != ".wav" &&
+        file.getFileExtension() != ".aiff" &&
         file.getFileExtension() != ".aif")
     {
         // Print message and stop execution
-        DBG("Library::addTrackToLib - ERROR! UNSUPPORTED FILE FORMAT!");
+        DBG("Library::addTrackToLib - ERROR! UNSUPPORTED FILE FORMAT {"+file.getFileExtension()+"}!");
         return;
     }
     // If empty file passed
@@ -461,18 +567,22 @@ void Library::addTrackToLib(const juce::File& file)
     // If everything is fine
     else 
     {
+        // Get metadata
+        juce::StringPairArray metadata = getMetadata(file);
+
         // Prepare params
         juce::StringArray params{ juce::String{ curLibrary
                                                 .getChildByName("ENTRIES")
-                                                ->getNumChildElements() + 1 },
-                                                file.getFileNameWithoutExtension(),
-                                                "#Artist",
-                                                "#Album",
-                                                "#Genre",
-                                                "#Length",
-                                                "#BPM",
-                                                "#Key",
-                                                file.getFullPathName()};
+                                                ->getNumChildElements() + 1 },  // next id number
+                                                metadata.getValue("Title",      // title from metadata OR filename
+                                                                            file.getFileNameWithoutExtension()),
+                                                metadata.getValue("Artist", "noData"),  // artist from metadata
+                                                metadata.getValue("Album", "noData"),   // album from metadata
+                                                metadata.getValue("Genre", "noData"),   // genre from metadata
+                                                metadata.getValue("Length", "noData"),  // length from metadata
+                                                "noData",                               // no initial BPM data :(
+                                                metadata.getValue("Key", "noData"),     // key from metadata
+                                                file.getFullPathName()};                // file URL
 
         // Make entry based on the passed data
         makeLibEntry(params);
@@ -564,8 +674,20 @@ void Library::sortOrderChanged(int newSortColumnId, bool isForwards)
 // Override this to be informed when the delete key is pressed
 void Library::deleteKeyPressed(int lastRowSelected)
 {
-    // Delete selected row
-    deleteLibEntry(lastRowSelected);
+    DBG(libTable.getSelectedRow());
+
+
+    //visibleEntries[libTable.getSelectedRow()]->getAttributeValue(0);
+
+    // If some row is selected
+    if (libTable.getSelectedRow() != -1)
+    {
+        // Get absolute ID
+        const int absId = getAbsID(libTable.getSelectedRow()) - 1;
+
+        // Delete row based on the absId
+        deleteLibEntry(absId);
+    }
 };
 
 // To allow rows from your table to be dragged - and -dropped, implement this method

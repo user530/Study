@@ -22,7 +22,7 @@ class Library  : public juce::Component,
                     public juce::DragAndDropContainer
 {
 public:
-    Library(FileBrowser*);
+    Library(FileBrowser*, juce::AudioFormatManager&);
     ~Library() override;
 
     void paint (juce::Graphics&) override;
@@ -168,11 +168,11 @@ private:
 
     //===================================================================
 
-    // Open file
-    void loadLibFile(juce::String libName) const;
+    // Open file callback
+    void loadLibFile(juce::File& libFile);
     
-    // Save file
-    void saveLibFile(juce::String libName) const;
+    // Save file callback
+    void saveLibFile(juce::File& libFile);
 
     // Setup XML library template 
     void libTemplate(juce::XmlElement* emptyLib);
@@ -200,8 +200,11 @@ private:
     // Update visible lib entries
     void updateVisible();
 
+    // Find lib entry ID based on the visble entry ID
+    const int getAbsID(const int visibleID) const;
+
     // Get metadata
-    juce::String getMetadata();
+    juce::StringPairArray getMetadata(juce::File);
 
     // Callback functions for interface elements
     void loadLibClick();
@@ -240,6 +243,9 @@ private:
 
     // File chooser for library interactions
     std::unique_ptr<juce::FileChooser> fileChooserPtr = nullptr;
+
+    // Shared format manager
+    juce::AudioFormatManager& formatManager;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Library)
 };
