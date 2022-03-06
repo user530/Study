@@ -29,7 +29,6 @@ Library::Library(FileBrowser* _fileBrowser,
     // Make visible entries list
     updateVisible();
 
-
     // Make table visible
     addAndMakeVisible(libTable);
     // Change table model to our component
@@ -39,7 +38,7 @@ Library::Library(FileBrowser* _fileBrowser,
     for (int i = 0; i < libStructure->getNumChildElements() - 1; ++i)
     {
         // Get column name
-        juce::String colName = libStructure->getChildElement(i)->getAttributeValue(1);
+        juce::String colName = libStructure->getChildElement(i)->getStringAttribute("name");
 
         // Prepare column width variable
         int colW = 100;
@@ -78,6 +77,7 @@ Library::Library(FileBrowser* _fileBrowser,
 
 Library::~Library()
 {
+    
 }
 
 void Library::paint (juce::Graphics& g)
@@ -166,6 +166,25 @@ void Library::setText(const int columnNumber, const int rowNumber, const juce::S
 
 //===================================================================
 
+// Callback to check whether this target is interested in the set of files being offered
+bool Library::isInterestedInFileDrag(const juce::StringArray& files) 
+{
+    return true;
+};
+
+// Callback to indicate that the user has dropped the files onto this component
+void Library::filesDropped(const juce::StringArray& files, int x, int y) 
+{
+    // Iterate over every file dropped
+    for(const auto file: files)
+    {
+        // Try to add it to the library
+        addTrackToLib(juce::File{ file });
+    }
+};
+
+//===================================================================
+
 void Library::loadLibFile(juce::File& libFile)
 {
     // Try to read selected file into an XML element pointer
@@ -187,8 +206,7 @@ void Library::loadLibFile(juce::File& libFile)
         for (auto entry : verEntries->getChildIterator())
         {
             // Try to create file based on the URL
-            juce::File f{ entry->getAttributeValue(
-                                    entry->getNumAttributes() - 1) };
+            juce::File f{ entry->getStringAttribute("URL")};
 
             // If there is no file with passed URL
             if (!f.existsAsFile())
@@ -201,8 +219,8 @@ void Library::loadLibFile(juce::File& libFile)
             }
         }
 
-        // Release result pointer to prevent memory leaks
-        res.release();
+        // Clear result pointer to prevent memory leaks
+        res.reset();
 
         // Load verified library
         curLibrary = verifiedRes;
@@ -292,7 +310,7 @@ void Library::makeLibEntry(const juce::StringArray params)
     for (int i = 0; i < libStructure->getNumChildElements(); ++i)
     {
         // Column name
-        juce::String colName = libStructure->getChildElement(i)->getAttributeValue(1);
+        juce::String colName = libStructure->getChildElement(i)->getStringAttribute("name");
 
         // Set passed value as column value
         newEntry->setAttribute(colName,params[i]);
@@ -360,10 +378,18 @@ const int Library::getAbsID(const int visibleID) const
     // Get shortcut to the entry
     const juce::XmlElement* visEntry = visibleEntries[visibleID];
 
-    // Get entry attribute name (ID)
-    const juce::String idName = visEntry->getAttributeName(0);
+    // Check that argument is valid
+    if (visibleID >= 0 && visibleID < visEntry->getNumAttributes())
+    {
+        // Get entry attribute name (ID)
+        const juce::String idName = visEntry->getStringAttribute("ID");
 
-    return visEntry->getIntAttribute(idName, -1);
+        // Return atribute value
+        return visEntry->getIntAttribute(idName, -1);
+    }
+
+    // If argument is out of range
+    return -1;
 };
 
 // Filter current library based on the argument passed
@@ -431,9 +457,6 @@ juce::StringPairArray Library::getMetadata(juce::File file)
         // Add length data to the result
         metaArr.set("Length", length);
 
-        // Release ReaderSource pointer
-        newSource.release();
-
         // Iterate over metadata container
         for (juce::String key : reader->metadataValues.getAllKeys())
         {
@@ -441,10 +464,77 @@ juce::StringPairArray Library::getMetadata(juce::File file)
             metaArr.set(key,
                 reader->metadataValues.getValue(key, "none"));
         }
+
+        // Clear ReaderSource pointer to prevent memory leaks
+        newSource.release();
+        newSource.reset();
     }
 
     return metaArr;
 };
+
+
+// Get selected track
+const juce::XmlElement* Library::getSelected() const
+{
+    // Check currently selected row
+    const int id = libTable.getSelectedRow();
+
+    // If selected row exists
+    if (id >= 0 && id < visibleEntries.size())
+    {
+        return visibleEntries[id];
+    }
+    
+    // If not return nullptr
+    return nullptr;
+}
+
+
+// Get track from the selected row
+const juce::File Library::getSelectedTrack() const
+{
+    // Selected entry pointer
+    const juce::XmlElement* selected = getSelected();
+
+    // If entry exists
+    if (selected)
+    {
+        // Get URL value of the selected track
+        const juce::String URL = getSelected()->getStringAttribute("URL");
+
+        // Create file from the URL
+        const juce::File track = juce::File{ URL };
+
+        // Check that file with this URL exists
+        if (track.existsAsFile()) 
+        {
+            // Return this file
+            return track;
+        }
+    }
+
+    // Return empty file
+    return juce::File{};
+};
+
+
+// Get track name from the selected row
+const juce::String Library::getSelectedName() const
+{
+    // Selected entry pointer
+    const juce::XmlElement* selected = getSelected();
+
+    // If entry exists
+    if (selected)
+    {
+        return selected->getStringAttribute("Track");
+    }
+   
+    // If no entry found
+    return getSelectedTrack().getFileName();
+}
+
 
 // Callback function to load library
 void Library::loadLibClick()
@@ -485,8 +575,12 @@ void Library::saveLibClick()
                                 juce::FileBrowserComponent::canSelectFiles,
                                 [this](const juce::FileChooser& chooser)
                                 {
-                                    // Save library file
-                                    saveLibFile(chooser.getResult());
+                                    // Check that user selected file
+                                    if (chooser.getResult().getSize() > 0)
+                                    {
+                                        // Save library file
+                                        saveLibFile(chooser.getResult());
+                                    }
                                 }); 
 };
 
@@ -507,11 +601,15 @@ void Library::addTrackClick()
         juce::FileBrowserComponent::canSelectMultipleItems,
         [this](const juce::FileChooser& chooser)
         {
-            // Iterate over all files
-            for (auto entry : chooser.getResults())
+            // Check that user selected something
+            if (chooser.getResults().size() > 0)
             {
-                // Try to make entry based on the file
-                addTrackToLib(entry);
+                // Iterate over all files
+                for (auto entry : chooser.getResults())
+                {
+                    // Try to make entry based on the file
+                    addTrackToLib(entry);
+                }
             }
         });
 };
@@ -647,7 +745,7 @@ void Library::paintCell(juce::Graphics& g,
 // This callback is made when the user clicks on one of the cells in the table
 void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
 {
-    
+    DBG("CELL CLICKED!");
 };
 
 // This callback is made when the table's sort order is changed        
@@ -676,9 +774,6 @@ void Library::deleteKeyPressed(int lastRowSelected)
 {
     DBG(libTable.getSelectedRow());
 
-
-    //visibleEntries[libTable.getSelectedRow()]->getAttributeValue(0);
-
     // If some row is selected
     if (libTable.getSelectedRow() != -1)
     {
@@ -695,10 +790,19 @@ juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& curren
 {
     DBG("GET DRAG SOURCE DESCRIPTION");
 
-    // Pass URL attribute (File path)
-    return libEntries->
-                getChildElement(currentlySelectedRows[0])->
-                    getStringAttribute("URL");
+    // Prepare result variable
+    juce::StringArray res{};
+
+    // Shortcut to the dragged entry
+    juce::XmlElement* entry = libEntries->getChildElement(currentlySelectedRows[0]);
+
+    // Add track URL to the result
+    res.add(entry->getStringAttribute("URL"));
+
+    // Add track name
+    res.add(entry->getStringAttribute("Track"));
+
+    return res;
 };
 
 // This is used to create or update a custom component to go in a cell
@@ -723,6 +827,13 @@ juce::Component* Library::refreshComponentForCell(int rowNumber,
     textLabel->setRowAndColumn(rowNumber, columnId);
 
     return textLabel;
+};
+
+
+// Override this to be informed when rows are selected or deselected
+void Library::selectedRowsChanged(int lastRowSelected)
+{
+    DBG("SELECTION CHANGED!");
 };
 
 //===================================================================

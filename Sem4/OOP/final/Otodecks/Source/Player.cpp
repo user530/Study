@@ -25,7 +25,16 @@ Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_format
 
 Player::~Player()
 {
+    // Destroy Audio Format Reader
+    if (readerSource != nullptr &&
+        readerSource->getAudioFormatReader() != nullptr)
+    {
+        readerSource->~AudioFormatReaderSource();
+    }
 
+    // Clear Audio Format Reader
+    readerSource.release();
+    readerSource.reset();
 };
 
 

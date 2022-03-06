@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    MixerGUI.h
-    Created: 4 Feb 2022 11:58:54am
+    StaticWaveform.h
+    Created: 6 Mar 2022 2:42:25pm
     Author:  eosdu
 
   ==============================================================================
@@ -15,15 +15,15 @@
 //==============================================================================
 /*
 */
-class MixerGUI  : public juce::Component
+class StaticWaveform  : public juce::Component
 {
 public:
-    MixerGUI();
-    ~MixerGUI() override;
+    StaticWaveform();
+    ~StaticWaveform() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MixerGUI)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StaticWaveform)
 };

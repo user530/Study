@@ -1,29 +1,29 @@
 /*
   ==============================================================================
 
-    Mixer.cpp
-    Created: 4 Feb 2022 11:58:36am
+    DynamicWaveform.cpp
+    Created: 6 Mar 2022 2:43:07pm
     Author:  eosdu
 
   ==============================================================================
 */
 
 #include <JuceHeader.h>
-#include "Mixer.h"
+#include "DynamicWaveform.h"
 
 //==============================================================================
-Mixer::Mixer()
+DynamicWaveform::DynamicWaveform()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
 
 }
 
-Mixer::~Mixer()
+DynamicWaveform::~DynamicWaveform()
 {
 }
 
-void Mixer::paint (juce::Graphics& g)
+void DynamicWaveform::paint (juce::Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -39,11 +39,11 @@ void Mixer::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
-    g.drawText ("Mixer", getLocalBounds(),
+    g.drawText ("DynamicWaveform", getLocalBounds(),
                 juce::Justification::centred, true);   // draw some placeholder text
 }
 
-void Mixer::resized()
+void DynamicWaveform::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..

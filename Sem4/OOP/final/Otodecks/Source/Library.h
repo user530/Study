@@ -19,7 +19,8 @@
 class Library  : public juce::Component,
                     public juce::FileBrowserListener,
                     public juce::TableListBoxModel,
-                    public juce::DragAndDropContainer
+                    public juce::DragAndDropContainer,
+                    public juce::FileDragAndDropTarget
 {
 public:
     Library(FileBrowser*, juce::AudioFormatManager&);
@@ -27,6 +28,16 @@ public:
 
     void paint (juce::Graphics&) override;
     void resized() override;
+
+    // Get selected track
+    const juce::XmlElement* getSelected() const;
+
+    // Get track from the selected row
+    const juce::File getSelectedTrack() const;
+
+    // Get track name from the selected row
+    const juce::String getSelectedName() const;
+
 
 private:
 
@@ -37,8 +48,6 @@ private:
     virtual void browserRootChanged(const juce::File& newRoot) override;
 
     //===================================================================
-
-
 
     // Inherited from the base class TableListBoxModel
     virtual int getNumRows() override;
@@ -71,6 +80,10 @@ private:
                                                 int columnId,
                                                 bool isRowSelected,
                                                 Component* existingComponentToUpdate) override;
+
+    // Override this to be informed when rows are selected or deselected
+    virtual void selectedRowsChanged(int lastRowSelected) override;
+
 
     //===================================================================
 
@@ -114,7 +127,7 @@ private:
             setEditable(false, true, false);
         }
 
-        
+        // Single click callback
         void mouseDown(const juce::MouseEvent& event) override
         {
             // single click on the label should simply select the row
@@ -122,14 +135,31 @@ private:
 
             Label::mouseDown(event);
 
-            // Get URL index
-            int urlInd = owner.visibleEntries[row]->getNumAttributes() - 1;
+            // Start drag and drop passing track information
+            dragTrack();
+        }
+
+        // Function to drag track based on the element
+        void dragTrack()
+        {
+
+            // Prepare result array
+            juce::StringArray res{};
+
+            // Entry shortcut
+            juce::XmlElement* entry = owner.visibleEntries[row];
+
+            // Add URL to the result
+            res.add(entry->getStringAttribute("URL"));
+
+            // Add name to the result
+            res.add(entry->getStringAttribute("Track"));
 
             // On click start drag and drop, dragging file URL
-            startDragging(owner.visibleEntries[row]->getAttributeValue(urlInd),
-                            this,          
-                            juce::ScaledImage{},
-                            true);
+            startDragging(res,
+                this,
+                juce::ScaledImage{},
+                true);
         }
 
         void textWasEdited() override
@@ -167,6 +197,17 @@ private:
     void setText(const int columnNumber, const int rowNumber, const juce::String& newText);
 
     //===================================================================
+
+    // Inherited from the base class FileDragAndDropTarget
+    
+    // Callback to check whether this target is interested in the set of files being offered
+    virtual bool isInterestedInFileDrag(const juce::StringArray& files) override;
+
+    // Callback to indicate that the user has dropped the files onto this component
+    virtual void filesDropped(const juce::StringArray& files, int x, int y) override;
+
+    //===================================================================
+
 
     // Open file callback
     void loadLibFile(juce::File& libFile);

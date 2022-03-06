@@ -13,8 +13,10 @@
 
 //==============================================================================
 PlayerGUI::PlayerGUI(Player* _player,
-                     Waveform* _waveform) : player(_player),
-                                             waveform(_waveform)
+                     Waveform* _waveform,
+                     Library* _library) : player(_player),
+                                            waveform(_waveform),
+                                            library(_library)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
@@ -23,7 +25,8 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Show GUI elements
     addAndMakeVisible(&playBtn);
     addAndMakeVisible(&stopBtn);
-    addAndMakeVisible(&openBtn);
+    addAndMakeVisible(&openBtn);                                                        // DELETE
+    addAndMakeVisible(&loadBtn);
 
     // Control sliders
     addAndMakeVisible(&gainSld);
@@ -33,7 +36,6 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Loop btn
     addAndMakeVisible(&loopBtn);
         
-
     // Que edit mode btn
     addAndMakeVisible(&queEditBtn);
 
@@ -50,7 +52,8 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Add callbacks to the GUI elements
     playBtn.onClick = [this] { playBtnClick(); };
     stopBtn.onClick = [this] { stopBtnClick(); };
-    openBtn.onClick = [this] { openBtnClick(); };
+    openBtn.onClick = [this] { openBtnClick(); };                                           // DELETE
+    loadBtn.onClick = [this] { loadBtnClick(); };
     loopBtn.onClick = [this] { loopBtnClick(); };
 
     gainSld.onValueChange = [this] { gainSldChange(); };
@@ -67,7 +70,6 @@ PlayerGUI::PlayerGUI(Player* _player,
     Que6Btn.onClick = [this] { hotQueClick(&Que6Btn); };
     Que7Btn.onClick = [this] { hotQueClick(&Que7Btn); };
     Que8Btn.onClick = [this] { hotQueClick(&Que8Btn); };
-
 
     // Disable control buttons when there is no track
     playBtn.setEnabled(false);
@@ -126,8 +128,7 @@ PlayerGUI::PlayerGUI(Player* _player,
     (waveform -> getAudioThumb()) -> addChangeListener(this);
 
     // Start timer thread
-    startTimer(40);
-
+    startTimerHz(40);
 } 
 
 PlayerGUI::~PlayerGUI()
@@ -165,7 +166,11 @@ void PlayerGUI::resized()
     // components that your component contains..
     playBtn.setBounds(0, 0, getWidth() / 4, getHeight() / 6);
     stopBtn.setBounds(0, getHeight() * 1/6, getWidth() / 4, getHeight() / 6);
-    openBtn.setBounds(0, getHeight() * 2/6, getWidth() / 4, getHeight() / 6);
+    openBtn.setBounds(0, getHeight() * 2/6, getWidth() / 4, getHeight() / 6);                   // DELETE
+
+    loadBtn.setBounds(getWidth() * 0.9, 0, getWidth() * 0.1, getHeight() / 6);
+
+
     gainSld.setBounds(0, getHeight() * 3/6, getWidth(), getHeight() / 6);
     timeSld.setBounds(0, getHeight() * 4/6, getWidth(), getHeight() / 6);
     tempoSld.setBounds(0, getHeight() * 5/6, getWidth(), getHeight() / 6);
@@ -206,8 +211,14 @@ void PlayerGUI::changeListenerCallback(juce::ChangeBroadcaster* source)
 // The user-defined callback routine that actually gets called periodically.
 void PlayerGUI::timerCallback()
 {
+    // Update time
+    waveform->setCurTime(player->getTransportSource()->getCurrentPosition());
+
     // Update playhead position
     waveform->setRelPos(player -> getPosRel());
+
+    // Update visible range
+    waveform->updateVisRange();
 };
 
 // Callback function for the play button
@@ -284,7 +295,7 @@ void PlayerGUI::openBtnClick()
                 if (player -> openFile(juce::URL{ file }))
                 {
                     // Successfull load callback
-                    fileLoaded(file);
+                    fileLoaded(file, "");
                 }
                 // If not
                 else
@@ -297,8 +308,28 @@ void PlayerGUI::openBtnClick()
 
 };
 
+// Callback function for the load button
+void PlayerGUI::loadBtnClick()
+{
+    DBG("LOAD BTN CLICKED!");
+
+    // Get selected file
+    const juce::File track = library->getSelectedTrack();
+
+    // Check that file exists
+    if (track.existsAsFile())
+    {
+        // If file opened successfully
+        if (player->openFile(juce::URL{ track }))
+        {
+            // Load track into the player
+            fileLoaded(track, library->getSelectedName());
+        }
+    }
+};
+
 // Successfull file load callback
-void PlayerGUI::fileLoaded(juce::File file)
+void PlayerGUI::fileLoaded(juce::File file, juce::String trackName)
 {
     // Change state
     player->changeState(Player::PlayerState::Stopped);
@@ -338,6 +369,14 @@ void PlayerGUI::fileLoaded(juce::File file)
     // Pass the audio data to the AudioThumb object to draw the waveform 
     (waveform->getAudioThumb()) -> 
         setSource(new juce::FileInputSource(file));
+
+    // Pass new track name to the Waveform component
+    waveform->setTrackName(trackName);
+
+    // Pass track length to the Waveform component
+    waveform->setTrackLength(player->
+                                getTransportSource()->
+                                    getLengthInSeconds());
 };
 
 // Callback function for the loop button
@@ -556,10 +595,8 @@ void PlayerGUI::filesDropped(const juce::StringArray& files, int x, int y)
         // If file opened successfully
         if (player->openFile(juce::URL{ file }))
         {
-            fileLoaded(file);
-        };
-
-
+            fileLoaded(file, file.getFileNameWithoutExtension());
+        }
     }
 };
 
@@ -569,17 +606,26 @@ bool PlayerGUI::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
     return true;
 };
 
-// Callback to indicate that the user has dropped something onto this component
+// Callback to indicate that the user has dropped something onto this component (from another component - lib table)
 void PlayerGUI::itemDropped(const SourceDetails& dragSourceDetails)
 {
+    // Shortcut to the result array
+    juce::Array<juce::var>* arr = dragSourceDetails.description.getArray();
+
+    // Track URL
+    juce::String url = arr->getFirst().toString();
+
+    // Track Name
+    juce::String name = arr->getLast().toString();
+
     // Try to get file from the stored address
-    juce::File track{ dragSourceDetails.description.toString() };
+    juce::File track{ url };
 
     // If file opened successfully
     if (player->openFile(juce::URL{ track }))
     {
         // Load track
-        fileLoaded(track);
+        fileLoaded(track, name);
     };
 };
 

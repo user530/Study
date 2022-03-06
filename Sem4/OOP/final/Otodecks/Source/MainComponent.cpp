@@ -29,7 +29,6 @@ MainComponent::MainComponent()
     addAndMakeVisible(player2GUI);
     addAndMakeVisible(waveform1);           // DELETE?
     addAndMakeVisible(waveform2);           // DELETE?
-    addAndMakeVisible(mixerGUI);
     addAndMakeVisible(fileBrowser);
     addAndMakeVisible(library);
 }
@@ -118,9 +117,8 @@ void MainComponent::resized()
 
     waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
     waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
-    player1GUI.setBounds(0, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
-    mixerGUI.setBounds(wUnit * 3.5, hUnit * 2.5, wUnit * 3, hUnit * 4);
-    player2GUI.setBounds(wUnit * 6.5, hUnit * 2.5, wUnit * 3.5, hUnit * 4);
+    player1GUI.setBounds(0, hUnit * 2.5, wUnit * 5, hUnit * 4);
+    player2GUI.setBounds(wUnit * 5, hUnit * 2.5, wUnit * 5, hUnit * 4);
     fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 2.5, hUnit * 3.5);
     library.setBounds(wUnit * 2.5, hUnit * 6.5, wUnit * 7.5, hUnit * 3.5);
 }

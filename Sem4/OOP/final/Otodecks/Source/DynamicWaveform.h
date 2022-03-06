@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    Mixer.h
-    Created: 4 Feb 2022 11:58:36am
+    DynamicWaveform.h
+    Created: 6 Mar 2022 2:43:07pm
     Author:  eosdu
 
   ==============================================================================
@@ -15,15 +15,15 @@
 //==============================================================================
 /*
 */
-class Mixer  : public juce::Component
+class DynamicWaveform  : public juce::Component
 {
 public:
-    Mixer();
-    ~Mixer() override;
+    DynamicWaveform();
+    ~DynamicWaveform() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Mixer)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DynamicWaveform)
 };

@@ -3,7 +3,6 @@
 #include <JuceHeader.h>
 #include "PlayerGUI.h"
 #include "Waveform.h"
-#include "MixerGUI.h"
 #include "FileBrowser.h"
 #include "Library.h"
 
@@ -52,11 +51,8 @@ private:
     Waveform waveform2{ formatManager, thumbCache };
 
     // Player GUI
-    PlayerGUI player1GUI{ &player1, &waveform1};
-    PlayerGUI player2GUI{ &player2, &waveform2 };
-
-    // Mixer GUI
-    MixerGUI mixerGUI;
+    PlayerGUI player1GUI{ &player1, &waveform1, &library};
+    PlayerGUI player2GUI{ &player2, &waveform2, &library};
 
     // File browser interface
     FileBrowser fileBrowser;

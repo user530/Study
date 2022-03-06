@@ -13,6 +13,7 @@
 #include <JuceHeader.h>
 #include "Player.h"
 #include "Waveform.h"
+#include "Library.h"
 
 //==============================================================================
 /*
@@ -25,7 +26,8 @@ class PlayerGUI  : public juce::Component,
 {
 public:
     PlayerGUI(Player* player,
-              Waveform* waveform);
+              Waveform* waveform,
+              Library* library);
     ~PlayerGUI() override;
 
     void paint (juce::Graphics&) override;
@@ -52,14 +54,17 @@ private:
     void playBtnClick() const;
     // Callback function for the stop button
     void stopBtnClick();
-    // Callback function for the open button
+    // Callback function for the open button                                                    // DELETE
     void openBtnClick();
+    // Callback function for the load button
+    void loadBtnClick();
+
+
     // Callback function for the loop button
     void loopBtnClick();
 
     // Successfull file load callback
-    void fileLoaded(juce::File file);
-
+    void fileLoaded(juce::File file, juce::String trackName);
 
     // Callback function for the hotQue
     void queEditClick();
@@ -90,9 +95,11 @@ private:
 
     // Open btn
     juce::TextButton openBtn{ "Open file" };
+
+    // Load from lib
+    juce::TextButton loadBtn{ "Load selected" };
     
     // Loop btn
-    //juce::ToggleButton loopBtn{ "Loop file" };                              // DELETE!
     juce::TextButton loopBtn{ "Loop file" };                              // DELETE!
 
     // Hot que edit mode
@@ -122,6 +129,9 @@ private:
 
     // Connect waveform display
     Waveform* waveform;
+
+    // Connect library
+    Library* library;
 
     // File chooser                 - DELETE LATER!
     std::unique_ptr<juce::FileChooser> chooser;
