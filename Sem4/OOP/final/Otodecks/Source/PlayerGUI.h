@@ -45,9 +45,6 @@ public:
     // Override pure virtual functions from the ChangeListener base class
     virtual void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
-
-
-
 private:
 
     // Callback function for the play button
@@ -58,7 +55,6 @@ private:
     void openBtnClick();
     // Callback function for the load button
     void loadBtnClick();
-
 
     // Callback function for the loop button
     void loopBtnClick();
@@ -127,7 +123,7 @@ private:
     // Connect player
     Player* player;
 
-    // Connect waveform display
+    // Connect audio thumb container
     Waveform* waveform;
 
     // Connect library

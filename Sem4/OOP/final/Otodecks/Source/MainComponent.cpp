@@ -27,8 +27,12 @@ MainComponent::MainComponent()
     // Show GUI elements
     addAndMakeVisible(player1GUI);
     addAndMakeVisible(player2GUI);
-    addAndMakeVisible(waveform1);           // DELETE?
-    addAndMakeVisible(waveform2);           // DELETE?
+    //addAndMakeVisible(waveform1);           // DELETE?
+    //addAndMakeVisible(waveform2);           // DELETE?
+    addAndMakeVisible(dynamWaveform1);           // DELETE?
+    addAndMakeVisible(dynamWaveform2);           // DELETE?
+    addAndMakeVisible(statWaveform1);           // DELETE?
+    addAndMakeVisible(statWaveform2);           // DELETE?
     addAndMakeVisible(fileBrowser);
     addAndMakeVisible(library);
 }
@@ -115,10 +119,14 @@ void MainComponent::resized()
     double wUnit = getWidth() / 10;
     double hUnit = getHeight() / 10;
 
-    waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
-    waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
-    player1GUI.setBounds(0, hUnit * 2.5, wUnit * 5, hUnit * 4);
-    player2GUI.setBounds(wUnit * 5, hUnit * 2.5, wUnit * 5, hUnit * 4);
-    fileBrowser.setBounds(0, hUnit * 6.5, wUnit * 2.5, hUnit * 3.5);
-    library.setBounds(wUnit * 2.5, hUnit * 6.5, wUnit * 7.5, hUnit * 3.5);
+    // waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
+    // waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
+    dynamWaveform1.setBounds        (0              , 0             , getWidth()    , hUnit         );                    
+    dynamWaveform2.setBounds        (0              , hUnit         , getWidth()    , hUnit         );      
+    statWaveform1.setBounds         (0              , hUnit * 2     , wUnit * 5     , hUnit         );
+    statWaveform2.setBounds         (wUnit * 5      , hUnit * 2     , wUnit * 5     , hUnit         );
+    player1GUI.setBounds            (0              , hUnit * 3     , wUnit * 5     , hUnit * 4     );
+    player2GUI.setBounds            (wUnit * 5      , hUnit * 3     , wUnit * 5     , hUnit * 4     );
+    fileBrowser.setBounds           (0              , hUnit * 7     , wUnit * 2.5   , hUnit * 3     );
+    library.setBounds               (wUnit * 2.5    , hUnit * 7     , wUnit * 7.5   , hUnit * 3     );
 }

@@ -126,6 +126,7 @@ PlayerGUI::PlayerGUI(Player* _player,
     (player -> getTransportSource()) -> addChangeListener(this);
     // Add listener to the waveform
     (waveform -> getAudioThumb()) -> addChangeListener(this);
+    
 
     // Start timer thread
     startTimerHz(40);
@@ -134,6 +135,8 @@ PlayerGUI::PlayerGUI(Player* _player,
 PlayerGUI::~PlayerGUI()
 {
 }
+
+
 
 void PlayerGUI::paint (juce::Graphics& g)
 {
@@ -219,7 +222,11 @@ void PlayerGUI::timerCallback()
 
     // Update visible range
     waveform->updateVisRange();
+
+
 };
+
+
 
 // Callback function for the play button
 void PlayerGUI::playBtnClick() const
@@ -369,6 +376,9 @@ void PlayerGUI::fileLoaded(juce::File file, juce::String trackName)
     // Pass the audio data to the AudioThumb object to draw the waveform 
     (waveform->getAudioThumb()) -> 
         setSource(new juce::FileInputSource(file));
+
+    // Pass new audio thumb to the static and dynamic components
+    waveform->setNewThumb();
 
     // Pass new track name to the Waveform component
     waveform->setTrackName(trackName);
@@ -561,7 +571,8 @@ void PlayerGUI::transpChange(juce::AudioTransportSource* transpSrcP)
 void PlayerGUI::thumbChange()
 {
     // Update visuals
-    waveform -> repaint();
+    //waveform -> repaint();                                                    // DELETE?
+    waveform -> updateWaveforms();
 };
 
 // Toggle off all HotQue btns

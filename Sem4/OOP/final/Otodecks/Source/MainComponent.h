@@ -3,6 +3,8 @@
 #include <JuceHeader.h>
 #include "PlayerGUI.h"
 #include "Waveform.h"
+#include "StaticWaveform.h"
+#include "DynamicWaveform.h"
 #include "FileBrowser.h"
 #include "Library.h"
 
@@ -41,14 +43,21 @@ private:
     // Mixer object to handle 2 players
     juce::MixerAudioSource mixerSource;
 
-
     // Player components
     Player player1{ formatManager };
     Player player2{ formatManager };
 
+    // Static waveforms
+    StaticWaveform statWaveform1{};
+    StaticWaveform statWaveform2{};
+
+    // Dynamic waveforms
+    DynamicWaveform dynamWaveform1{};
+    DynamicWaveform dynamWaveform2{};
+
     // Waveform interface
-    Waveform waveform1{ formatManager, thumbCache };
-    Waveform waveform2{ formatManager, thumbCache };
+    Waveform waveform1{ formatManager, thumbCache, &statWaveform1, &dynamWaveform1 };
+    Waveform waveform2{ formatManager, thumbCache, &statWaveform2, &dynamWaveform2 };
 
     // Player GUI
     PlayerGUI player1GUI{ &player1, &waveform1, &library};

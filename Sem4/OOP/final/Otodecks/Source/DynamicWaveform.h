@@ -24,6 +24,37 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    // Paint helper functions
+    void paintIfLoaded(juce::Graphics& g);
+    void paintIfEmpty(juce::Graphics& g);
+
+
+    // Set audio thumb to draw waveforms
+    void setAudioThumb(juce::AudioThumbnail* newAudioThumb);
+
+
+    // Set current time
+    void setCurTime(const double newTime);
+
+    // Set new visible range
+    void setVisRange(juce::Range<double> newRange);
+
+    // Initialize range based on the new track
+    void initRange();
+
+    // Update visible range
+    void updateVisRange();
+
 private:
+
+    juce::AudioThumbnail* audioThumb;
+
+    double curTime;
+
+    juce::Range<double> visibleRange;
+
+    unsigned int visibleTimeSpread;
+
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DynamicWaveform)
 };
