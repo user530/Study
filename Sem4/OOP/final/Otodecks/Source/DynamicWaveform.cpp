@@ -15,7 +15,8 @@
 DynamicWaveform::DynamicWaveform() : audioThumb(nullptr), 
                                         curTime(0.0),
                                         visibleRange(juce::Range<double>{}),
-                                        visibleTimeSpread(20)
+                                        visibleTimeSpread(20),
+                                        bpm(120)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs
@@ -111,28 +112,35 @@ void DynamicWaveform::paintIfLoaded(juce::Graphics& g)
                     1.0f,
                     (float)getHeight(),
                     2.0f);
+    // Scale in pix/sec
+    const double scale = getWidth() / visibleRange.getLength();
 
-    // Bars color
+    // Beat frequency (beach every x seconds)
+    const double beatFreq = 60.0 / bpm;
+
+    // Absolute X position of the first beat
+    double beatAbsX = abs( rangeStart - ceil(rangeStart / beatFreq) * beatFreq );
+
+    // Beat color
     g.setColour(juce::Colours::white);
 
-    // Scale in pix/sec
-    float scale = getWidth() / visibleRange.getLength();
-
-    // Iterate over visible range
-    for (int i = std::ceil(rangeStart);
-        i <= std::floor(rangeEnd);
-        ++i)
+    // Iterate over every beat
+    while (beatAbsX <= visibleTimeSpread )
     {
-        // Time to the next whole second (in seconds)
-        double dSec = i - rangeStart;
-
-        // Draw bar based on the scale
-        g.drawRect(dSec * scale - 1,
-                    i%4 == 0 ? 0 : (float)getHeight() * 0.25,
+        // Draw beat rect
+        g.drawRect(beatAbsX * scale - 1,
+                    fmod(beatAbsX, 4*beatFreq ) == 0    ?   0             : (float)getHeight() * 0.25,
                     1.0f,
-                    i%4 == 0 ? getHeight() : (float)getHeight() * 0.5,
+                    fmod(beatAbsX, 4*beatFreq ) == 0    ?   getHeight()   : (float)getHeight() * 0.5,
                     2.0f);
+
+        // Calculate coordinates of the next beat
+        beatAbsX += beatFreq;
     }
+    
+
+
+
 
 
 };
