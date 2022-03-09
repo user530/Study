@@ -28,10 +28,14 @@ public:
     void paintIfLoaded(juce::Graphics& g);
     void paintIfEmpty(juce::Graphics& g);
 
+    // Set track BPM to adjust graphics
+    void setTrackBPM(const double newBpm);
+
+    // Get track BPM
+    const double getTrackBPM() const;
 
     // Set audio thumb to draw waveforms
     void setAudioThumb(juce::AudioThumbnail* newAudioThumb);
-
 
     // Set current time
     void setCurTime(const double newTime);
@@ -55,8 +59,7 @@ private:
 
     unsigned int visibleTimeSpread;
 
-    unsigned int bpm;
-
+    double bpm;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DynamicWaveform)
 };

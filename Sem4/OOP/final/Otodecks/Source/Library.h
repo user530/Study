@@ -38,6 +38,9 @@ public:
     // Get track name from the selected row
     const juce::String getSelectedName() const;
 
+    // Get track BPM from the selected row
+    const double getSelectedBPM() const;
+
 
 private:
 
@@ -155,6 +158,14 @@ private:
             // Add name to the result
             res.add(entry->getStringAttribute("Track"));
 
+            // BPM stored OR "default" value
+            const juce::String BPM = entry->getStringAttribute("BPM").getDoubleValue() > 0 ?
+                                                          entry->getStringAttribute("BPM") :
+                                                          "0.0";
+
+            // Add bpm to the result
+            res.add(BPM);
+
             // On click start drag and drop, dragging file URL
             startDragging(res,
                 this,
@@ -253,6 +264,7 @@ private:
     void addTrackClick();
     void delTrackClick();
     void searchChange();
+    void clearSearch();
 
     //===================================================================
 
@@ -279,8 +291,11 @@ private:
     juce::TextButton loadLibBtn{ "Load library" };
     juce::TextButton saveLibBtn{ "Save library" };
     juce::TextButton addTrackBtn{ "Add track" };
-    juce::TextButton delTrackBtn{ "Remove track" };
-    juce::TextEditor searchField{ "Search lib..." };
+    juce::TextButton delTrackBtn{ "Del track" };
+    juce::TextEditor searchField{ "Search field" };
+
+    juce::Label searchLabel{ "Search", "Filter:" };
+    juce::TextButton clearSearchBtn{ "X" };
 
     // File chooser for library interactions
     std::unique_ptr<juce::FileChooser> fileChooserPtr = nullptr;

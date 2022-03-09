@@ -16,7 +16,7 @@ DynamicWaveform::DynamicWaveform() : audioThumb(nullptr),
                                         curTime(0.0),
                                         visibleRange(juce::Range<double>{}),
                                         visibleTimeSpread(20),
-                                        bpm(120)
+                                        bpm(0.0)
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs
@@ -82,10 +82,12 @@ void DynamicWaveform::paintIfLoaded(juce::Graphics& g)
 
     // Fill background
     g.fillRect(getLocalBounds());
+
     // Waveform color
     g.setColour(juce::Colours::lawngreen);
+
     // Set waveform opacity
-    g.setOpacity(0.8);
+    g.setOpacity(0.7);
 
     // Visible range start value
     const double rangeStart = visibleRange.getStart();
@@ -103,7 +105,8 @@ void DynamicWaveform::paintIfLoaded(juce::Graphics& g)
 
     // Playhead color
     g.setColour(juce::Colours::red);
-
+    
+    // Restore opacity
     g.setOpacity(1);
 
     // Draw the playhead for the dinamic waveform
@@ -112,36 +115,56 @@ void DynamicWaveform::paintIfLoaded(juce::Graphics& g)
                     1.0f,
                     (float)getHeight(),
                     2.0f);
-    // Scale in pix/sec
-    const double scale = getWidth() / visibleRange.getLength();
 
-    // Beat frequency (beach every x seconds)
-    const double beatFreq = 60.0 / bpm;
-
-    // Absolute X position of the first beat
-    double beatAbsX = abs( rangeStart - ceil(rangeStart / beatFreq) * beatFreq );
-
-    // Beat color
-    g.setColour(juce::Colours::white);
-
-    // Iterate over every beat
-    while (beatAbsX <= visibleTimeSpread )
+    // Check that BPM is correct
+    if (bpm > 0)
     {
-        // Draw beat rect
-        g.drawRect(beatAbsX * scale - 1,
-                    fmod(beatAbsX, 4*beatFreq ) == 0    ?   0             : (float)getHeight() * 0.25,
-                    1.0f,
-                    fmod(beatAbsX, 4*beatFreq ) == 0    ?   getHeight()   : (float)getHeight() * 0.5,
-                    2.0f);
+        // Beat frequency (1 beat every N seconds)
+        const double beatFreq = 60.0 / bpm;
 
-        // Calculate coordinates of the next beat
-        beatAbsX += beatFreq;
-    }
+        // Scale in pix/sec
+        const double scale = getWidth() / visibleRange.getLength();
+
+        // Absolute X position of the first beat
+        const double fBeatAbsX = abs( rangeStart - ceil(rangeStart / beatFreq) * beatFreq );
+
+        // Absolute position of the current beat
+        double beatX = fBeatAbsX;
+
+        // Beat color
+        g.setColour(juce::Colours::white);
     
+        // Iterate while beat is visible
+        for(int i = 0 ; beatX <= visibleTimeSpread ; ++i)
+        {
+            // Calculate coordinate in Seconds
+            beatX = fBeatAbsX + beatFreq * i;
 
+            // Absolute "Index" of the first visible beat 
+            int fBeatInd = ceil(rangeStart / beatFreq);
 
+            // Mark each 4-th beat as bar
+            const bool isBar = fmod(fBeatInd + i, 4) == 0;
 
+            // Draw beat(bar) rect
+            g.drawRect(beatX * scale - 1,
+                        isBar   ?   0           : (float)getHeight() * 0.25,
+                        1.0f,
+                        isBar   ?   getHeight() : (float)getHeight() * 0.5,
+                        2.0f);
+        }
 
+        // Playhead color
+        g.setColour(juce::Colours::red);
+
+        // Set Font
+        g.setFont(28.0f);
+
+        //Draw BPM 
+        g.drawText("Track BPM: " + juce::String(bpm),
+            getLocalBounds().removeFromTop(getHeight() / 2),
+            juce::Justification::centredLeft);
+    }
 
 };
 
@@ -161,6 +184,21 @@ void DynamicWaveform::paintIfEmpty(juce::Graphics& g)
     g.setFont(28.0f);
     // Print text   
     g.drawFittedText("NO WAVEFORM DETECTED", getLocalBounds(), juce::Justification::centred, 1);
+};
+
+
+// Set track BPM to adjust graphics
+void DynamicWaveform::setTrackBPM(const double newBpm)
+{
+    if (bpm != newBpm)
+        bpm = newBpm;
+};
+
+
+// Get track BPM
+const double DynamicWaveform::getTrackBPM() const
+{
+    return bpm;
 };
 
 // Set audio thumb to draw waveforms

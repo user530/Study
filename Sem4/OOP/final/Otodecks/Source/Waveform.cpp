@@ -111,6 +111,21 @@ void Waveform::setTrackName(const juce::String name)
     statWaveform->setTrackName(name);
 };
 
+
+// Set track BPM
+void Waveform::setTrackBPM(const double bpm)
+{
+    // Pass the job to the dynamic waveform
+    dynWaveform->setTrackBPM(bpm);
+};
+
+// Get track BPM
+const double Waveform::getTrackBPM() const
+{
+    // Pass the job to the dynamic waveform
+    return dynWaveform->getTrackBPM();
+};
+
 // Update visible range
 void Waveform::updateVisRange()
 {

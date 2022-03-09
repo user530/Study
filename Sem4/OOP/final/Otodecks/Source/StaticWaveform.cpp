@@ -154,28 +154,17 @@ void StaticWaveform::paintIfLoaded(juce::Graphics& g)
                 (float)getHeight());
 
     // Text color
-    g.setColour(juce::Colours::yellow);
+    g.setColour(juce::Colours::red);
 
     // Set font size
     g.setFont(28.0f);
 
     // Draw Song name and 
-    g.drawFittedText(trackName,
-                        juce::Rectangle<int>(getWidth() * 0.25,
-                                                0,
-                                                getWidth() * 0.25,
-                                                getHeight() * 0.5),
-                        juce::Justification::centred,
-                        2);
-
-    // Draw playback time
-    g.drawFittedText(getTimeString(curTime),
-                        juce::Rectangle<int>(getWidth() * 0.5,
-                                                0,
-                                                getWidth() * 0.25,
-                                                getHeight() * 0.5),
-                        juce::Justification::centred,
+    g.drawFittedText(trackName + "  -   " + getTimeString(curTime),
+                        juce::Rectangle<int>(0, 0, getWidth(), getHeight() * 0.5),
+                        juce::Justification::centred, 
                         1);
+    
 };
 
 

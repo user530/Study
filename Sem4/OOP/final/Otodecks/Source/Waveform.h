@@ -38,6 +38,12 @@ public:
     // Set track name
     void setTrackName(const juce::String name);
 
+    // Set track BPM
+    void setTrackBPM(const double bpm);
+
+    // Get track BPM
+    const double getTrackBPM() const;
+
     // Set track length
     void setTrackLength(const int maxLen);
 

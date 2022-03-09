@@ -47,12 +47,15 @@ public:
 
 private:
 
+    // Override pure virtual functions from the Timer base class
+    virtual void timerCallback() override;
+
     // Callback function for the play button
     void playBtnClick() const;
+
     // Callback function for the stop button
     void stopBtnClick();
-    // Callback function for the open button                                                    // DELETE
-    void openBtnClick();
+
     // Callback function for the load button
     void loadBtnClick();
 
@@ -60,10 +63,11 @@ private:
     void loopBtnClick();
 
     // Successfull file load callback
-    void fileLoaded(juce::File file, juce::String trackName);
+    void fileLoaded(juce::File file, juce::String trackName, double bpm);
 
     // Callback function for the hotQue
     void queEditClick();
+
     // Callback function for the hotQue
     void hotQueClick(juce::TextButton* btnAddr) const;
 
@@ -72,8 +76,10 @@ private:
 
     // Callback function for the gain slider
     void gainSldChange() const;
+
     // Callback function for the time slider
     void timeSldChange() const;
+
     // Callback function for the tempo slider
     void tempoSldChange() const;
 
@@ -83,23 +89,21 @@ private:
     // Logic behind changes of thumbnail
     void thumbChange();
 
+
     // Start btn
     juce::TextButton playBtn;
 
     // Stop btn
     juce::TextButton stopBtn;
 
-    // Open btn
-    juce::TextButton openBtn{ "Open file" };
-
     // Load from lib
     juce::TextButton loadBtn{ "Load selected" };
     
     // Loop btn
-    juce::TextButton loopBtn{ "Loop file" };                              // DELETE!
+    juce::TextButton loopBtn{ "LOOP: OFF" };                                    
 
     // Hot que edit mode
-    juce::TextButton queEditBtn{ "Edit hot ques" };
+    juce::TextButton queEditBtn{ "QUE EDIT: OFF" };
 
     // Hot que btns
     juce::TextButton Que1Btn{ "1" };
@@ -120,6 +124,16 @@ private:
     // Tempo slider
     juce::Slider tempoSld;
 
+    // Gain label
+    juce::Label gainLabel{"Gain", "Gain:"};
+
+    // Time label
+    juce::Label timeLabel{"Time", "Time:"};
+
+    // Tempo label
+    juce::Label tempoLabel{"Tempo", "Tempo:"};
+
+
     // Connect player
     Player* player;
 
@@ -131,9 +145,6 @@ private:
 
     // File chooser                 - DELETE LATER!
     std::unique_ptr<juce::FileChooser> chooser;
-
-    // Override pure virtual functions from the Timer base class
-    virtual void timerCallback() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayerGUI)
 };

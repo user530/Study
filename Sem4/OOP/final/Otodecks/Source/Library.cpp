@@ -30,7 +30,8 @@ Library::Library(FileBrowser* _fileBrowser,
     updateVisible();
 
     // Make table visible
-    addAndMakeVisible(libTable);
+    addAndMakeVisible(&libTable);
+
     // Change table model to our component
     libTable.setModel(this);
 
@@ -61,11 +62,15 @@ Library::Library(FileBrowser* _fileBrowser,
     ( fileBrowser -> getFiletree() ) -> addListener(this);
 
     // Add lib interface
-    addAndMakeVisible(loadLibBtn);
-    addAndMakeVisible(saveLibBtn);
-    addAndMakeVisible(addTrackBtn);
-    addAndMakeVisible(delTrackBtn);
-    addAndMakeVisible(searchField);
+    addAndMakeVisible(&loadLibBtn);
+    addAndMakeVisible(&saveLibBtn);
+    addAndMakeVisible(&addTrackBtn);
+    addAndMakeVisible(&delTrackBtn);
+    addAndMakeVisible(&searchField);
+
+    addAndMakeVisible(&clearSearchBtn);
+    addAndMakeVisible(&searchLabel);
+
 
     // Add linsteners
     loadLibBtn.onClick = [this] {loadLibClick(); };
@@ -73,6 +78,8 @@ Library::Library(FileBrowser* _fileBrowser,
     addTrackBtn.onClick = [this] {addTrackClick(); };
     delTrackBtn.onClick = [this] {delTrackClick(); };
     searchField.onTextChange = [this] {searchChange(); };
+    clearSearchBtn.onClick = [this] {clearSearch(); };
+
 }
 
 Library::~Library()
@@ -116,7 +123,10 @@ void Library::resized()
     saveLibBtn.setBounds(getWidth() * 0.155, 0, getWidth() * 0.135, getHeight() * 0.15);
     addTrackBtn.setBounds(getWidth() * 0.31, 0, getWidth() * 0.135, getHeight() * 0.15);
     delTrackBtn.setBounds(getWidth() * 0.465, 0, getWidth() * 0.135, getHeight() * 0.15);
-    searchField.setBounds(getWidth() * 0.62, 0, getWidth() * 0.38, getHeight() * 0.15);
+    searchField.setBounds(getWidth() * 0.7, 0, getWidth() * 0.25, getHeight() * 0.15);
+    searchLabel.setBounds(getWidth() * 0.62, 0, getWidth() * 0.08, getHeight() * 0.15);
+    clearSearchBtn.setBounds(getWidth() * 0.95, 0, getWidth() * 0.05, getHeight() * 0.15);
+    
 }
 
 //===================================================================
@@ -381,11 +391,8 @@ const int Library::getAbsID(const int visibleID) const
     // Check that argument is valid
     if (visibleID >= 0 && visibleID < visEntry->getNumAttributes())
     {
-        // Get entry attribute name (ID)
-        const juce::String idName = visEntry->getStringAttribute("ID");
-
-        // Return atribute value
-        return visEntry->getIntAttribute(idName, -1);
+        // return atribute value
+        return visEntry->getIntAttribute("ID", -1);
     }
 
     // If argument is out of range
@@ -536,6 +543,30 @@ const juce::String Library::getSelectedName() const
 }
 
 
+// Get track name from the selected row
+const double Library::getSelectedBPM() const
+{
+    // Selected entry pointer
+    const juce::XmlElement* selected = getSelected();
+
+    // If entry exists
+    if (selected)
+    {
+        // Get BPM from the selected track
+        const double selectedBPM = selected->getStringAttribute("BPM").getDoubleValue();
+
+        // If selected track has correct BPM value
+        if ( selectedBPM > 0.0)
+        {
+            // Return new result value
+            return selectedBPM;
+        }
+    }
+
+    // Return "default" value
+    return 0.0;
+}
+
 // Callback function to load library
 void Library::loadLibClick()
 {
@@ -642,6 +673,18 @@ void Library::searchChange()
     libTable.updateContent();
 };
  
+// Clear search bar
+void Library::clearSearch()
+{
+    DBG("Clear search field click!");
+
+    // Clear search field
+    searchField.setText("");
+
+    // Fire search bar callback to update visuals
+    searchChange();
+};
+
 // Add file from the file tree to the library
 void Library::addTrackToLib(const juce::File& file)
 {
@@ -772,7 +815,6 @@ void Library::sortOrderChanged(int newSortColumnId, bool isForwards)
 // Override this to be informed when the delete key is pressed
 void Library::deleteKeyPressed(int lastRowSelected)
 {
-    DBG(libTable.getSelectedRow());
 
     // If some row is selected
     if (libTable.getSelectedRow() != -1)
@@ -801,6 +843,14 @@ juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& curren
 
     // Add track name
     res.add(entry->getStringAttribute("Track"));
+
+    // BPM stored OR "default" value
+    const juce::String BPM = entry->getStringAttribute("BPM").getDoubleValue() > 0 ?
+                                                  entry->getStringAttribute("BPM") :
+                                                  "0.0";
+
+    // Add track bpm
+    res.add(BPM);
 
     return res;
 };

@@ -78,6 +78,9 @@ public:
 
     // Set tempo
     void setTempo(double tempo);
+
+    // Get tempo
+    const double getTempo() const;
     
     // Get loop state
     bool isLooping() const;

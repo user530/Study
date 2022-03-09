@@ -239,6 +239,13 @@ void Player::setTempo(double tempo)
     resampleSource.setResamplingRatio(tempo);
 };
 
+// Get tempo
+const double Player::getTempo() const
+{
+    return resampleSource.getResamplingRatio();
+};
+
+
 // Get loop state
 bool Player::isLooping() const
 {

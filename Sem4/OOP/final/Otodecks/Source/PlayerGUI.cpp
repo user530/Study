@@ -25,7 +25,6 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Show GUI elements
     addAndMakeVisible(&playBtn);
     addAndMakeVisible(&stopBtn);
-    addAndMakeVisible(&openBtn);                                                        // DELETE
     addAndMakeVisible(&loadBtn);
 
     // Control sliders
@@ -33,6 +32,11 @@ PlayerGUI::PlayerGUI(Player* _player,
     addAndMakeVisible(&timeSld);
     addAndMakeVisible(&tempoSld);
 
+    // Slider labels
+    addAndMakeVisible(&gainLabel);
+    addAndMakeVisible(&timeLabel);
+    addAndMakeVisible(&tempoLabel);
+    
     // Loop btn
     addAndMakeVisible(&loopBtn);
         
@@ -52,15 +56,14 @@ PlayerGUI::PlayerGUI(Player* _player,
     // Add callbacks to the GUI elements
     playBtn.onClick = [this] { playBtnClick(); };
     stopBtn.onClick = [this] { stopBtnClick(); };
-    openBtn.onClick = [this] { openBtnClick(); };                                           // DELETE
     loadBtn.onClick = [this] { loadBtnClick(); };
-    loopBtn.onClick = [this] { loopBtnClick(); };
 
-    gainSld.onValueChange = [this] { gainSldChange(); };
+    gainSld.onValueChange = [this] { gainSldChange(); };    
     timeSld.onValueChange = [this] { timeSldChange(); };
     tempoSld.onValueChange = [this] { tempoSldChange(); };
 
     queEditBtn.onClick = [this] { queEditClick(); };
+    loopBtn.onClick = [this] { loopBtnClick(); };
 
     Que1Btn.onClick = [this] { hotQueClick(&Que1Btn); };
     Que2Btn.onClick = [this] { hotQueClick(&Que2Btn); };
@@ -77,6 +80,7 @@ PlayerGUI::PlayerGUI(Player* _player,
 
     loopBtn.setEnabled(false);
     queEditBtn.setEnabled(false);
+
     Que1Btn.setEnabled(false);
     Que2Btn.setEnabled(false);
     Que3Btn.setEnabled(false);
@@ -95,7 +99,7 @@ PlayerGUI::PlayerGUI(Player* _player,
     queEditBtn.setClickingTogglesState(true);
 
     // Change colour when button activated
-    loopBtn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::red);
+    loopBtn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::blue);
     queEditBtn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::green);
 
     // Set colours of the hot que buttons
@@ -108,25 +112,42 @@ PlayerGUI::PlayerGUI(Player* _player,
     Que7Btn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightpink);
     Que8Btn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::lightpink);
 
-
     // Setup gain slider
     gainSld.setRange(0.0, 3.0);
     gainSld.setValue(1.0);
+    gainSld.setSliderStyle(juce::Slider::Rotary);
+    gainSld.setRotaryParameters(juce::MathConstants<float>::pi * 1.2f, 
+                                juce::MathConstants<float>::pi * 2.8f, 
+                                false);
+    gainSld.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
+    gainSld.setDoubleClickReturnValue(true, 1.0);
 
     // Setup time slider
     timeSld.setRange(0.0, 1.0);
     timeSld.setValue(0.0);
+    timeSld.setTextBoxStyle(juce::Slider::TextBoxRight, false, 70, 20);
 
-    // Setup time slider
+    // Setup tempo slider
     tempoSld.setRange(0.1, 8.0);
     tempoSld.setValue(1);
+    tempoSld.setSliderStyle(juce::Slider::Rotary);
+    tempoSld.setRotaryParameters(juce::MathConstants<float>::pi * 1.2f,
+                                 juce::MathConstants<float>::pi * 2.8f,
+                                 false);
+    tempoSld.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, 20);
+    tempoSld.setDoubleClickReturnValue(true, 1.0);
+
+    // Setup labels
+    gainLabel.setJustificationType(juce::Justification::centred);
+    timeLabel.setJustificationType(juce::Justification::centred);
+    tempoLabel.setJustificationType(juce::Justification::centred);
 
 
     // Add listener to the transport source
-    (player -> getTransportSource()) -> addChangeListener(this);
+    player->getTransportSource()->addChangeListener(this);
+
     // Add listener to the waveform
-    (waveform -> getAudioThumb()) -> addChangeListener(this);
-    
+    waveform->getAudioThumb()->addChangeListener(this);
 
     // Start timer thread
     startTimerHz(40);
@@ -152,12 +173,6 @@ void PlayerGUI::paint (juce::Graphics& g)
     g.setColour (juce::Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
 
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("PlayerGUI", getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
-
-
     // Change colour scheme
     loopBtn.setColour(1, juce::Colours::yellow);
     queEditBtn.setColour(1, juce::Colours::mediumvioletred);
@@ -167,29 +182,101 @@ void PlayerGUI::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
-    playBtn.setBounds(0, 0, getWidth() / 4, getHeight() / 6);
-    stopBtn.setBounds(0, getHeight() * 1/6, getWidth() / 4, getHeight() / 6);
-    openBtn.setBounds(0, getHeight() * 2/6, getWidth() / 4, getHeight() / 6);                   // DELETE
 
-    loadBtn.setBounds(getWidth() * 0.9, 0, getWidth() * 0.1, getHeight() / 6);
+    playBtn.setBounds(getWidth()    * 0.1,
+                      getHeight()   * 0.8,
+                      getWidth()    * 0.3,
+                      getHeight()   * 0.1);
 
+    stopBtn.setBounds(getWidth()    * 0.1, 
+                      getHeight()   * 0.9, 
+                      getWidth()    * 0.3, 
+                      getHeight()   * 0.1);
 
-    gainSld.setBounds(0, getHeight() * 3/6, getWidth(), getHeight() / 6);
-    timeSld.setBounds(0, getHeight() * 4/6, getWidth(), getHeight() / 6);
-    tempoSld.setBounds(0, getHeight() * 5/6, getWidth(), getHeight() / 6);
+    loadBtn.setBounds(getWidth()    * 0.1,
+                      getHeight()   * 0.65 ,
+                      getWidth()    * 0.3,
+                      getHeight()   * 0.1);
 
-    loopBtn.setBounds(getWidth() * 1 / 4, 0, getWidth() / 4, getHeight() / 6);
+    timeSld.setBounds(getWidth()    * 0.2, 
+                      getHeight()   * 0.0, 
+                      getWidth()    * 0.8, 
+                      getHeight()   * 0.1);
 
-    queEditBtn.setBounds(getWidth() * 1 / 2, 0, getWidth() /4, getHeight()/6);
+    timeLabel.setBounds(getWidth()  * 0.0,
+                        getHeight() * 0.0,
+                        getWidth()  * 0.2,
+                        getHeight() * 0.1);
 
-    Que1Btn.setBounds(getWidth() * 2 / 8, getHeight() * 1 / 6, getWidth()/8, getHeight()/6);
-    Que2Btn.setBounds(getWidth() * 3 / 8, getHeight() * 1 / 6, getWidth()/8, getHeight()/6);
-    Que3Btn.setBounds(getWidth() * 4 / 8, getHeight() * 1 / 6, getWidth()/8, getHeight()/6);
-    Que4Btn.setBounds(getWidth() * 5 / 8, getHeight() * 1 / 6, getWidth()/8, getHeight()/6);
-    Que5Btn.setBounds(getWidth() * 2 / 8, getHeight() * 2 / 6, getWidth()/8, getHeight()/6);
-    Que6Btn.setBounds(getWidth() * 3 / 8, getHeight() * 2 / 6, getWidth()/8, getHeight()/6);
-    Que7Btn.setBounds(getWidth() * 4 / 8, getHeight() * 2 / 6, getWidth()/8, getHeight()/6);
-    Que8Btn.setBounds(getWidth() * 5 / 8, getHeight() * 2 / 6, getWidth()/8, getHeight()/6);
+    gainSld.setBounds(getWidth()    * 0.0, 
+                      getHeight()   * 0.1, 
+                      getWidth()    * 0.5, 
+                      getHeight()   * 0.5);
+
+    gainLabel.setBounds(getWidth() * 0.0,
+                        getHeight() * 0.25,
+                        getWidth() * 0.5,
+                        getHeight() * 0.1);
+
+    tempoSld.setBounds(getWidth()   * 0.5,
+                       getHeight()  * 0.1,
+                       getWidth()   * 0.5,
+                       getHeight()  * 0.5);
+
+    tempoLabel.setBounds(getWidth() * 0.5,
+                        getHeight() * 0.25,
+                        getWidth() * 0.5,
+                        getHeight() * 0.1);
+
+    loopBtn.setBounds(getWidth()    * 0.5,
+                      getHeight()   * 0.65,
+                      getWidth()    * 0.2,
+                      getHeight()   * 0.1);
+
+    queEditBtn.setBounds(getWidth() * 0.7,
+                         getHeight()* 0.65,
+                         getWidth() * 0.2,
+                         getHeight()* 0.1);
+
+    Que1Btn.setBounds(getWidth()    * 0.5, 
+                      getHeight()   * 0.8, 
+                      getWidth()    * 0.1, 
+                      getHeight()   * 0.1);
+
+    Que2Btn.setBounds(getWidth()    * 0.6,
+                      getHeight()   * 0.8,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que3Btn.setBounds(getWidth()    * 0.7,
+                      getHeight()   * 0.8,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que4Btn.setBounds(getWidth()    * 0.8,
+                      getHeight()   * 0.8,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que5Btn.setBounds(getWidth()    * 0.5,
+                      getHeight()   * 0.9,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que6Btn.setBounds(getWidth()    * 0.6,
+                      getHeight()   * 0.9,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que7Btn.setBounds(getWidth()    * 0.7,
+                      getHeight()   * 0.9,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
+
+    Que8Btn.setBounds(getWidth()    * 0.8,
+                      getHeight()   * 0.9,
+                      getWidth()    * 0.1,
+                      getHeight()   * 0.1);
 
 }
 
@@ -222,8 +309,6 @@ void PlayerGUI::timerCallback()
 
     // Update visible range
     waveform->updateVisRange();
-
-
 };
 
 
@@ -275,46 +360,6 @@ void PlayerGUI::stopBtnClick()
     }
 };
 
-// Callback function for the open button
-void PlayerGUI::openBtnClick()
-{
-    //=======================================================================Multithreading problem!
-
-    // Create file chooser
-    chooser = std::make_unique<juce::FileChooser>("Select a file to play...", 
-                                                    juce::File{}, 
-                                                    "*.wav;*.mp3;*.aif");
-
-    // Set options for FileBrowserComponent - that browser can open and select 
-    auto chooserFlags = juce::FileBrowserComponent::openMode |
-                        juce::FileBrowserComponent::canSelectFiles;
-
-    // Run asynchronous file browser window
-    chooser -> launchAsync(chooserFlags, [this](const juce::FileChooser& FC)
-        {
-            // File selected in the window
-            juce::File file = FC.getResult();
-
-            // Check that user selected actual file in the browser window
-            if (file != juce::File{})
-            {
-                // If file opened successfully
-                if (player -> openFile(juce::URL{ file }))
-                {
-                    // Successfull load callback
-                    fileLoaded(file, "");
-                }
-                // If not
-                else
-                {
-                    // Alert user
-                    DBG("PLAYER::OPEN FILE - ERROR! CAN'T OPEN THE TRACK!");
-                }
-            }
-        });
-
-};
-
 // Callback function for the load button
 void PlayerGUI::loadBtnClick()
 {
@@ -330,13 +375,15 @@ void PlayerGUI::loadBtnClick()
         if (player->openFile(juce::URL{ track }))
         {
             // Load track into the player
-            fileLoaded(track, library->getSelectedName());
+            fileLoaded(track, 
+                        library->getSelectedName(), 
+                        library->getSelectedBPM() * player->getTempo());
         }
     }
 };
 
 // Successfull file load callback
-void PlayerGUI::fileLoaded(juce::File file, juce::String trackName)
+void PlayerGUI::fileLoaded(juce::File file, juce::String trackName, double bpm)
 {
     // Change state
     player->changeState(Player::PlayerState::Stopped);
@@ -383,6 +430,9 @@ void PlayerGUI::fileLoaded(juce::File file, juce::String trackName)
     // Pass new track name to the Waveform component
     waveform->setTrackName(trackName);
 
+    // Pass new track BPM to the Waveform component
+    waveform->setTrackBPM(bpm) ;
+
     // Pass track length to the Waveform component
     waveform->setTrackLength(player->
                                 getTransportSource()->
@@ -395,11 +445,11 @@ void PlayerGUI::loopBtnClick()
     // Set button text depending on the btn state
     if (loopBtn.getToggleState())
     {
-        loopBtn.setButtonText("Loop: ON");
+        loopBtn.setButtonText("LOOP: ON");
     }
     else
     {
-        loopBtn.setButtonText("Loop: OFF");
+        loopBtn.setButtonText("LOOP: OFF");
     }
 
     // Set new loop state based on the btn value
@@ -432,6 +482,12 @@ void PlayerGUI::tempoSldChange() const
     // Get the value of the slider
     double newTempo = tempoSld.getValue();
 
+    // Modify BPM accordingly                                                       // DELETE?
+    waveform->setTrackBPM(waveform->getTrackBPM() * (newTempo / player->getTempo()));
+
+    // Update visuals
+    waveform->updateWaveforms();
+    
     // Set new tempo
     player->setTempo(newTempo);
 };
@@ -547,8 +603,9 @@ void PlayerGUI::transpChange(juce::AudioTransportSource* transpSrcP)
         // Stop the player
         player -> changeState(Player::PlayerState::Stopped);
 
-        // Set btn text to "Play" and "Stop"
+        // Set btn text to "Play" and "Stop" and set colours
         playBtn.setButtonText("Play");
+
         stopBtn.setButtonText("Stop");
 
         // Disable stop btn
@@ -574,6 +631,7 @@ void PlayerGUI::thumbChange()
     //waveform -> repaint();                                                    // DELETE?
     waveform -> updateWaveforms();
 };
+
 
 // Toggle off all HotQue btns
 void PlayerGUI::queBtnsOff()
@@ -606,7 +664,9 @@ void PlayerGUI::filesDropped(const juce::StringArray& files, int x, int y)
         // If file opened successfully
         if (player->openFile(juce::URL{ file }))
         {
-            fileLoaded(file, file.getFileNameWithoutExtension());
+            fileLoaded(file, 
+                        file.getFileNameWithoutExtension(), 
+                        0.0 * player->getTempo());
         }
     }
 };
@@ -624,10 +684,15 @@ void PlayerGUI::itemDropped(const SourceDetails& dragSourceDetails)
     juce::Array<juce::var>* arr = dragSourceDetails.description.getArray();
 
     // Track URL
-    juce::String url = arr->getFirst().toString();
+    //juce::String url = arr->getFirst().toString();                        // DELETE
+    juce::String url = arr->getUnchecked(0).toString();
 
     // Track Name
-    juce::String name = arr->getLast().toString();
+    //juce::String name = arr->getLast().toString();                        // DELETE
+    juce::String name = arr->getUnchecked(1).toString();
+
+    // Track BPM
+    const double bpm = (double)arr->getUnchecked(2) * player->getTempo();
 
     // Try to get file from the stored address
     juce::File track{ url };
@@ -636,7 +701,9 @@ void PlayerGUI::itemDropped(const SourceDetails& dragSourceDetails)
     if (player->openFile(juce::URL{ track }))
     {
         // Load track
-        fileLoaded(track, name);
+        fileLoaded(track, 
+                    name, 
+                    bpm);
     };
 };
 

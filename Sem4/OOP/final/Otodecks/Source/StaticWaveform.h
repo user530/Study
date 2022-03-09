@@ -28,7 +28,6 @@ public:
     void paintIfLoaded(juce::Graphics& g);
     void paintIfEmpty(juce::Graphics& g);
 
-
     // Set audio thumb to draw waveforms
     void setAudioThumb(juce::AudioThumbnail* newAudioThumb);
 
