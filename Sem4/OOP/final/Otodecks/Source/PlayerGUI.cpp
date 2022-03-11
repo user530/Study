@@ -18,8 +18,8 @@ PlayerGUI::PlayerGUI(Player* _player,
     player(_player),                                    // Connect player component
     waveform(_waveform),                                // Connect waveform component
     library(_library),                                  // Connect library component
-    QueBtns({&Que1Btn, &Que2Btn, &Que3Btn, &Que4Btn,    // Collect hot que btns into array for easy access
-                &Que5Btn, &Que6Btn, &Que7Btn, &Que8Btn})
+    CueBtns({&Cue1Btn, &Cue2Btn, &Cue3Btn, &Cue4Btn,    // Collect hot cue btns into array for easy access
+                &Cue5Btn, &Cue6Btn, &Cue7Btn, &Cue8Btn})
 {
 
     // Initialize and setup GUI elements
@@ -35,7 +35,7 @@ PlayerGUI::PlayerGUI(Player* _player,
     initTempoLabel();
     initLoopBtn();
     initEditQBtn();
-    initQueBtns();
+    initCueBtns();
 
     // Add change listener to the transport source
     player->getTransportSource()->addChangeListener(this);
@@ -118,20 +118,20 @@ void PlayerGUI::resized()
                       getWidth()    * 0.2,
                       getHeight()   * 0.1);
 
-    queEditBtn.setBounds(getWidth() * 0.7,
+    cueEditBtn.setBounds(getWidth() * 0.7,
                          getHeight()* 0.65,
                          getWidth() * 0.2,
                          getHeight()* 0.1);
 
-    // Iterate over hot que btns
-    for (int i = 0; i < QueBtns.size(); ++i)
+    // Iterate over hot cue btns
+    for (int i = 0; i < CueBtns.size(); ++i)
     {
         // Calculate X and Y
         const int x = getWidth()    * (0.5 + (i % 4) * 0.1);
         const int y = getHeight()   * (0.8 + (int)(i / 4) * 0.1);
 
         // Set bounds for the button
-        QueBtns[i]->setBounds(x, y, getWidth() * 0.1, getHeight() * 0.1);
+        CueBtns[i]->setBounds(x, y, getWidth() * 0.1, getHeight() * 0.1);
     }
 }
 
@@ -239,31 +239,31 @@ void PlayerGUI::fileLoaded(juce::File file, juce::String trackName, double bpm)
     // Enable btns after file is loaded
     playBtn.setEnabled(true);
     loopBtn.setEnabled(true);
-    queEditBtn.setEnabled(true);
+    cueEditBtn.setEnabled(true);
 
     // Toggle off play and stop btns
     playBtn.setToggleState(false, juce::NotificationType::dontSendNotification);
     stopBtn.setToggleState(false, juce::NotificationType::dontSendNotification);
 
     // Iterate over all btns
-    for (int i = 0; i < QueBtns.size(); ++i)
+    for (int i = 0; i < CueBtns.size(); ++i)
     {
-        // Enable que btn
-        QueBtns[i]->setEnabled(true);
+        // Enable cue btn
+        CueBtns[i]->setEnabled(true);
 
         // Reset stored data
-        player->setHotQue(i, 0.0);
+        player->setHotCue(i, 0.0);
     }
 
     // Change text
     playBtn.setButtonText("Play");
     stopBtn.setButtonText("Stop");
 
-    // Toggle all queBtns off
-    queBtnsOff();
+    // Toggle all cueBtns off
+    cueBtnsOff();
 
     // Restore loop setting
-    player->setLooping(loopBtn.getToggleState());
+    player->setLooping(player->isLooping());
     
     // Pass the audio data to the AudioThumb object to draw the new waveform 
     waveform->getAudioThumb()->setSource(new juce::FileInputSource(file));
@@ -285,7 +285,7 @@ void PlayerGUI::fileLoaded(juce::File file, juce::String trackName, double bpm)
 void PlayerGUI::loopBtnClick()
 {
     // Set button text depending on the btn state
-    if (loopBtn.getToggleState())
+    if (player->isLooping())
     {
         loopBtn.setButtonText("LOOP: ON");
     }
@@ -294,8 +294,8 @@ void PlayerGUI::loopBtnClick()
         loopBtn.setButtonText("LOOP: OFF");
     }
 
-    // Set new loop state based on the btn value
-    player->setLooping( loopBtn.getToggleState() );
+    // Set new loop state based on the current state
+    player->setLooping( !player->isLooping() );
 };
 
 void PlayerGUI::gainSldChange() const
@@ -333,49 +333,50 @@ void PlayerGUI::tempoSldChange() const
     player->setTempo(newTempo);
 };
 
-void PlayerGUI::queEditClick()
+void PlayerGUI::cueEditClick()
 {
-    // Set button text depending on the btn state
-    if (queEditBtn.getToggleState())
+    // Set button text depending on the edit state
+    if (player->getCueEdit())
     {
-        queEditBtn.setButtonText("QUE EDIT: ON");
+        cueEditBtn.setButtonText("CUE EDIT: ON");
     }
     else
     {
-        queEditBtn.setButtonText("QUE EDIT: OFF");
+        cueEditBtn.setButtonText("CUE EDIT: OFF");
     }
 
-    // Set que edit mode
-    player->setQueEdit(queEditBtn.getToggleState());
+    // Set cue edit mode
+    player->setCueEdit( !player->getCueEdit());
 };
 
-void PlayerGUI::hotQueClick(juce::TextButton* btnAddr) const
+void PlayerGUI::hotCueClick(juce::TextButton* btnAddr) const
 {
     // If no file loaded, do nothing and stop execution
     if (!(player->rdrSrcNotEmpty()))
         return;
 
     // Index of the clicked button
-    const int ind = QueBtns.indexOf(btnAddr);
+    const int ind = CueBtns.indexOf(btnAddr);
 
     // If edit mode is ON
-    if (player->getQueEdit())
+    if (player->getCueEdit())
     {
-        // Store current timestamp to the HotQue slot
-        player->setHotQue(ind, player->getPosRel());
+        // Store current timestamp to the HotCue slot
+        player->setHotCue(ind, player->getPosRel());
 
-        // Set button state to indicate that Que is loaded
+        // Set button state to indicate that Cue is loaded
         btnAddr->setToggleState(true, juce::NotificationType::dontSendNotification);
     }
     // If edit mode is OFF
     else
     {
         // If button is not loaded, do nothing and stop execution
+        // We use button state to prevent loading 0.0 timestamp when file is reloaded
         if (!(btnAddr->getToggleState()))
             return;
 
         // Retrive timestamp
-        double timestamp = player->getHotQue(ind);
+        double timestamp = player->getHotCue(ind);
 
         // Set player position to the timestamp
         player->setPosRel((float)timestamp);
@@ -444,13 +445,13 @@ void PlayerGUI::thumbChange()
     waveform->updateWaveforms();
 };
 
-void PlayerGUI::queBtnsOff()
+void PlayerGUI::cueBtnsOff()
 {
-    // Iterate over all hot que buttons 
-    for (int i = 0; i < QueBtns.size(); ++i)
+    // Iterate over all hot cue buttons 
+    for (int i = 0; i < CueBtns.size(); ++i)
     {
         // Disable toggle state
-        QueBtns[i]->setToggleState(false, juce::NotificationType::dontSendNotification);
+        CueBtns[i]->setToggleState(false, juce::NotificationType::dontSendNotification);
     }
 };
 
@@ -653,36 +654,36 @@ void PlayerGUI::initLoopBtn()
 void PlayerGUI::initEditQBtn()
 {
     // Show element
-    addAndMakeVisible(&queEditBtn);
+    addAndMakeVisible(&cueEditBtn);
 
     // Add callback for the click event 
-    queEditBtn.onClick = [this] { queEditClick(); };
+    cueEditBtn.onClick = [this] { cueEditClick(); };
 
     // Disable control button on the start
-    queEditBtn.setEnabled(false);
+    cueEditBtn.setEnabled(false);
 
     // Make button togglebale
-    queEditBtn.setClickingTogglesState(true);
+    cueEditBtn.setClickingTogglesState(true);
 
     // Set toggle colour
-    queEditBtn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::mediumvioletred);
+    cueEditBtn.setColour(juce::TextButton::buttonOnColourId, juce::Colours::mediumvioletred);
 };
 
-void PlayerGUI::initQueBtns()
+void PlayerGUI::initCueBtns()
 {
-    // Iterate over all hot que btns
-    for (int i = 0; i < QueBtns.size(); ++i)
+    // Iterate over all hot cue btns
+    for (int i = 0; i < CueBtns.size(); ++i)
     {
         // Show element
-        addAndMakeVisible(QueBtns[i]);
+        addAndMakeVisible(CueBtns[i]);
 
         // Add callback for the click event 
-        QueBtns[i]->onClick = [this, i] { hotQueClick(QueBtns[i]); };
+        CueBtns[i]->onClick = [this, i] { hotCueClick(CueBtns[i]); };
 
         // Disable control button on the start
-        QueBtns[i]->setEnabled(false);
+        CueBtns[i]->setEnabled(false);
 
         // Set toggle colour
-        QueBtns[i]->setColour(juce::TextButton::buttonOnColourId, juce::Colours::mediumvioletred);
+        CueBtns[i]->setColour(juce::TextButton::buttonOnColourId, juce::Colours::mediumvioletred);
     }
 };

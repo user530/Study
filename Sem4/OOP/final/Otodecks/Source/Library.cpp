@@ -113,11 +113,7 @@ void Library::resized()
 
 void Library::selectionChanged() {};
 
-void Library::fileClicked(const juce::File& file, const juce::MouseEvent& e) 
-{
-    // Try to add file to the library
-    addTrackToLib(file);
-};
+void Library::fileClicked(const juce::File& file, const juce::MouseEvent& e){};
 
 void Library::fileDoubleClicked(const juce::File& file)
 {

@@ -15,10 +15,10 @@
 Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager),   // Access to the format manager
                                                             state(PlayerState::Stopped),    // Initial player state
                                                             loopMode(false),                // Initial loop mode
-                                                            queEditMode(false),             // Initial que edit mode
-                                                            hotQues({ 0.0 })                // Initialize hot ques array
+                                                            cueEditMode(false),             // Initial cue edit mode
+                                                            hotCues({ 0.0})                // Initialize hot cues array
 {
-    
+
 }
 
 Player::~Player()
@@ -235,15 +235,8 @@ const double Player::getTempo() const
 
 const bool Player::isLooping() const
 {
-    // Check that reader source exists
-    if (rdrSrcNotEmpty())
-    {
-        // Get looping state
-        return readerSource -> isLooping();
-    }
-
-    // If no reader exists, then no looping
-    return false;
+    // Get looping state
+    return loopMode;
 };
 
 void Player::setLooping(bool willLoop)
@@ -259,47 +252,47 @@ void Player::setLooping(bool willLoop)
     }
 };
 
-void Player::setQueEdit(bool isEditable)
+void Player::setCueEdit(bool isEditable)
 {
     // Set new player state
-    queEditMode = isEditable;
+    cueEditMode = isEditable;
 };
 
-const bool Player::getQueEdit() const
+const bool Player::getCueEdit() const
 {
-    // Return current hot que edit mode
-    return queEditMode;
+    // Return current hot cue edit mode
+    return cueEditMode;
 };
 
-void Player::setHotQue(int ind, double timestamp)
+void Player::setHotCue(int ind, double timestamp)
 {
     // If index argument is invalid print error msg and stop
-    if (ind < 0 || ind > hotQues.size() - 1 )
+    if (ind < 0 || ind > hotCues.size() - 1 )
     {
-        DBG("Player::setHotQue - ERROR! Hot que index is out of range!");
+        DBG("Player::setHotCue - ERROR! Hot cue index is out of range!");
         return;
     }
     
     // If timestamp argument is invalid print error msg and stop
     if (timestamp < 0 || timestamp > transportSource.getLengthInSeconds())
     {
-        DBG("Player::setHotQue - ERROR! Hot que timestamp is out of range!");
+        DBG("Player::setHotCue - ERROR! Hot cue timestamp is out of range!");
         return;
     }
 
     // Store timestamp
-    hotQues.insert(ind, timestamp);
+    hotCues.insert(ind, timestamp);
 };
 
-const double Player::getHotQue(int ind) const
+const double Player::getHotCue(int ind) const
 {
     // If index argument is invalid print error msg and stop
-    if (ind < 0 || ind > hotQues.size() - 1)
+    if (ind < 0 || ind > hotCues.size() - 1)
     {
-        DBG("Player::getHotQue - ERROR! Hot que index is out of range!");
+        DBG("Player::getHotCue - ERROR! Hot cue index is out of range!");
         return 0.0;
     }
 
     // Get timestamp
-    return hotQues[ind];
+    return hotCues[ind];
 };

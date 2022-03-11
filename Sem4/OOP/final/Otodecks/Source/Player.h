@@ -105,22 +105,22 @@ public:
     void setLooping(bool willLoop);
 
     /// <summary> Set edit mode </summary>
-    /// <param name="isEditable"> - Hot que edit mode flag</param>
-    void setQueEdit(bool isEditable);
+    /// <param name="isEditable"> - Hot cue edit mode flag</param>
+    void setCueEdit(bool isEditable);
 
-    /// <summary> Get hot ques edit mode status </summary>
+    /// <summary> Get hot cues edit mode status </summary>
     /// <returns> True if editing is enabled, false - otherwise </returns>
-    const bool getQueEdit() const;
+    const bool getCueEdit() const;
 
-    /// <summary> Set timestamp to the hot que </summary>
-    /// <param name="ind"> - Index of the hot que </param>
+    /// <summary> Set timestamp to the hot cue </summary>
+    /// <param name="ind"> - Index of the hot cue </param>
     /// <param name="timestamp"> - Timestamp to set </param>
-    void setHotQue(int ind, double timestamp);
+    void setHotCue(int ind, double timestamp);
 
-    /// <summary> Get timestamp stored at the hot que </summary>
-    /// <param name="ind"> - Hot que index </param>
+    /// <summary> Get timestamp stored at the hot cue </summary>
+    /// <param name="ind"> - Hot cue index </param>
     /// <returns> Timestamp stored </returns>
-    const double getHotQue(int ind) const;
+    const double getHotCue(int ind) const;
 
 private:
     
@@ -142,11 +142,11 @@ private:
     // Player Loop mode
     bool loopMode;
 
-    // Player Hot que edit mode
-    bool queEditMode;
+    // Player Hot cue edit mode
+    bool cueEditMode;
 
-    // Hot que's timestamp storage
-    juce::Array<double> hotQues;
+    // Hot cue's timestamp storage
+    juce::Array<double> hotCues;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player)

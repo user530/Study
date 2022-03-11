@@ -97,15 +97,15 @@ private:
     /// <param name="bpm"> - Track BPM </param>
     void fileLoaded(juce::File file, juce::String trackName, double bpm);
 
-    /// <summary> Callback function for the hotQue edit mode click </summary>
-    void queEditClick();
+    /// <summary> Callback function for the hotCue edit mode click </summary>
+    void cueEditClick();
 
-    /// <summary> Callback function for the hotQue button click </summary>
+    /// <summary> Callback function for the hotCue button click </summary>
     /// <param name="btnAddr"> - Address of the callee button </param>
-    void hotQueClick(juce::TextButton* btnAddr) const;
+    void hotCueClick(juce::TextButton* btnAddr) const;
 
-    /// <summary> Toggle off all hot que btns </summary>
-    void queBtnsOff();
+    /// <summary> Toggle off all hot cue btns </summary>
+    void cueBtnsOff();
 
     /// <summary> Callback function for the gain slider </summary>
     void gainSldChange() const;
@@ -153,11 +153,11 @@ private:
     /// <summary> Initialize the loop button </summary>
     void initLoopBtn();
 
-    /// <summary> Initialize the hot que edit button </summary>
+    /// <summary> Initialize the hot cue edit button </summary>
     void initEditQBtn();
 
-    /// <summary> Initialize the hot que buttons </summary>
-    void initQueBtns();
+    /// <summary> Initialize the hot cue buttons </summary>
+    void initCueBtns();
 
 
     // Start btn
@@ -172,19 +172,19 @@ private:
     // Switch Loop mode btn
     juce::TextButton loopBtn{ "LOOP: OFF" };                                    
 
-    // Switch Hot que edit mode btn
-    juce::TextButton queEditBtn{ "QUE EDIT: OFF" };
+    // Switch Hot cue edit mode btn
+    juce::TextButton cueEditBtn{ "CUE EDIT: OFF" };
 
-    // Hot que btns
-    juce::Array<juce::TextButton*> QueBtns;
-    juce::TextButton Que1Btn{ "1" };
-    juce::TextButton Que2Btn{ "2" };
-    juce::TextButton Que3Btn{ "3" };
-    juce::TextButton Que4Btn{ "4" };
-    juce::TextButton Que5Btn{ "5" };
-    juce::TextButton Que6Btn{ "6" };
-    juce::TextButton Que7Btn{ "7" };
-    juce::TextButton Que8Btn{ "8" };
+    // Hot cue btns
+    juce::Array<juce::TextButton*> CueBtns;
+    juce::TextButton Cue1Btn{ "1" };
+    juce::TextButton Cue2Btn{ "2" };
+    juce::TextButton Cue3Btn{ "3" };
+    juce::TextButton Cue4Btn{ "4" };
+    juce::TextButton Cue5Btn{ "5" };
+    juce::TextButton Cue6Btn{ "6" };
+    juce::TextButton Cue7Btn{ "7" };
+    juce::TextButton Cue8Btn{ "8" };
 
     // Gain (volume) slider
     juce::Slider gainSld;
