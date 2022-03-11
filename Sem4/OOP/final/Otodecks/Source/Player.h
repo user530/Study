@@ -19,15 +19,14 @@
 //==============================================================================
 /*
 */
-class Player  : public juce::AudioSource       // Work with audio
+class Player  : public juce::AudioSource
 {               
 public:
     Player(juce::AudioFormatManager&);
     ~Player() override;
 
     //==================================================================
-
-    // All available player states
+    // Enum class to store all available player states
     enum class PlayerState
     {
         Stopped,
@@ -39,83 +38,115 @@ public:
     };
 
     //==================================================================
-
     // Override pure virtual functions from the AudioSource parent class
+
+    // Tells the source to prepare for playing
     virtual void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
 
+    // Allows the source to release anything it no longer needs after playback has stopped
     virtual void releaseResources() override;
 
+    // Called repeatedly to fetch subsequent blocks of audio data
     virtual void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
 
     //==================================================================
 
-    // Function to handle changes in player state
+    /// <summary> Function to handle changes in player state </summary>
+    /// <param name="newState"> - Set new player state </param>
     void changeState(PlayerState newState);
 
-    // Function to check the player state
+    /// <summary> Function to check the player state </summary>
+    /// <returns> Current player state </returns>
     PlayerState getState() const;
 
-    // Open file
-    bool openFile(juce::URL audioURL);
+    /// <summary> Attempts to open the file from the URL passed </summary>
+    /// <param name="audioURL"> - URL to the audio file </param>
+    /// <returns> True if file opened successfully, false - otherwise </returns>
+    const bool openFile(juce::URL audioURL);
 
-    // Get access to the transport source, so GUI can attach listener
+    /// <summary> Provide access to the transport source, so GUI can attach listener </summary>
+    /// <returns> Pointer to the AudioTransportSource </returns>
     juce::AudioTransportSource* getTransportSource();
 
-    // Check that reader source is not empty
-    bool rdrSrcNotEmpty() const;
+    /// <summary> Checks that reader source is not empty </summary>
+    /// <returns> True if reader is not empty, false - otherwise </returns>
+    const bool rdrSrcNotEmpty() const;
 
-    // Set new volume value
+    /// <summary> Set new gain(volume) value </summary>
+    /// <param name="newValue"> - New gain value, from 0 to 3.0 (300%) </param>
     void setGain(float newValue);
 
-    // Set relative position
+    /// <summary> Set playback position based on the relative position </summary>
+    /// <param name="relStamp"> - Relative playback position (from 0.0 to 1.0) </param>
     void setPosRel(float relStamp);
 
-    // Get relative position
-    double getPosRel() const;
+    /// <summary> Get current relative position </summary>
+    /// <returns> Relative position of the current playback time to the total length </returns>
+    const double getPosRel() const;
 
-    // Set position in seconds
+    /// <summary> Set playback position based on time stamp </summary>
+    /// <param name="timeStamp"> - Playback position in seconds </param>
     void setPos(float timeStamp);
 
-    // Set tempo
+    /// <summary> Set playback tempo </summary>
+    /// <param name="tempo"> - New tempo value, from 0.1 (10%) to 8 (800%)</param>
     void setTempo(double tempo);
 
-    // Get tempo
+    /// <summary> Get current player tempo </summary>
+    /// <returns> Current player tempo value </returns>
     const double getTempo() const;
     
-    // Get loop state
-    bool isLooping() const;
+    /// <summary> Get player loop state </summary>
+    /// <returns> True if looping is enabled, false - otherwise </returns>
+    const bool isLooping() const;
 
-    // Set loop state
+    /// <summary> Set loop state </summary>
+    /// <param name="willLoop"> - Loop setting flag </param>
     void setLooping(bool willLoop);
 
-    // Set edit mode
+    /// <summary> Set edit mode </summary>
+    /// <param name="isEditable"> - Hot que edit mode flag</param>
     void setQueEdit(bool isEditable);
 
-    // Get edit mode
-    bool getQueEdit() const;
+    /// <summary> Get hot ques edit mode status </summary>
+    /// <returns> True if editing is enabled, false - otherwise </returns>
+    const bool getQueEdit() const;
 
-    // Set hot que
+    /// <summary> Set timestamp to the hot que </summary>
+    /// <param name="ind"> - Index of the hot que </param>
+    /// <param name="timestamp"> - Timestamp to set </param>
     void setHotQue(int ind, double timestamp);
 
-    // Get hot que timestamp
-    double getHotQue(int ind) const;
+    /// <summary> Get timestamp stored at the hot que </summary>
+    /// <param name="ind"> - Hot que index </param>
+    /// <returns> Timestamp stored </returns>
+    const double getHotQue(int ind) const;
 
 private:
-
+    
+    // Transport source
     juce::AudioTransportSource transportSource;
+
+    // Format manager (we pass Manager to the player as reference)
     juce::AudioFormatManager& formatManager;
+
+    // Smart pointer to store reader source
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource; 
+
+    // Resampling source to allow changes in tempo
     juce::ResamplingAudioSource resampleSource{&transportSource, false, 2};
+
+    // Player state
     PlayerState state;
 
-    // Loop mode
+    // Player Loop mode
     bool loopMode;
 
-    // Hot que edit mode
+    // Player Hot que edit mode
     bool queEditMode;
 
-    // Hot que's data storage
-    std::array<double, 8> hotQues;
+    // Hot que's timestamp storage
+    juce::Array<double> hotQues;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Player)

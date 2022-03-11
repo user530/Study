@@ -17,28 +17,40 @@ class MainComponent  : public juce::AudioAppComponent
 {
 public:
     //==============================================================================
+    // Constructor and Destructor
     MainComponent();
     ~MainComponent() override;
 
     //==============================================================================
+    // Override functions from the AudioAppComponent base class
+    
+    /// Tells the source to prepare for playing
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
+
+    // Called repeatedly to fetch subsequent blocks of audio data
     void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
+
+    // Allows the source to release anything it no longer needs after playback has stopped
     void releaseResources() override;
 
     //==============================================================================
+    // Override virtual functions from the AudioAppComponent base class
+
+    // Components can override this method to draw their content
     void paint (juce::Graphics& g) override;
+
+    // Called when this component's size has been changed 
     void resized() override;
 
 
 private:
     //==============================================================================
-    // Your private member variables go here...
 
-    // Universal format manager
+    // Universal format manager to pass for different components
     juce::AudioFormatManager formatManager;
 
     // Universal thumbnail cache
-    juce::AudioThumbnailCache thumbCache{ 100 }; // Store 100 thumbnails
+    juce::AudioThumbnailCache thumbCache{ 100 };    // Stores 100 thumbnails
 
     // Mixer object to handle 2 players
     juce::MixerAudioSource mixerSource;
@@ -59,7 +71,7 @@ private:
     Waveform waveform1{ formatManager, thumbCache, &statWaveform1, &dynamWaveform1 };
     Waveform waveform2{ formatManager, thumbCache, &statWaveform2, &dynamWaveform2 };
 
-    // Player GUI
+    // Player GUI for every player
     PlayerGUI player1GUI{ &player1, &waveform1, &library};
     PlayerGUI player2GUI{ &player2, &waveform2, &library};
 

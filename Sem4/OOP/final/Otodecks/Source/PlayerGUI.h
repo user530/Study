@@ -25,24 +25,53 @@ class PlayerGUI  : public juce::Component,
                     private juce::Timer
 {
 public:
+
+    // Constructor
     PlayerGUI(Player* player,
               Waveform* waveform,
               Library* library);
+
+    // Destructor
     ~PlayerGUI() override;
 
+    //==================================================================
+
+    // Override virtual functions from the Component base class
+
+    // Components can override this method to draw their content
     void paint (juce::Graphics&) override;
+
+    // Called when this component's size has been changed
     void resized() override;
 
+    //==================================================================
+
     // Override pure virtual functions from the FileDragAndDropTarget base class
+
+    // Callback to check whether this target is interested in the type of object being dragged
     virtual bool isInterestedInFileDrag(const juce::StringArray& files) override;
+
+    // Callback to indicate that the user has dropped the files onto this component
     virtual void filesDropped(const juce::StringArray& files, int x, int y) override;
 
+    //==================================================================
+
     // Override pure virtual functions from the DragAndDropTarget base class
+    
+    // Callback to check whether this target is interested in the type of object being dragged
     virtual bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
+
+    // Callback to indicate that the user has dropped something onto this component
     virtual void itemDropped(const SourceDetails& dragSourceDetails) override;
+
+    // Callback to indicate that the user has dropped something onto this component
     virtual bool shouldDrawDragImageWhenOver() override;
 
+    //==================================================================
+
     // Override pure virtual functions from the ChangeListener base class
+    
+    // Your subclass should implement this method to receive the callback
     virtual void changeListenerCallback(juce::ChangeBroadcaster* source) override;
 
 private:
@@ -50,62 +79,104 @@ private:
     // Override pure virtual functions from the Timer base class
     virtual void timerCallback() override;
 
-    // Callback function for the play button
+    /// <summary> Callback function for the play button click </summary>
     void playBtnClick() const;
 
-    // Callback function for the stop button
+    /// <summary> Callback function for the stop button click </summary>
     void stopBtnClick();
 
-    // Callback function for the load button
+    /// <summary> Callback function for the load button click </summary>
     void loadBtnClick();
 
-    // Callback function for the loop button
+    /// <summary> Callback function for the loop button click </summary>
     void loopBtnClick();
 
-    // Successfull file load callback
+    /// <summary> Update GUI when the new file loaded </summary>
+    /// <param name="file"> - File path </param>
+    /// <param name="trackName"> - Track name </param>
+    /// <param name="bpm"> - Track BPM </param>
     void fileLoaded(juce::File file, juce::String trackName, double bpm);
 
-    // Callback function for the hotQue
+    /// <summary> Callback function for the hotQue edit mode click </summary>
     void queEditClick();
 
-    // Callback function for the hotQue
+    /// <summary> Callback function for the hotQue button click </summary>
+    /// <param name="btnAddr"> - Address of the callee button </param>
     void hotQueClick(juce::TextButton* btnAddr) const;
 
-    // Toggle off all hot que btns
+    /// <summary> Toggle off all hot que btns </summary>
     void queBtnsOff();
 
-    // Callback function for the gain slider
+    /// <summary> Callback function for the gain slider </summary>
     void gainSldChange() const;
 
-    // Callback function for the time slider
+    /// <summary> Callback function for the time slider </summary>
     void timeSldChange() const;
 
-    // Callback function for the tempo slider
+    /// <summary> Callback function for the tempo slider </summary>
     void tempoSldChange() const;
 
-    // Logic behind changes of transport source
+    /// <summary> Logic behind changes of transport source </summary>
+    /// <param name="transpSrcP"> - Address of the Audio Transport Source </param>
     void transpChange(juce::AudioTransportSource* transpSrcP);
 
-    // Logic behind changes of thumbnail
+    /// <summary> Logic behind changes of the thumbnail </summary>
     void thumbChange();
+
+    /// <summary> Initialize the play button </summary>
+    void initPlayBtn();
+
+    /// <summary> Initialize the stop button </summary>
+    void initStopBtn();
+
+    /// <summary> Initialize the load button </summary>
+    void initLoadBtn();
+
+    /// <summary> Initialize the gain slider </summary>
+    void initGainSld();
+
+    /// <summary> Initialize the time slider </summary>
+    void initTimeSld();
+
+    /// <summary> Initialize the tempo slider </summary>
+    void initTempoSld();
+
+    /// <summary> Initialize the gain label </summary>
+    void initGainLabel();
+
+    /// <summary> Initialize the time label </summary>
+    void initTimeLabel();
+
+    /// <summary> Initialize the tempo label </summary>
+    void initTempoLabel();
+
+    /// <summary> Initialize the loop button </summary>
+    void initLoopBtn();
+
+    /// <summary> Initialize the hot que edit button </summary>
+    void initEditQBtn();
+
+    /// <summary> Initialize the hot que buttons </summary>
+    void initQueBtns();
 
 
     // Start btn
-    juce::TextButton playBtn;
+    juce::TextButton playBtn{ "Play" };
 
     // Stop btn
-    juce::TextButton stopBtn;
+    juce::TextButton stopBtn{ "Stop" };
 
-    // Load from lib
+    // Load from the lib btn
     juce::TextButton loadBtn{ "Load selected" };
     
-    // Loop btn
+    // Switch Loop mode btn
     juce::TextButton loopBtn{ "LOOP: OFF" };                                    
 
-    // Hot que edit mode
+    // Switch Hot que edit mode btn
     juce::TextButton queEditBtn{ "QUE EDIT: OFF" };
 
     // Hot que btns
+    juce::Array<juce::TextButton*> QueBtns;
     juce::TextButton Que1Btn{ "1" };
     juce::TextButton Que2Btn{ "2" };
     juce::TextButton Que3Btn{ "3" };
@@ -115,36 +186,32 @@ private:
     juce::TextButton Que7Btn{ "7" };
     juce::TextButton Que8Btn{ "8" };
 
-    // Gain slider
+    // Gain (volume) slider
     juce::Slider gainSld;
-
-    // Time slider
-    juce::Slider timeSld;
-    
-    // Tempo slider
-    juce::Slider tempoSld;
 
     // Gain label
     juce::Label gainLabel{"Gain", "Gain:"};
 
+    // Time slider
+    juce::Slider timeSld;
+
     // Time label
     juce::Label timeLabel{"Time", "Time:"};
+    
+    // Tempo slider
+    juce::Slider tempoSld;
 
     // Tempo label
     juce::Label tempoLabel{"Tempo", "Tempo:"};
 
-
-    // Connect player
+    // Connect player component
     Player* player;
 
-    // Connect audio thumb container
+    // Connect audio thumb container component
     Waveform* waveform;
 
-    // Connect library
+    // Connect library component
     Library* library;
-
-    // File chooser                 - DELETE LATER!
-    std::unique_ptr<juce::FileChooser> chooser;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayerGUI)
 };

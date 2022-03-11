@@ -13,12 +13,10 @@
 
 //==============================================================================
 Library::Library(FileBrowser* _fileBrowser, 
-                    juce::AudioFormatManager& _formatManager) : fileBrowser(_fileBrowser),
-                                                                formatManager(_formatManager)
+                    juce::AudioFormatManager& _formatManager) 
+    : fileBrowser(_fileBrowser),        // Connect file browser
+        formatManager(_formatManager)   // Connect format manager
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-    
     // Setup initial library structure
     libTemplate(&curLibrary);
 
@@ -59,7 +57,7 @@ Library::Library(FileBrowser* _fileBrowser,
 
 
     // Add listener to the file browser
-    ( fileBrowser -> getFiletree() ) -> addListener(this);
+    fileBrowser->getFiletree()->addListener(this);
 
     // Add lib interface
     addAndMakeVisible(&loadLibBtn);
@@ -67,7 +65,6 @@ Library::Library(FileBrowser* _fileBrowser,
     addAndMakeVisible(&addTrackBtn);
     addAndMakeVisible(&delTrackBtn);
     addAndMakeVisible(&searchField);
-
     addAndMakeVisible(&clearSearchBtn);
     addAndMakeVisible(&searchLabel);
 
@@ -89,83 +86,59 @@ Library::~Library()
 
 void Library::paint (juce::Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
+    // Clear the background
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
-    g.fillAll (getLookAndFeel()
-                .findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
+    // Draw an outline around the component
     g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("Library", 
-                getLocalBounds(),
-                juce::Justification::centred, true);   // draw some placeholder text
-
+    g.drawRect (getLocalBounds(), 1);
 }
 
 void Library::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
-    
     // Library table position
-    libTable.setBounds(0, getHeight() * 0.15, getWidth(), getHeight() * 0.85);
+    libTable.setBounds(         0,              getHeight() * 0.15,     getWidth(),     getHeight() * 0.85);
     
     // Library control elements
-    loadLibBtn.setBounds(0, 0, getWidth() * 0.135, getHeight() * 0.15);
-    saveLibBtn.setBounds(getWidth() * 0.155, 0, getWidth() * 0.135, getHeight() * 0.15);
-    addTrackBtn.setBounds(getWidth() * 0.31, 0, getWidth() * 0.135, getHeight() * 0.15);
-    delTrackBtn.setBounds(getWidth() * 0.465, 0, getWidth() * 0.135, getHeight() * 0.15);
-    searchField.setBounds(getWidth() * 0.7, 0, getWidth() * 0.25, getHeight() * 0.15);
-    searchLabel.setBounds(getWidth() * 0.62, 0, getWidth() * 0.08, getHeight() * 0.15);
-    clearSearchBtn.setBounds(getWidth() * 0.95, 0, getWidth() * 0.05, getHeight() * 0.15);
-    
+    loadLibBtn.setBounds(       0,                      0,      getWidth() * 0.135,     getHeight() * 0.15);
+    saveLibBtn.setBounds(       getWidth() * 0.155,     0,      getWidth() * 0.135,     getHeight() * 0.15);
+    addTrackBtn.setBounds(      getWidth() * 0.31,      0,      getWidth() * 0.135,     getHeight() * 0.15);
+    delTrackBtn.setBounds(      getWidth() * 0.465,     0,      getWidth() * 0.135,     getHeight() * 0.15);
+    searchField.setBounds(      getWidth() * 0.7,       0,      getWidth() * 0.25,      getHeight() * 0.15);
+    searchLabel.setBounds(      getWidth() * 0.62,      0,      getWidth() * 0.08,      getHeight() * 0.15);
+    clearSearchBtn.setBounds(   getWidth() * 0.95,      0,      getWidth() * 0.05,      getHeight() * 0.15);
 }
 
 //===================================================================
 
-// Callback when the user selects a different file in the browser
 void Library::selectionChanged() {};
 
-// Callback when the user clicks on a file in the browser
-void Library::fileClicked(const juce::File& file, const juce::MouseEvent& e) {};
-
-// Callback when the user double-clicks on a file in the browser
-void Library::fileDoubleClicked(const juce::File& file)
+void Library::fileClicked(const juce::File& file, const juce::MouseEvent& e) 
 {
-    // Add file to the library
+    // Try to add file to the library
     addTrackToLib(file);
 };
 
-// Callback when the browser's root folder changes
+void Library::fileDoubleClicked(const juce::File& file)
+{
+    // Try to add file to the library
+    addTrackToLib(file);
+};
+
 void Library::browserRootChanged(const juce::File& newRoot) {};
 
 //===================================================================
 
-// Helper functin to get current value from the selected cell
 juce::String Library::getText(const int columnNumber, const int rowNumber) const
 {
     // Get requested value
     return visibleEntries[rowNumber]->getAttributeValue(columnNumber-1);
 };
 
-// Helper functin to set new value to the selected cell
 void Library::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
 {
     // Set new text to the cell
-    libEntries->
-        getChildElement(rowNumber)->
-            setAttribute(getColName(columnNumber), newText);
-
-    // Sort rows
-    sortOrderChanged(columnNumber, true);
+    libEntries->getChildElement(rowNumber)->setAttribute(getColName(columnNumber), newText);
 
     // Update visible entries list
     updateVisible();
@@ -176,20 +149,34 @@ void Library::setText(const int columnNumber, const int rowNumber, const juce::S
 
 //===================================================================
 
-// Callback to check whether this target is interested in the set of files being offered
 bool Library::isInterestedInFileDrag(const juce::StringArray& files) 
 {
     return true;
 };
 
-// Callback to indicate that the user has dropped the files onto this component
 void Library::filesDropped(const juce::StringArray& files, int x, int y) 
 {
     // Iterate over every file dropped
-    for(const auto file: files)
+    for(const juce::String file: files)
     {
-        // Try to add it to the library
-        addTrackToLib(juce::File{ file });
+        // Create File based on the data
+        juce::File dropedFile{ file };
+
+        // If user passed library file
+        if (dropedFile.getFileExtension() == ".oto")
+        {
+            // Load library
+            loadLibFile(dropedFile);
+
+            // Stop execution
+            return;
+        }
+        // If user passed other file
+        else 
+        {
+            // Treat it like a audio file and try to add it to the library
+            addTrackToLib(dropedFile);      
+        }
     }
 };
 
@@ -254,16 +241,12 @@ void Library::loadLibFile(juce::File& libFile)
     }
 };
 
-// Save file
 void Library::saveLibFile(juce::File& libFile)
 {
     // Save copy of the library to the file
     curLibrary.writeTo(libFile);
 };
 
-
-
-// Setup XML library template 
 void Library::libTemplate(juce::XmlElement* emptyLib)
 {
     // If empty pointer is passed
@@ -302,7 +285,6 @@ void Library::libTemplate(juce::XmlElement* emptyLib)
     }
 };
 
-// Make XML entry to the current library
 void Library::makeLibEntry(const juce::StringArray params)
 {
     // Create new entry element
@@ -312,7 +294,7 @@ void Library::makeLibEntry(const juce::StringArray params)
     if (libStructure->getNumChildElements() != params.size())
     {
         // Print error and stop execution
-        DBG("Library::makeLibEntry - Error! Number of parameters doesn't match the data structure!");
+        DBG("Library::makeLibEntry - ERROR! Number of parameters doesn't match the data structure!");
         return;
     }
 
@@ -336,21 +318,10 @@ void Library::makeLibEntry(const juce::StringArray params)
     libTable.updateContent();
 };
 
-// Update XML entry from the current library
-void Library::updateLibEntry(const int columnNumber, const int rowNumber, const juce::String& newText)
-{
-    // Update attribute 
-    libEntries->getChildElement(rowNumber)->setAttribute(newText, getColName(columnNumber));
-
-    // Update library table
-    libTable.updateContent();
-};
-
-// Delete XML entry from the current library
-void Library::deleteLibEntry(const int rowNumber)
+void Library::deleteLibEntry(const juce::String rowID)
 {
     // Get requested entry
-    juce::XmlElement* entryToDel= libEntries->getChildElement(rowNumber);
+    juce::XmlElement* entryToDel= libEntries->getChildByAttribute("ID", rowID);
 
     // Remove requested entry
     libEntries->removeChildElement(entryToDel, true);
@@ -365,7 +336,6 @@ void Library::deleteLibEntry(const int rowNumber)
     libTable.updateContent();
 };
 
-// Update library ID order
 void Library::orderLibID() const
 {
     // Iterate over every entry and set new ID
@@ -376,30 +346,27 @@ void Library::orderLibID() const
     }
 };
 
-// Helper function to get attribute name based on the passed column number
 juce::String Library::getColName(const int columnNumber) const
 {
     return libTable.getHeader().getColumnName(columnNumber);
 };
 
-// Find lib entry ID based on the visble entry ID
-const int Library::getAbsID(const int visibleID) const
+const juce::String Library::getAbsID(const int visibleInd) const
 {
     // Get shortcut to the entry
-    const juce::XmlElement* visEntry = visibleEntries[visibleID];
+    const juce::XmlElement* visEntry = visibleEntries[visibleInd];
 
     // Check that argument is valid
-    if (visibleID >= 0 && visibleID < visEntry->getNumAttributes())
+    if (visibleInd >= 0 && visibleInd < visEntry->getNumAttributes())
     {
         // return atribute value
-        return visEntry->getIntAttribute("ID", -1);
+        return visEntry->getStringAttribute("ID");
     }
 
     // If argument is out of range
-    return -1;
+    return "";
 };
 
-// Filter current library based on the argument passed
 void Library::updateVisible()
 {
     // Get search field value
@@ -420,7 +387,7 @@ void Library::updateVisible()
             // Checking if attribute contains filtered substring (case insensitive) OR empty string is passed
             bool check = element->getAttributeValue(i).toLowerCase()
                         .contains(fString.toLowerCase())    ||
-                                                                fString == "";
+                                    fString == "";
 
             // If attribute contains filter string OR empty string is passed
             if (check)
@@ -433,7 +400,6 @@ void Library::updateVisible()
     }
 };
 
-// Get metadata
 juce::StringPairArray Library::getMetadata(juce::File file)
 {
     // Prepare result variable
@@ -480,8 +446,6 @@ juce::StringPairArray Library::getMetadata(juce::File file)
     return metaArr;
 };
 
-
-// Get selected track
 const juce::XmlElement* Library::getSelected() const
 {
     // Check currently selected row
@@ -497,8 +461,6 @@ const juce::XmlElement* Library::getSelected() const
     return nullptr;
 }
 
-
-// Get track from the selected row
 const juce::File Library::getSelectedTrack() const
 {
     // Selected entry pointer
@@ -525,8 +487,6 @@ const juce::File Library::getSelectedTrack() const
     return juce::File{};
 };
 
-
-// Get track name from the selected row
 const juce::String Library::getSelectedName() const
 {
     // Selected entry pointer
@@ -537,13 +497,11 @@ const juce::String Library::getSelectedName() const
     {
         return selected->getStringAttribute("Track");
     }
-   
+
     // If no entry found
     return getSelectedTrack().getFileName();
-}
+};
 
-
-// Get track name from the selected row
 const double Library::getSelectedBPM() const
 {
     // Selected entry pointer
@@ -567,11 +525,8 @@ const double Library::getSelectedBPM() const
     return 0.0;
 }
 
-// Callback function to load library
 void Library::loadLibClick()
 {
-    DBG("Load lib button");
-
     // Create new FileChooser and get the file name
     fileChooserPtr.reset(new juce::FileChooser("Choose a library to open",
                             juce::File::getCurrentWorkingDirectory(),
@@ -581,19 +536,15 @@ void Library::loadLibClick()
     // Create file open closure
     fileChooserPtr->launchAsync(juce::FileBrowserComponent::openMode |
                                 juce::FileBrowserComponent::canSelectFiles,
-        [this](const juce::FileChooser& chooser)
-        {
-            // Load library file based on the selection
-            loadLibFile(chooser.getResult());
-        });
-
+                                [this](const juce::FileChooser& chooser)
+                                {
+                                    // Load library file based on the selection
+                                    loadLibFile(chooser.getResult());
+                                });
 };
 
-// Callback function to save library
 void Library::saveLibClick()
 {
-    DBG("Save lib button");
-
     // Create new FileChooser and get the file name
     fileChooserPtr.reset(new juce::FileChooser("Choose a library name",
                                                 juce::File::getCurrentWorkingDirectory()
@@ -606,78 +557,65 @@ void Library::saveLibClick()
                                 juce::FileBrowserComponent::canSelectFiles,
                                 [this](const juce::FileChooser& chooser)
                                 {
-                                    // Check that user selected file
-                                    if (chooser.getResult().getSize() > 0)
+                                    // Check that user selected file name
+                                    if (chooser.getResult().getFullPathName() != "")
                                     {
-                                        // Save library file
+                                        // Save library to file
                                         saveLibFile(chooser.getResult());
                                     }
                                 }); 
 };
 
-// Callback function to add track/s to the library
 void Library::addTrackClick()
 {
-    DBG("Add track button");
-
     // Create new FileChooser and get file names
     fileChooserPtr.reset(new juce::FileChooser("Choose file(-s) to add...",
                                 juce::File::getSpecialLocation(juce::File::userMusicDirectory),
-                                "*.mp3;*.wav;*.aif")
-    );
+                                "*.mp3;*.wav;*.aif"));
 
     // Create file open closure (multiple)
     fileChooserPtr->launchAsync(juce::FileBrowserComponent::openMode |
-        juce::FileBrowserComponent::canSelectFiles |
-        juce::FileBrowserComponent::canSelectMultipleItems,
-        [this](const juce::FileChooser& chooser)
-        {
-            // Check that user selected something
-            if (chooser.getResults().size() > 0)
-            {
-                // Iterate over all files
-                for (auto entry : chooser.getResults())
-                {
-                    // Try to make entry based on the file
-                    addTrackToLib(entry);
-                }
-            }
-        });
+                                juce::FileBrowserComponent::canSelectFiles |
+                                juce::FileBrowserComponent::canSelectMultipleItems,
+                                [this](const juce::FileChooser& chooser)
+                                {
+                                    // Check that user selected something
+                                    if (chooser.getResults().size() > 0)
+                                    {
+                                        // Iterate over all files
+                                        for (auto entry : chooser.getResults())
+                                        {
+                                            // Try to make entry based on the file
+                                            addTrackToLib(entry);
+                                        }
+                                    }
+                                });
 };
 
-// Callback function to delete selected track from the library
 void Library::delTrackClick()
 {
-    DBG("Del lib button");
-
     // If some row is selected
     if (libTable.getSelectedRow() != -1)
     {
         // Get absolute ID
-        const int absId = getAbsID(libTable.getSelectedRow()) - 1;
+        const juce::String absId = getAbsID(libTable.getSelectedRow());
 
         // Delete row based on the absId
         deleteLibEntry(absId);
     }
 };
 
-// Callback function for the load button
 void Library::searchChange()
 {
-    DBG("Search field changed!");
-
     // Update list of visible entries
     updateVisible();
 
     // Update table data
     libTable.updateContent();
 };
- 
-// Clear search bar
+
 void Library::clearSearch()
 {
-    DBG("Clear search field click!");
-
     // Clear search field
     searchField.setText("");
 
@@ -685,7 +623,6 @@ void Library::clearSearch()
     searchChange();
 };
 
-// Add file from the file tree to the library
 void Library::addTrackToLib(const juce::File& file)
 {
     // If file has invalid format
@@ -695,14 +632,14 @@ void Library::addTrackToLib(const juce::File& file)
         file.getFileExtension() != ".aif")
     {
         // Print message and stop execution
-        DBG("Library::addTrackToLib - ERROR! UNSUPPORTED FILE FORMAT {"+file.getFileExtension()+"}!");
+        DBG("Library::addTrackToLib - ERROR! Unsupported file format {"+file.getFileExtension()+"}!");
         return;
     }
     // If empty file passed
     else if (file == juce::File{})
     {
         // Print message and stop execution
-        DBG("Library::addTrackToLib - ERROR! EMPTY FILE PASSED!");
+        DBG("Library::addTrackToLib - ERROR! Empty file passed!");
         return;
     }
     // If everything is fine
@@ -716,7 +653,7 @@ void Library::addTrackToLib(const juce::File& file)
                                                 .getChildByName("ENTRIES")
                                                 ->getNumChildElements() + 1 },  // next id number
                                                 metadata.getValue("Title",      // title from metadata OR filename
-                                                                            file.getFileNameWithoutExtension()),
+                                                                    file.getFileNameWithoutExtension()),
                                                 metadata.getValue("Artist", "noData"),  // artist from metadata
                                                 metadata.getValue("Album", "noData"),   // album from metadata
                                                 metadata.getValue("Genre", "noData"),   // genre from metadata
@@ -733,25 +670,25 @@ void Library::addTrackToLib(const juce::File& file)
 
 //===================================================================
 
-// This must return the number of rows currently in the table
 int Library::getNumRows()
 {
     return visibleEntries.size();
 };
 
-// This must draw the background behind one of the rows in the table
 void Library::paintRowBackground(juce::Graphics& g,
                                     int rowNumber,
                                     int width,
                                     int height,
                                     bool rowIsSelected)
 {
+    // Paint selected row background
     if (rowIsSelected)
     {
         g.fillAll(juce::Colours::orange);
     }
+    // Paint not-selected rows
     else {
-        // make different colours for different rows
+        // Make different colour for odd rows for better visualisation
         if (rowNumber % 2 == 0)
         {
             g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
@@ -759,7 +696,6 @@ void Library::paintRowBackground(juce::Graphics& g,
     }
 };
 
-// This must draw one of the cells
 void Library::paintCell(juce::Graphics& g,
                             int rowNumber,
                             int columnId,
@@ -769,7 +705,7 @@ void Library::paintCell(juce::Graphics& g,
 {
     // Set font
     g.setColour(juce::Colours::white);
-    g.setFont(tableFont);
+    g.setFont(juce::Font{ 12.0f });
 
     // Draw visible cells
     if (juce::XmlElement* entryP = visibleEntries[rowNumber])
@@ -780,26 +716,19 @@ void Library::paintCell(juce::Graphics& g,
         // Draw cell data
         g.drawText(cellData, 2, 0, width - 4, height, juce::Justification::centredRight);
     }
-    
-    
-
 };
 
-// This callback is made when the user clicks on one of the cells in the table
-void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&)
-{
-    DBG("CELL CLICKED!");
-};
-
-// This callback is made when the table's sort order is changed        
+void Library::cellClicked(int rowNumber, int columnId, const juce::MouseEvent&){};
+ 
 void Library::sortOrderChanged(int newSortColumnId, bool isForwards) 
 {
+    // If there are elements to sort
     if(libEntries->getNumChildElements() != 0)
     {
         // Setup sorter based on the column name and search direction
-        DemoDataSorter sorter(libEntries->
-                                getFirstChildElement()->
-                                    getAttributeName(newSortColumnId - 1), isForwards);
+        DataSorter sorter(libEntries->getFirstChildElement()->
+                            getAttributeName(newSortColumnId - 1), 
+                            isForwards);
 
         // Sort entries
         libEntries->sortChildElements(sorter);
@@ -812,26 +741,14 @@ void Library::sortOrderChanged(int newSortColumnId, bool isForwards)
     }
 };
 
-// Override this to be informed when the delete key is pressed
 void Library::deleteKeyPressed(int lastRowSelected)
 {
-
-    // If some row is selected
-    if (libTable.getSelectedRow() != -1)
-    {
-        // Get absolute ID
-        const int absId = getAbsID(libTable.getSelectedRow()) - 1;
-
-        // Delete row based on the absId
-        deleteLibEntry(absId);
-    }
+    // Same logic as del click
+    delTrackClick();
 };
 
-// To allow rows from your table to be dragged - and -dropped, implement this method
 juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& currentlySelectedRows)
 {
-    DBG("GET DRAG SOURCE DESCRIPTION");
-
     // Prepare result variable
     juce::StringArray res{};
 
@@ -855,13 +772,15 @@ juce::var Library::getDragSourceDescription(const juce::SparseSet< int >& curren
     return res;
 };
 
-// This is used to create or update a custom component to go in a cell
-//(from the WidgetsDemo from the base JUCE demo collection, adapted)
 juce::Component* Library::refreshComponentForCell(int rowNumber,
                                                     int columnId,
                                                     bool isRowSelected,
                                                     Component* existingComponentToUpdate)
 {
+
+    // This is used to create or update a custom component to go in a cell
+    //(from the WidgetsDemo from the base JUCE demo collection, adapted)
+
     // To prevent edits for the ID column, return nullptr
     if (columnId == 1)
         return nullptr;
@@ -879,11 +798,6 @@ juce::Component* Library::refreshComponentForCell(int rowNumber,
     return textLabel;
 };
 
+void Library::selectedRowsChanged(int lastRowSelected){};
 
-// Override this to be informed when rows are selected or deselected
-void Library::selectedRowsChanged(int lastRowSelected)
-{
-    DBG("SELECTION CHANGED!");
-};
 
-//===================================================================

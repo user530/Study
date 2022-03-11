@@ -23,16 +23,13 @@ MainComponent::MainComponent()
     // Register basic formats to be able to handle different audio files
     formatManager.registerBasicFormats();
 
-
-    // Show GUI elements
+    // Show application components (blocks)
     addAndMakeVisible(player1GUI);
     addAndMakeVisible(player2GUI);
-    //addAndMakeVisible(waveform1);           // DELETE?
-    //addAndMakeVisible(waveform2);           // DELETE?
-    addAndMakeVisible(dynamWaveform1);           // DELETE?
-    addAndMakeVisible(dynamWaveform2);           // DELETE?
-    addAndMakeVisible(statWaveform1);           // DELETE?
-    addAndMakeVisible(statWaveform2);           // DELETE?
+    addAndMakeVisible(dynamWaveform1);
+    addAndMakeVisible(dynamWaveform2);
+    addAndMakeVisible(statWaveform1);
+    addAndMakeVisible(statWaveform2);
     addAndMakeVisible(fileBrowser);
     addAndMakeVisible(library);
 }
@@ -46,51 +43,25 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-    // This function will be called when the audio device is started, or when
-    // its settings (i.e. sample rate, block size, etc) are changed.
-
-    // You can use this function to initialise any resources you might need,
-    // but be careful - it will be called on the audio thread, not the GUI thread.
-
-    // For more details, see the help for AudioProcessor::prepareToPlay()
-
-
-
-
     // Add both players to the mixer
     mixerSource.addInputSource(&player1, false);
     mixerSource.addInputSource(&player2, false);
 
-    // Prepare the Player 1
+    // Prepare Player 1
     player1.prepareToPlay(samplesPerBlockExpected, sampleRate);
 
-    // Prepare the Player 2
+    // Prepare Player 2
     player2.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    // Your audio-processing code goes here!
-
-    // For more details, see the help for AudioProcessor::getNextAudioBlock()
-
-    // Right now we are not producing any data, in which case we need to clear the buffer
-    // (to prevent the output of random noise)
-
-
     // Pass the job to the mixer
     mixerSource.getNextAudioBlock(bufferToFill);
-    
 }
 
 void MainComponent::releaseResources()
 {
-    // This will be called when the audio device stops, or when it is being
-    // restarted due to a setting change.
-
-    // For more details, see the help for AudioProcessor::releaseResources()
-
-
     // Clean up the mixer
     mixerSource.removeAllInputs();
     mixerSource.releaseResources();
@@ -98,7 +69,6 @@ void MainComponent::releaseResources()
     // Clean up the players
     player1.releaseResources();
     player2.releaseResources();
-
 }
 
 //==============================================================================
@@ -106,21 +76,15 @@ void MainComponent::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-    
-    // You can add your drawing code here!
 }
 
 void MainComponent::resized()
 {
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
+    // Size values equal to the 10% of the application window Width AND Height
+    const int wUnit = getWidth() / 10;
+    const int hUnit = getHeight() / 10;
 
-    double wUnit = getWidth() / 10;
-    double hUnit = getHeight() / 10;
-
-    // waveform1.setBounds(0, 0, getWidth(), hUnit * 1.25);                    // DELETE?
-    // waveform2.setBounds(0, hUnit * 1.25, getWidth(), hUnit * 1.25);         // DELETE?
+    // Set bounds of every application component (block)
     dynamWaveform1.setBounds        (0              , 0             , getWidth()    , hUnit         );                    
     dynamWaveform2.setBounds        (0              , hUnit         , getWidth()    , hUnit         );      
     statWaveform1.setBounds         (0              , hUnit * 2     , wUnit * 5     , hUnit         );

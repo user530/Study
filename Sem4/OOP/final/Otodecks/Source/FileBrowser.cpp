@@ -14,9 +14,6 @@
 //==============================================================================
 FileBrowser::FileBrowser()
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
     // Show file tree
     addAndMakeVisible(&fileTree);
 
@@ -30,36 +27,26 @@ FileBrowser::FileBrowser()
 
     // Start thread
     browserThread.startThread(3);
-}
+};
 
-FileBrowser::~FileBrowser()
-{
-}
+FileBrowser::~FileBrowser() {};
 
 void FileBrowser::paint (juce::Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
+    // Clear the background
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
-       You should replace everything in this method with your own
-       drawing code..
-    */
-
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
+    // Draw an outline around the component
     g.setColour (juce::Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
+    g.drawRect (getLocalBounds(), 1);
 }
 
 void FileBrowser::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
+    // Make File tree component to take 100% of given space
     fileTree.setBounds(0, 0, getWidth(), getHeight());
 }
 
-// Get access to the file tree
 juce::FileTreeComponent* FileBrowser::getFiletree()
 {
     return &fileTree;

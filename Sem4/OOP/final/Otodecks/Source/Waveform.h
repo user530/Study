@@ -17,57 +17,73 @@
 //==============================================================================
 /*
 */
-class Waveform : public juce::Component
+class Waveform
 {
 public:
-    Waveform(juce::AudioFormatManager& formatManagerAdr,
-             juce::AudioThumbnailCache& thumbCacheAdr,
-                        StaticWaveform* statWaveform,
-                        DynamicWaveform* dynWaveform);
-    ~Waveform() override;
 
-    void paint (juce::Graphics&) override;
-    void resized() override;
+    // Constructor
+    Waveform(juce::AudioFormatManager& formatManagerAdr,    // Access to the AudioFormatManager
+             juce::AudioThumbnailCache& thumbCacheAdr,      // Access to the AudioThumbnailCache
+                        StaticWaveform* statWaveform,       // Connect Static Waveform component
+                        DynamicWaveform* dynWaveform);      // Connect Dynamic Waveform component
 
-    // Update waveforms
+    // Destructor
+    ~Waveform();
+
+    //==================================================================
+
+    /// <summary> Update waveform components (static and dynamic) </summary>
     void updateWaveforms();
 
-    // Update playhead position
-    void setRelPos(double relPos);
+    /// <summary> Update playhead relative position </summary>
+    /// <param name="relPos"> - New relative playhead position </param>
+    void setRelPos(const double relPos);
 
-    // Set track name
+    /// <summary> Set track name visible in the static waveform component </summary>
+    /// <param name="name"> - Track name </param>
     void setTrackName(const juce::String name);
 
-    // Set track BPM
+    /// <summary> Set track BPM (rhytm as Beats Per Minute) visible in the dynamic waveform component </summary>
+    /// <param name="bpm"> - Track BPM </param>
     void setTrackBPM(const double bpm);
 
-    // Get track BPM
+    /// <summary> Get track BPM value from the dynamic waveform component </summary>
+    /// <returns> Current track rhytm as Beats Per Minute </returns>
     const double getTrackBPM() const;
 
-    // Set track length
+    /// <summary> Set track length in the format "Minutes : Seconds", visible in the static waveform component </summary>
+    /// <param name="maxLen"> - Track length in seconds </param>
     void setTrackLength(const int maxLen);
 
-    // Set current time
+    /// <summary> Set current playback position in seconds </summary>
+    /// <param name="newTime"> - playback position in seconds </param>
     void setCurTime(const double newTime);
 
-    // Set new audio thumb to the static and dynamic audio thumb
+    /// <summary> Pass new audio thumb to the static and dynamic waveform components for the visualisation </summary>
     void setNewThumb();
 
-    // Get access to the audio thumbnail, so GUI can attach listener
+    /// <summary> Get access to the audio thumbnail, so GUI can attach listener </summary>
+    /// <returns> Adress of the AudioThumbnail object </returns>
     juce::AudioThumbnail* getAudioThumb();
 
-    // Callback to update the visible range of the dynamic waveform
+    /// <summary> Callback to update the visible range of the dynamic waveform </summary>
     void updateVisRange();                                            
 
 private:
+
+    // Audio Thumbnail object to store waveforms of the tracks
     juce::AudioThumbnail audioThumb;
 
+    // Address of the static waveform component
     StaticWaveform* statWaveform;
 
+    // Address of the dynamic waveform component
     DynamicWaveform* dynWaveform;
 
+    // Current relative position 
     double curPos;
 
+    // Current playback time
     double curTime;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Waveform)

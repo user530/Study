@@ -12,15 +12,13 @@
 #include "Player.h"
 
 //==============================================================================
-Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager),
-                                                            state(PlayerState::Stopped),
-                                                            loopMode(false),
-                                                            queEditMode(false),
-                                                            hotQues({ 0 })
+Player::Player(juce::AudioFormatManager& _formatManager) : formatManager(_formatManager),   // Access to the format manager
+                                                            state(PlayerState::Stopped),    // Initial player state
+                                                            loopMode(false),                // Initial loop mode
+                                                            queEditMode(false),             // Initial que edit mode
+                                                            hotQues({ 0.0 })                // Initialize hot ques array
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-
+    
 }
 
 Player::~Player()
@@ -40,7 +38,6 @@ Player::~Player()
 
 void Player::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    
     // Pass the job to the resample source
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 };
@@ -67,8 +64,6 @@ void Player::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
     }
 };
 
-
-// Function to handle changes in player state
 void Player::changeState(PlayerState newState)
 {
     // If current state differs from the new one
@@ -113,13 +108,13 @@ void Player::changeState(PlayerState newState)
     }
 };
 
-// Function to check the player state
 Player::PlayerState Player::getState() const
 {
+    // Return current player state
     return state;
 };
 
-bool Player::openFile(juce::URL audioURL)
+const bool Player::openFile(juce::URL audioURL)
 {
     // Attempt to create a reader for the passed URL
     auto* fReader = formatManager.createReaderFor(audioURL.createInputStream(false));
@@ -146,14 +141,13 @@ bool Player::openFile(juce::URL audioURL)
     return false;
 };
 
-// Get access to the transport source
 juce::AudioTransportSource* Player::getTransportSource() 
 {
+    // Return pointer to the transport source
     return &transportSource;
 };
 
-// Check that reader source is not empty
-bool Player::rdrSrcNotEmpty() const
+const bool Player::rdrSrcNotEmpty() const
 {
     // If reader source is not empty, return true
     if (readerSource.get() != nullptr)
@@ -163,28 +157,26 @@ bool Player::rdrSrcNotEmpty() const
     return false;
 };
 
-// Set new volume value
 void Player::setGain(float newValue)
 {
     // Limit gain rage from 0 to 300%, if out of range
     if (newValue < 0.0f || newValue > 3.0f)
     {
-        // Message and break
-        DBG("Gain argument is out of range. Should be between 0.0f and 3.0f!");
+        // Debug message and break
+        DBG("Player::setGain - ERROR! Gain argument is out of range. Should be between 0.0f and 3.0f!");
         return;
     }
     // If value is valid, set new gain
     transportSource.setGain(newValue);
 };
 
-// Set relative position
 void Player::setPosRel(float relStamp)
 {
     // Check if argument is out of range
     if (relStamp < 0.0f || relStamp > 1.0f)
     {
         // Message and break
-        DBG("Relative timestamp is out of range. Should be between 0.0f and 1.0f!");
+        DBG("Player::setPosRel - ERROR! Relative timestamp is out of range. Should be between 0.0f and 1.0f!");
         return;
     }
 
@@ -193,11 +185,9 @@ void Player::setPosRel(float relStamp)
 
     // Set this position
     setPos(timeStamp);
-
 };
 
-// Get relative position
-double Player::getPosRel() const
+const double Player::getPosRel() const
 {
     // To prevent division by 0 we check that track length is not zero
     if (transportSource.getLengthInSeconds() != 0)
@@ -209,14 +199,13 @@ double Player::getPosRel() const
     return 0.0;
 };
 
-// Set position in seconds
 void Player::setPos(float timeStamp)
 {
     // Check if argument is out of range
     if (timeStamp < 0.0f || timeStamp > transportSource.getLengthInSeconds())
     {
         // Message and break
-        DBG("Timestamp is out of range. Should be between 0 and track length in seconds!");
+        DBG("Player::setPos - ERROR! Timestamp is out of range. Should be between 0 and track length in seconds!");
         return;
     }
 
@@ -224,14 +213,13 @@ void Player::setPos(float timeStamp)
     transportSource.setPosition(timeStamp);
 };
 
-// Set tempo
 void Player::setTempo(double tempo)
 {
     // Check if argument is out of range (tempo between 10% and 800%)
     if (tempo < 0.1 || tempo > 8.0)
     {
         // Message and break
-        DBG("Tempo is out of range. Should be between 0 and 8!");
+        DBG("Player::setTempo - ERROR! Tempo is out of range. Should be between 0 and 8!");
         return;
     }
 
@@ -239,15 +227,13 @@ void Player::setTempo(double tempo)
     resampleSource.setResamplingRatio(tempo);
 };
 
-// Get tempo
 const double Player::getTempo() const
 {
+    // Return current tempo
     return resampleSource.getResamplingRatio();
 };
 
-
-// Get loop state
-bool Player::isLooping() const
+const bool Player::isLooping() const
 {
     // Check that reader source exists
     if (rdrSrcNotEmpty())
@@ -260,7 +246,6 @@ bool Player::isLooping() const
     return false;
 };
 
-// Set loop state
 void Player::setLooping(bool willLoop)
 {
     // Set new player state
@@ -274,47 +259,44 @@ void Player::setLooping(bool willLoop)
     }
 };
 
-// Set edit mode state
 void Player::setQueEdit(bool isEditable)
 {
     // Set new player state
     queEditMode = isEditable;
 };
 
-// Get edit mode state
-bool Player::getQueEdit() const
+const bool Player::getQueEdit() const
 {
+    // Return current hot que edit mode
     return queEditMode;
 };
 
-// Set hot que relative position
 void Player::setHotQue(int ind, double timestamp)
 {
     // If index argument is invalid print error msg and stop
     if (ind < 0 || ind > hotQues.size() - 1 )
     {
-        DBG("HOT QUE INDEX IS OUT OF RANGE!");
+        DBG("Player::setHotQue - ERROR! Hot que index is out of range!");
         return;
     }
     
     // If timestamp argument is invalid print error msg and stop
     if (timestamp < 0 || timestamp > transportSource.getLengthInSeconds())
     {
-        DBG("HOT QUE TIMESTAMP IS OUT OF RANGE!");
+        DBG("Player::setHotQue - ERROR! Hot que timestamp is out of range!");
         return;
     }
 
     // Store timestamp
-    hotQues[ind] = timestamp;
+    hotQues.insert(ind, timestamp);
 };
 
-// Get hot que timestamp
-double Player::getHotQue(int ind) const
+const double Player::getHotQue(int ind) const
 {
     // If index argument is invalid print error msg and stop
     if (ind < 0 || ind > hotQues.size() - 1)
     {
-        DBG("HOT QUE INDEX IS OUT OF RANGE!");
+        DBG("Player::getHotQue - ERROR! Hot que index is out of range!");
         return 0.0;
     }
 
