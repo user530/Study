@@ -284,6 +284,9 @@ void PlayerGUI::fileLoaded(juce::File file, juce::String trackName, double bpm)
 
 void PlayerGUI::loopBtnClick()
 {
+    // Set new loop state based on the current state
+    player->setLooping( !player->isLooping() );
+
     // Set button text depending on the btn state
     if (player->isLooping())
     {
@@ -293,9 +296,6 @@ void PlayerGUI::loopBtnClick()
     {
         loopBtn.setButtonText("LOOP: OFF");
     }
-
-    // Set new loop state based on the current state
-    player->setLooping( !player->isLooping() );
 };
 
 void PlayerGUI::gainSldChange() const
@@ -335,6 +335,9 @@ void PlayerGUI::tempoSldChange() const
 
 void PlayerGUI::cueEditClick()
 {
+    // Set cue edit mode
+    player->setCueEdit( !player->getCueEdit());
+
     // Set button text depending on the edit state
     if (player->getCueEdit())
     {
@@ -344,9 +347,6 @@ void PlayerGUI::cueEditClick()
     {
         cueEditBtn.setButtonText("CUE EDIT: OFF");
     }
-
-    // Set cue edit mode
-    player->setCueEdit( !player->getCueEdit());
 };
 
 void PlayerGUI::hotCueClick(juce::TextButton* btnAddr) const
