@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="fV1swa" name="Otodecks">
     <GROUP id="{8970A238-5B52-565C-7076-951507803F18}" name="Source">
+      <FILE id="zkIemY" name="DataSorter.cpp" compile="1" resource="0" file="Source/DataSorter.cpp"/>
+      <FILE id="Ch8cgy" name="DataSorter.h" compile="0" resource="0" file="Source/DataSorter.h"/>
       <FILE id="O3wLcv" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="WqIZcz" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="OfGGX1" name="MainComponent.cpp" compile="1" resource="0"
@@ -47,7 +49,6 @@
         <MODULEPATH id="juce_graphics" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../../../JUCE/modules"/>
-        <MODULEPATH id="juce_dsp" path="../../../../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
@@ -59,7 +60,6 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
-    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
