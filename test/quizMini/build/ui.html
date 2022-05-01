@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+		<!--====remove blue color for safari ========-->
+		<meta name="format-detection" content="telephone=no"/>
+		<!--====plagin for inputRange ========-->
+		<link rel="stylesheet" href="libs/jQueryUi/jQuery_ui.css"/>
+		<link rel="stylesheet" href="css/main.css"/>
+		<title>Main</title>
+	</head>
+	<body>
+		<div id="overlay"></div>
+		<div class="container">
+			<ul class="test">
+				<li>
+					<div class="area-range">
+						<div class="range-results-wrap">
+							<div class="range-results">50 m<sup>2</sup></div>
+							<div class="range-total">390 m<sup>3</sup></div>
+						</div>
+						<div class="range">
+							<input type="range" min="1" max="6" steps="1" value="1"/>
+						</div>
+						<ul class="range-labels">
+							<li class="active selected">
+								<div class="range-results">50 m<sup>2</sup></div>
+								<div class="range-total">130 m<sup>3</sup></div>
+							</li>
+							<li>
+								<div class="range-results">100 m<sup>2</sup></div>
+								<div class="range-total">260 m<sup>3</sup></div>
+							</li>
+							<li>
+								<div class="range-results">150 m<sup>2</sup></div>
+								<div class="range-total">390 m<sup>3</sup></div>
+							</li>
+							<li>
+								<div class="range-results">200 m<sup>2</sup></div>
+								<div class="range-total">520 m<sup>3</sup></div>
+							</li>
+							<li>
+								<div class="range-results">650 m<sup>2</sup></div>
+								<div class="range-total">390 m<sup>3</sup></div>
+							</li>
+							<li>
+								<div class="range-results">780 m<sup>2</sup></div>
+								<div class="range-total">390 m<sup>3</sup></div>
+							</li>
+						</ul>
+					</div>
+					<div class="form-btn">
+						<button class="btn-arrow"><span class="arrowGray"></span></button>
+						<button class="btn-round-light"><span>Next step</span><span class="arrowRight-green"></span></button>
+					</div>
+				</li>
+				<li>
+					<div class="li-item title-96">title-96</div>
+					<pre>.title-96 title-96</pre><br/>
+					<div class="title-88">title-88</div>
+					<pre>.title-88 title-88</pre><br/>
+					<div class="title-48 text-green">title-48</div>
+					<pre>.title-48.text-green title-48</pre><br/>
+					<div class="title-38">title-38</div>
+					<pre>.title-38 title-38</pre><br/>
+					<div class="text-186">24</div>
+					<pre>.text-186 24</pre><br/>
+					<div class="text-94">256</div>
+					<pre>.text-94 256
+</pre>
+				</li>
+				<li>
+					<button class="btn"><span>Request a quote</span><span class="arrowRight"></span></button>
+					<pre>.btn
+	span Request a quote
+	span.arrowRight</pre>
+				</li>
+				<li><a class="btn-round" href="#!"><span>Request a quote</span><span class="arrowRight"></span></a>
+					<pre>.btn-round
+	span Request a quote
+	span.arrowRight</pre>
+				</li>
+				<li>
+					<h3 style="margin-bottom: 15px;">input[type="submit"] as button</h3>
+					<div class="submit-arrow">
+						<input class="btn-round btn-round--yellow" type="submit" value="Request a quote "/><span class="arrowRight"></span>
+					</div>
+					<pre>.submit-arrow
+	input(type="submit" value="Request a quote ").btn-round.btn-round--yellow
+	span.arrowRight</pre>
+				</li>
+				<li>
+					<div class="btn-round btn-round--yellow"><span>Request a quote</span><span class="arrowRight-black"></span></div>
+					<pre>.btn-round.btn-round--yellow
+	span Request a quote
+	span.arrowRight-black
+</pre>
+				</li>
+				<li>
+					<div class="btn-round-light"><span>Request a quote</span><span class="arrowRight-green"></span></div>
+					<pre>.btn-round-light
+	span Request a quote
+	span.arrowRight</pre>
+				</li>
+				<li>
+					<div class="btn-light"><span>Request a quote</span><span class="arrowRight-green"></span></div>
+					<pre>.btn-light
+	span Request a quote
+	span.arrowRight
+</pre>
+				</li>
+				<li>
+					<div class="label label--red">Popular</div>
+					<pre>.label.label--red Popular
+</pre>
+				</li>
+				<li>
+					<div class="label">CW3</div>
+					<pre>.label CW3
+</pre>
+				</li>
+				<li>
+					<div class="card-bg" style="background-image: url(./img/card-bg.jpg);">
+						<p>Members receive great discounts, get quotes from top home improvement companies and stay up to date with design trends</p><a class="btn-round btn-round--yellow" href="#!"><span>Sign up now</span><span class="arrowRight"></span></a>
+					</div>
+					<pre>.card-bg(style="background-image: url(./img/card-bg.jpg);")
+	p Members receive great discounts, get quotes from top home improvement companies and stay up to date with design trends
+	a.btn-round.btn-round--yellow(href="#!")
+		span Sign up now
+		span.arrowRight</pre>
+				</li>
+				<li style="background-color:  #F7F7F7;">
+					<div class="form-item">
+						<input type="text" name="" placeholder="Heating and hot water supply"/>
+					</div>
+					<div class="form-item">
+						<input type="text" name="" placeholder="Heating and hot water supply"/>
+					</div>
+					<div class="form-item">
+						<input type="text" name="" placeholder="Heating and hot water supply"/>
+					</div>
+					<pre>.form-item
+	input(type="text" name="" placeholder="Heating and hot water supply")
+</pre>
+				</li>
+				<li style="background-color:  #348AA7;">
+					<div class="form-item form-item--base">
+						<label>Zip Code</label>
+						<input type="text" name=""/>
+					</div>
+					<div class="form-row">
+						<div class="form-item form-item--base">
+							<label>Zip Code</label>
+							<input type="text" name=""/>
+						</div>
+						<div class="form-item form-item--base">
+							<label>Zip Code</label>
+							<input type="text" name=""/>
+						</div>
+					</div>
+					<div class="form-btn">
+						<button class="btn-arrow"><span class="arrowGray"></span></button>
+						<button class="btn-round-light"><span>Next step</span><span class="arrowRight-green"></span></button>
+					</div>
+					<pre>.form-item.form-item--base
+	label Zip Code
+	input(type="text" name="")
+.form-row
+	.form-item.form-item--base
+		label Zip Code
+		input(type="text" name="")
+	.form-item.form-item--base
+		label Zip Code
+		input(type="text" name="")
+.form-btn
+	button.btn-arrow
+		span.arrowGray
+	button.btn-round-light
+		span Next step
+		span.arrowRight-green
+</pre>
+				</li>
+				<li>
+					<div class="title-38">Do you have a tub or two showers?</div>
+					<div class="form-item form-item--base">
+						<label class="custom-radiobutton">
+							<input type="radio" name="house_type"/><span>Apartment</span>
+						</label>
+					</div>
+					<div class="form-item form-item--base">
+						<label class="custom-radiobutton">
+							<input type="radio" name="house_type"/><span>Apartment2</span>
+						</label>
+					</div>
+					<div class="form-item form-item--base">
+						<label class="custom-radiobutton">
+							<input type="radio" name="house_type"/><span>Apartment3</span>
+						</label>
+					</div>
+					<div class="form-btn">
+						<button class="btn-arrow"><span class="arrowGray"></span></button>
+						<button class="btn-round-light"><span>Next step</span><span class="arrowRight-green"></span></button>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="libs/jquery/jquery-3.0.0.min.js"></script>
+		<!--====plagin for inputRange ========-->
+		<script src="libs/jQueryUi/jQuery_Ui.js"></script>
+		<script src="libs/jQueryUi/jQuery_Touch.js"></script>
+		<!--=============== my scripts ===================	-->
+		<script src="js/main.js"></script>
+	</body>
+</html>
