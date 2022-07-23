@@ -30,12 +30,7 @@ function setup() {
 function draw() {
   bgSubstr();
   grid.run(diffImg);
-  push();
-  textSize(32);
-  textAlign(CENTER);
-  fill(255, 0, 0);
-  text("Press 'Space' to toggle sound", width / 4, height - 10);
-  pop();
+  writeText();
   updateBG();
 }
 
@@ -127,6 +122,15 @@ function updateBG() {
 
 function toggleState() {
   oscState = 1 - oscState;
+}
+
+function writeText() {
+  push();
+  textSize(32);
+  textAlign(CENTER);
+  fill(255, 0, 0);
+  text("Press 'Space' to toggle sound", width / 4, height - 10);
+  pop();
 }
 
 function keyPressed() {
